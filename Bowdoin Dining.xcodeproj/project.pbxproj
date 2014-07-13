@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4507E6CC1971B289000628DE /* 128.png in Resources */ = {isa = PBXBuildFile; fileRef = 4507E6CB1971B289000628DE /* 128.png */; };
+		451C9E6A1970A229006007AE /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 451C9E691970A229006007AE /* GDataXMLNode.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		4530A1001970CE75000CCBCC /* Course.m in Sources */ = {isa = PBXBuildFile; fileRef = 4530A0FF1970CE75000CCBCC /* Course.m */; };
+		4530A1051970DD31000CCBCC /* Menus.m in Sources */ = {isa = PBXBuildFile; fileRef = 4530A1041970DD31000CCBCC /* Menus.m */; };
 		45AAB58E1970636E0078A7F9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 45AAB58D1970636E0078A7F9 /* main.m */; };
 		45AAB5911970636E0078A7F9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 45AAB5901970636E0078A7F9 /* AppDelegate.m */; };
 		45AAB5941970636E0078A7F9 /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45AAB5931970636E0078A7F9 /* FirstViewController.m */; };
@@ -27,6 +31,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4507E6CB1971B289000628DE /* 128.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 128.png; path = "Bowdoin Dining/128.png"; sourceTree = "<group>"; };
+		451C9E681970A229006007AE /* GDataXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDataXMLNode.h; sourceTree = "<group>"; };
+		451C9E691970A229006007AE /* GDataXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDataXMLNode.m; sourceTree = "<group>"; };
+		4530A0FF1970CE75000CCBCC /* Course.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Course.m; sourceTree = "<group>"; };
+		4530A1021970CED9000CCBCC /* Course.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Course.h; sourceTree = "<group>"; };
+		4530A1031970DD26000CCBCC /* Menus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Menus.h; sourceTree = "<group>"; };
+		4530A1041970DD31000CCBCC /* Menus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Menus.m; sourceTree = "<group>"; };
 		45AAB5881970636E0078A7F9 /* Bowdoin Dining.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bowdoin Dining.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		45AAB58C1970636E0078A7F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		45AAB58D1970636E0078A7F9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -67,6 +78,9 @@
 				45AAB58A1970636E0078A7F9 /* Bowdoin Dining */,
 				45AAB5A41970636F0078A7F9 /* Bowdoin DiningTests */,
 				45AAB5891970636E0078A7F9 /* Products */,
+				451C9E681970A229006007AE /* GDataXMLNode.h */,
+				451C9E691970A229006007AE /* GDataXMLNode.m */,
+				4507E6CB1971B289000628DE /* 128.png */,
 			);
 			sourceTree = "<group>";
 		};
@@ -86,6 +100,10 @@
 				45AAB5901970636E0078A7F9 /* AppDelegate.m */,
 				45AAB5921970636E0078A7F9 /* FirstViewController.h */,
 				45AAB5931970636E0078A7F9 /* FirstViewController.m */,
+				4530A1031970DD26000CCBCC /* Menus.h */,
+				4530A1041970DD31000CCBCC /* Menus.m */,
+				4530A0FF1970CE75000CCBCC /* Course.m */,
+				4530A1021970CED9000CCBCC /* Course.h */,
 				45AAB5951970636E0078A7F9 /* SecondViewController.h */,
 				45AAB5961970636E0078A7F9 /* SecondViewController.m */,
 				45AAB5981970636E0078A7F9 /* Main.storyboard */,
@@ -169,6 +187,7 @@
 				TargetAttributes = {
 					45AAB5871970636E0078A7F9 = {
 						CreatedOnToolsVersion = 6.0;
+						DevelopmentTeam = FG7AYYTX96;
 					};
 					45AAB5A01970636F0078A7F9 = {
 						CreatedOnToolsVersion = 6.0;
@@ -200,6 +219,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4507E6CC1971B289000628DE /* 128.png in Resources */,
 				45AAB59A1970636E0078A7F9 /* Main.storyboard in Resources */,
 				45AAB59C1970636E0078A7F9 /* Images.xcassets in Resources */,
 			);
@@ -221,7 +241,10 @@
 			files = (
 				45AAB5971970636E0078A7F9 /* SecondViewController.m in Sources */,
 				45AAB5911970636E0078A7F9 /* AppDelegate.m in Sources */,
+				451C9E6A1970A229006007AE /* GDataXMLNode.m in Sources */,
+				4530A1051970DD31000CCBCC /* Menus.m in Sources */,
 				45AAB5941970636E0078A7F9 /* FirstViewController.m in Sources */,
+				4530A1001970CE75000CCBCC /* Course.m in Sources */,
 				45AAB58E1970636E0078A7F9 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -337,8 +360,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Applications/Xcode6-Beta2.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,/usr/include/libxml2",
+					/usr/include/libxml2,
+				);
 				INFOPLIST_FILE = "Bowdoin Dining/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -348,8 +378,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Applications/Xcode6-Beta2.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,/usr/include/libxml2",
+					/usr/include/libxml2,
+				);
 				INFOPLIST_FILE = "Bowdoin Dining/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -409,6 +446,7 @@
 				45AAB5AD1970636F0078A7F9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		45AAB5AE1970636F0078A7F9 /* Build configuration list for PBXNativeTarget "Bowdoin DiningTests" */ = {
 			isa = XCConfigurationList;
@@ -417,6 +455,7 @@
 				45AAB5B01970636F0078A7F9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
