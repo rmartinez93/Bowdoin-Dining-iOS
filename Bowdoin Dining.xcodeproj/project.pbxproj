@@ -21,6 +21,7 @@
 		45AAB59A1970636E0078A7F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45AAB5981970636E0078A7F9 /* Main.storyboard */; };
 		45AAB59C1970636E0078A7F9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45AAB59B1970636E0078A7F9 /* Images.xcassets */; };
 		45AAB5A81970636F0078A7F9 /* Bowdoin_DiningTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 45AAB5A71970636F0078A7F9 /* Bowdoin_DiningTests.m */; };
+		45CC829A1973320D008A391C /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45CC82991973320D008A391C /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		45AAB5A11970636F0078A7F9 /* Bowdoin DiningTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Bowdoin DiningTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		45AAB5A61970636F0078A7F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		45AAB5A71970636F0078A7F9 /* Bowdoin_DiningTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Bowdoin_DiningTests.m; sourceTree = "<group>"; };
+		45CC82991973320D008A391C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +67,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45CC829A1973320D008A391C /* CoreLocation.framework in Frameworks */,
 				4507E70419726E3A000628DE /* CoreGraphics.framework in Frameworks */,
 				4507E70519726E3A000628DE /* Foundation.framework in Frameworks */,
 				4507E70619726E3A000628DE /* UIKit.framework in Frameworks */,
@@ -84,6 +87,7 @@
 		4507E70719726E53000628DE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				45CC82991973320D008A391C /* CoreLocation.framework */,
 				4507E70119726E3A000628DE /* CoreGraphics.framework */,
 				4507E70219726E3A000628DE /* Foundation.framework */,
 				4507E70319726E3A000628DE /* UIKit.framework */,
@@ -122,8 +126,8 @@
 				45AAB5931970636E0078A7F9 /* FirstViewController.m */,
 				4530A1031970DD26000CCBCC /* Menus.h */,
 				4530A1041970DD31000CCBCC /* Menus.m */,
-				4530A0FF1970CE75000CCBCC /* Course.m */,
 				4530A1021970CED9000CCBCC /* Course.h */,
+				4530A0FF1970CE75000CCBCC /* Course.m */,
 				45AAB5951970636E0078A7F9 /* SecondViewController.h */,
 				45AAB5961970636E0078A7F9 /* SecondViewController.m */,
 				45AAB5981970636E0078A7F9 /* Main.storyboard */,

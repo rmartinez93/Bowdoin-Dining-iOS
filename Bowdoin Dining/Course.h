@@ -13,6 +13,11 @@
 
 @property (strong, atomic) NSString *courseName;
 @property (strong, atomic) NSMutableArray *items;
+@property (strong, atomic) NSMutableArray *itemIds;
 @property (strong, atomic) NSMutableArray *descriptions;
+
++ (void) addToFavoritedItems: (NSString *) item_id_string;
++ (void) removeFromFavoritedItems: (NSString *) item_id_string;
++ (NSMutableArray *) allFavoritedItems;
 
 @end

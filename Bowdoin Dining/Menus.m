@@ -110,6 +110,7 @@ NSString *serverURL = @"http://www.bowdoin.edu/atreus/lib/xml/";
             }
             
             GDataXMLElement *item_name = [[item elementsForName:@"item_name"] firstObject];
+            GDataXMLElement *item_id = [[item elementsForName:@"itemID"] firstObject];
             NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\(+(GF|VE|V|L)+[A-Z ]*\\)" options:0 error:&error];
             NSArray *specials  = [regex matchesInString:item_name.stringValue options:0 range:NSMakeRange(0, [item_name.stringValue length])];
             
@@ -124,13 +125,16 @@ NSString *serverURL = @"http://www.bowdoin.edu/atreus/lib/xml/";
             if(coursePosition >= 0) {
                 Course *thiscourse = courses[coursePosition];
                 [thiscourse.items addObject: cleaned];
+                [thiscourse.itemIds addObject: item_id.stringValue];
                 [thiscourse.descriptions addObject: detail];
             } else {
                 Course *thiscourse = [[Course alloc] init];
                 thiscourse.courseName = courseObject.stringValue;
                 thiscourse.items = [[NSMutableArray alloc] init];
+                thiscourse.itemIds = [[NSMutableArray alloc] init];
                 thiscourse.descriptions = [[NSMutableArray alloc] init];
                 [thiscourse.items addObject: cleaned];
+                [thiscourse.itemIds addObject: item_id.stringValue];
                 [thiscourse.descriptions addObject: detail];
                 [courses addObject: thiscourse];
             }

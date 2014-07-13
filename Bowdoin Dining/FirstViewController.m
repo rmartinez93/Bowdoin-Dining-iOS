@@ -97,6 +97,10 @@ AppDelegate *delegate;
         cell.textLabel.text = [thiscourse.items objectAtIndex: indexPath.row];
         cell.detailTextLabel.text = [thiscourse.descriptions objectAtIndex: indexPath.row];
         cell.detailTextLabel.textColor = [UIColor lightGrayColor];
+        
+        if([Course.allFavoritedItems containsObject: (NSString *)thiscourse.itemIds[indexPath.row]]) {
+            cell.backgroundColor = [UIColor colorWithRed:1 green:0.84 blue:0 alpha:1];
+        } else cell.backgroundColor = [UIColor whiteColor];
     }
     return cell;
 }
@@ -107,7 +111,6 @@ AppDelegate *delegate;
     rotation = CATransform3DMakeRotation( (90.0*M_PI)/180, 0.0, 0.7, 0.4);
     rotation.m34 = 1.0/ -600;
     
-    
     //2. Define the initial state (Before the animation)
     cell.layer.shadowColor = [[UIColor blackColor]CGColor];
     cell.layer.shadowOffset = CGSizeMake(10, 10);
@@ -115,7 +118,6 @@ AppDelegate *delegate;
     
     cell.layer.transform = rotation;
     cell.layer.anchorPoint = CGPointMake(0, 0.5);
-    
     
     //3. Define the final state (After the animation) and commit the animation
     [UIView beginAnimations:@"rotation" context:NULL];
@@ -172,6 +174,34 @@ AppDelegate *delegate;
             }
         });
     });
+}
+
+- (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+    Course *course = [delegate.courses objectAtIndex:indexPath.section];
+    if(![Course.allFavoritedItems containsObject: (NSString *) course.itemIds[indexPath.row]]) {
+        UITableViewRowAction *faveAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Favorite" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+            [Course addToFavoritedItems: [course.itemIds objectAtIndex:indexPath.row]];
+            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+            cell.backgroundColor = [UIColor colorWithRed:1 green:0.84 blue:0 alpha:1];
+            [tableView setEditing:NO];
+        }];
+        faveAction.backgroundColor = [UIColor colorWithRed:1 green:0.84 blue:0 alpha:1];
+        return @[faveAction];
+    } else {
+        UITableViewRowAction *unfaveAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Remove" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+            [Course removeFromFavoritedItems: [course.itemIds objectAtIndex:indexPath.row]];
+            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+            cell.backgroundColor = [UIColor whiteColor];
+            [tableView setEditing:NO];
+        }];
+        unfaveAction.backgroundColor = [UIColor lightGrayColor];
+        return @[unfaveAction];
+    }
+    
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    // No statement or algorithm is needed in here. Just the implementation
 }
 
 - (IBAction)backButtonPressed: (UIButton*)sender {
