@@ -10,9 +10,7 @@
 #import "Course.h"
 #import "AppDelegate.h"
 
-@interface SecondViewController () {
-}
-
+@interface SecondViewController () 
 @end
 
 @implementation SecondViewController
@@ -21,14 +19,17 @@ AppDelegate *delegate;
 - (void)viewDidLoad {
     [super viewDidLoad];
     delegate  = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    if(delegate.daysAdded == 0)
-        self.backButton.hidden = true;
     [self.menuItems setDelegate:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     self.dayLabel.text = [self getTextForCurrentDay];
     self.meals.selectedSegmentIndex = delegate.selectedSegment;
+    if(delegate.daysAdded == 0) {
+        self.backButton.hidden = true;
+    } else if(delegate.daysAdded == 6) {
+        self.forwardButton.hidden = true;
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {

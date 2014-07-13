@@ -19,8 +19,6 @@ AppDelegate *delegate;
 - (void)viewDidLoad {
     [super viewDidLoad];
     delegate  = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    if(delegate.daysAdded == 0)
-        self.backButton.hidden = true;
     [self.menuItems setDelegate:self];
     self.meals.selectedSegmentIndex = [self segmentIndexOfCurrentMeal: [NSDate date]];
     delegate.selectedSegment = self.meals.selectedSegmentIndex;
@@ -29,6 +27,11 @@ AppDelegate *delegate;
 - (void)viewWillAppear:(BOOL)animated {
     self.dayLabel.text = [self getTextForCurrentDay];
     self.meals.selectedSegmentIndex = delegate.selectedSegment;
+    if(delegate.daysAdded == 0) {
+        self.backButton.hidden = true;
+    } else if(delegate.daysAdded == 6) {
+        self.forwardButton.hidden = true;
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -213,10 +216,9 @@ AppDelegate *delegate;
             self.forwardButton.hidden = true;
         } else if(delegate.daysAdded == 1)
             self.backButton.hidden = false;
-        [self updateVisibleMenu];
         CGFloat textWidth = [[self.dayLabel text] sizeWithAttributes:@{NSFontAttributeName:[self.dayLabel font]}].width;
         CGPoint center = self.dayLabel.center;
-        [UIView animateWithDuration:0.5
+        [UIView animateWithDuration:0.3
                               delay:0.0
                             options:UIViewAnimationOptionCurveEaseIn
                          animations:^ {
@@ -224,6 +226,7 @@ AppDelegate *delegate;
                              self.dayLabel.center = CGPointMake(0-(textWidth/2), self.dayLabel.center.y);
                          }
                          completion:^(BOOL finished) {
+                             [self updateVisibleMenu];
                              self.dayLabel.text = [self getTextForCurrentDay];
                              CGFloat newWidth = [[self.dayLabel text] sizeWithAttributes:@{NSFontAttributeName:[self.dayLabel font]}].width;
                              self.dayLabel.center = CGPointMake(320+(newWidth/2), self.dayLabel.center.y);
