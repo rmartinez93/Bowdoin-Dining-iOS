@@ -19,8 +19,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    self.thorneId = 1;
+    self.moultonId = 0;
+    self.daysAdded = 0;
     FirstViewController* mainController = (FirstViewController*) self.window.rootViewController;
-
     UIImageView*imageView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"128.png"]];
     
     [[mainController view] addSubview:imageView];

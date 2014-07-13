@@ -128,8 +128,8 @@
                                     <action selector="indexDidChangeForSegmentedControl:" destination="8rJ-Kc-sve" eventType="valueChanged" id="NPD-Yy-qT4"/>
                                 </connections>
                             </segmentedControl>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" text="Moulton" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="zEq-FU-wV5">
-                                <rect key="frame" x="176" y="60" width="129" height="42"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" text="Today" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="zEq-FU-wV5">
+                                <rect key="frame" x="192" y="60" width="97" height="42"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="36"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -146,14 +146,36 @@
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="dEd-Ib-KVL">
                                 <rect key="frame" x="230" y="230" width="20" height="20"/>
                             </activityIndicatorView>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hEK-yr-9QX">
+                                <rect key="frame" x="95" y="60" width="30" height="42"/>
+                                <state key="normal" title="&lt;">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="backButtonPressed:" destination="8rJ-Kc-sve" eventType="touchUpInside" id="ptS-gS-cZp"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iLI-Sg-Um9">
+                                <rect key="frame" x="356" y="60" width="30" height="42"/>
+                                <state key="normal" title="&gt;">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="forwardButtonPressed:" destination="8rJ-Kc-sve" eventType="touchUpInside" id="BaG-uk-Kkd"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Djb-ko-YwX" firstAttribute="top" secondItem="imo-gB-kTG" secondAttribute="bottom" constant="50" id="8k8-9G-vXJ"/>
                             <constraint firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailing" id="C9p-N0-R4o"/>
+                            <constraint firstItem="vJv-ba-vIU" firstAttribute="trailing" secondItem="iLI-Sg-Um9" secondAttribute="trailing" id="Fm7-2H-h07"/>
                             <constraint firstItem="zEq-FU-wV5" firstAttribute="top" secondItem="QS5-Rx-YEW" secondAttribute="top" constant="60" id="Fsb-Po-eTB"/>
+                            <constraint firstItem="vJv-ba-vIU" firstAttribute="leading" secondItem="hEK-yr-9QX" secondAttribute="leading" id="KC6-C5-M4J"/>
+                            <constraint firstItem="hEK-yr-9QX" firstAttribute="centerY" secondItem="zEq-FU-wV5" secondAttribute="centerY" id="KZy-yN-3yQ"/>
                             <constraint firstAttribute="centerX" secondItem="vJv-ba-vIU" secondAttribute="centerX" id="LLj-zc-b3T"/>
                             <constraint firstAttribute="centerY" secondItem="dEd-Ib-KVL" secondAttribute="centerY" id="NnX-jL-Rt3"/>
+                            <constraint firstItem="iLI-Sg-Um9" firstAttribute="centerY" secondItem="zEq-FU-wV5" secondAttribute="centerY" id="QVR-yw-tsX"/>
                             <constraint firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leading" id="ZQW-8Y-bT4"/>
                             <constraint firstAttribute="top" secondItem="QS5-Rx-YEW" secondAttribute="top" id="dYc-7R-70W"/>
                             <constraint firstItem="imo-gB-kTG" firstAttribute="top" secondItem="zEq-FU-wV5" secondAttribute="bottom" constant="8" symbolic="YES" id="dmj-B6-6dp"/>
@@ -167,6 +189,9 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Moulton" image="second" id="cPa-gy-q4n"/>
                     <connections>
+                        <outlet property="backButton" destination="hEK-yr-9QX" id="gBh-4a-UAl"/>
+                        <outlet property="dayLabel" destination="zEq-FU-wV5" id="nMB-CE-Pok"/>
+                        <outlet property="forwardButton" destination="iLI-Sg-Um9" id="70d-iw-Okg"/>
                         <outlet property="loading" destination="dEd-Ib-KVL" id="Egz-UN-BKo"/>
                         <outlet property="meals" destination="vJv-ba-vIU" id="ScM-HA-HH1"/>
                         <outlet property="menuItems" destination="imo-gB-kTG" id="Loc-Lq-Hf2"/>

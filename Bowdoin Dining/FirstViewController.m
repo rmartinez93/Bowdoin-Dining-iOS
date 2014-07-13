@@ -8,26 +8,30 @@
 #import "FirstViewController.h"
 #import "Menus.h"
 #import "Course.h"
+#import "AppDelegate.h"
 
 @interface FirstViewController ()
 @end
 
 @implementation FirstViewController
-
-NSMutableArray *courses;
-NSInteger day;
-NSInteger month;
-NSInteger year;
-NSInteger offset;
-NSUInteger thorneId = 1;
-NSInteger daysAdded = 0;
+AppDelegate *delegate;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    delegate  = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    if(delegate.daysAdded == 0)
+        self.backButton.hidden = true;
     [self.menuItems setDelegate:self];
-    self.dayLabel.text = [self getTextForCurrentDay];
-    
     self.meals.selectedSegmentIndex = [self segmentIndexOfCurrentMeal: [NSDate date]];
+    delegate.selectedSegment = self.meals.selectedSegmentIndex;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    self.dayLabel.text = [self getTextForCurrentDay];
+    self.meals.selectedSegmentIndex = delegate.selectedSegment;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
     [self updateVisibleMenu];
 }
 
@@ -53,19 +57,19 @@ NSInteger daysAdded = 0;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return courses.count;
+    return delegate.courses.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if(section < courses.count) {
-        Course *thiscourse = [courses objectAtIndex:section];
+    if(section < delegate.courses.count) {
+        Course *thiscourse = [delegate.courses objectAtIndex:section];
         return thiscourse.items.count;
     } else return 0;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if(section < courses.count) {
-        Course *thiscourse = [courses objectAtIndex:section];
+    if(section < delegate.courses.count) {
+        Course *thiscourse = [delegate.courses objectAtIndex:section];
         return thiscourse.courseName;
     } else return @"";
 }
@@ -85,8 +89,8 @@ NSInteger daysAdded = 0;
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:simpleTableIdentifier];
     }
     
-    if(indexPath.section < courses.count && indexPath.row < [courses[indexPath.section] items].count) {
-        Course *thiscourse = [courses objectAtIndex: indexPath.section];
+    if(indexPath.section < delegate.courses.count && indexPath.row < [delegate.courses[indexPath.section] items].count) {
+        Course *thiscourse = [delegate.courses objectAtIndex: indexPath.section];
         cell.textLabel.text = [thiscourse.items objectAtIndex: indexPath.row];
         cell.detailTextLabel.text = [thiscourse.descriptions objectAtIndex: indexPath.row];
         cell.detailTextLabel.textColor = [UIColor lightGrayColor];
@@ -95,39 +99,56 @@ NSInteger daysAdded = 0;
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
-    cell.alpha = 0.3;
+    //1. Setup the CATransform3D structure
+    CATransform3D rotation;
+    rotation = CATransform3DMakeRotation( (90.0*M_PI)/180, 0.0, 0.7, 0.4);
+    rotation.m34 = 1.0/ -600;
     
-    [UIView beginAnimations:@"show" context:NULL];
-    [UIView setAnimationDuration:0.5];
+    
+    //2. Define the initial state (Before the animation)
+    cell.layer.shadowColor = [[UIColor blackColor]CGColor];
+    cell.layer.shadowOffset = CGSizeMake(10, 10);
+    cell.alpha = 0;
+    
+    cell.layer.transform = rotation;
+    cell.layer.anchorPoint = CGPointMake(0, 0.5);
+    
+    
+    //3. Define the final state (After the animation) and commit the animation
+    [UIView beginAnimations:@"rotation" context:NULL];
+    [UIView setAnimationDuration:0.8];
+    cell.layer.transform = CATransform3DIdentity;
     cell.alpha = 1;
+    cell.layer.shadowOffset = CGSizeMake(0, 0);
     [UIView commitAnimations];
 }
 
 - (IBAction)indexDidChangeForSegmentedControl:(UISegmentedControl *)sender {
     if (UISegmentedControlNoSegment != sender.selectedSegmentIndex) {
+        delegate.selectedSegment = self.meals.selectedSegmentIndex;
         [self updateVisibleMenu];
     }
 }
 
 - (void)updateVisibleMenu {
-    NSDate *date = [[NSDate date] dateByAddingTimeInterval:60*60*24*daysAdded];
+    NSDate *date = [[NSDate date] dateByAddingTimeInterval:60*60*24*delegate.daysAdded];
     NSArray *formattedDate = [Menus formatDate: date];
-    day     = [formattedDate[0] integerValue];
-    month   = [formattedDate[1] integerValue];
-    year    = [formattedDate[2] integerValue];
-    offset  = [formattedDate[3] integerValue];
+    delegate.day     = [formattedDate[0] integerValue];
+    delegate.month   = [formattedDate[1] integerValue];
+    delegate.year    = [formattedDate[2] integerValue];
+    delegate.offset  = [formattedDate[3] integerValue];
     
-    NSRange originalRange = NSMakeRange(0, courses.count);
+    NSRange originalRange = NSMakeRange(0, delegate.courses.count);
     [self.menuItems beginUpdates];
     [self.menuItems deleteSections:[NSIndexSet indexSetWithIndexesInRange:originalRange] withRowAnimation:UITableViewRowAnimationRight];
-    [courses removeAllObjects];
+    [delegate.courses removeAllObjects];
     
     [self.meals setUserInteractionEnabled:FALSE];
     [self.loading startAnimating];
     
     dispatch_queue_t downloadQueue = dispatch_queue_create("Download queue", NULL);
     dispatch_async(downloadQueue, ^{
-        NSData *xml = [Menus loadMenuForDay: day Month: month Year: year Offset: offset];
+        NSData *xml = [Menus loadMenuForDay: delegate.day Month: delegate.month Year: delegate.year Offset: delegate.offset];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (xml == nil) {
                 [self.loading stopAnimating];
@@ -139,12 +160,11 @@ NSInteger daysAdded = 0;
                                                         otherButtonTitles:nil];
                 [message show];
             } else {
-                courses = [Menus createMenuFromXML:xml ForMeal:[self.meals selectedSegmentIndex] AtLocation:thorneId];
-                NSRange newRange = NSMakeRange(0, courses.count);
+                delegate.courses = [Menus createMenuFromXML:xml ForMeal:[self.meals selectedSegmentIndex] AtLocation:delegate.thorneId];
+                NSRange newRange = NSMakeRange(0, delegate.courses.count);
                 [self.menuItems insertSections:[NSIndexSet indexSetWithIndexesInRange:newRange] withRowAnimation:UITableViewRowAnimationRight];
                 [self.loading stopAnimating];
                 [self.menuItems endUpdates];
-                [self.menuItems setContentOffset:CGPointZero animated:YES];
                 [self.meals setUserInteractionEnabled:TRUE];
             }
         });
@@ -152,18 +172,18 @@ NSInteger daysAdded = 0;
 }
 
 - (IBAction)backButtonPressed: (UIButton*)sender {
-    if(daysAdded > 0) {
-        daysAdded--;
-        if(daysAdded == 0) {
+    if(delegate.daysAdded > 0) {
+        delegate.daysAdded--;
+        if(delegate.daysAdded == 0) {
             self.backButton.hidden = true;
-        } else if(daysAdded == 5)
+        } else if(delegate.daysAdded == 5)
             self.forwardButton.hidden = false;
         [self updateVisibleMenu];
         CGFloat textWidth = [[self.dayLabel text] sizeWithAttributes:@{NSFontAttributeName:[self.dayLabel font]}].width;
         CGPoint center = self.dayLabel.center;
-        [UIView animateWithDuration:0.2
+        [UIView animateWithDuration:0.5
                               delay:0.0
-                            options:UIViewAnimationCurveEaseInOut
+                            options:UIViewAnimationOptionCurveEaseIn
                          animations:^ {
                              self.dayLabel.alpha = 0.0;
                              self.dayLabel.center = CGPointMake(320+(textWidth/2), self.dayLabel.center.y);
@@ -174,7 +194,7 @@ NSInteger daysAdded = 0;
                              self.dayLabel.center = CGPointMake(0-(newWidth/2), self.dayLabel.center.y);
                              [UIView animateWithDuration:0.2
                                                    delay:0.0
-                                                 options:UIViewAnimationCurveEaseInOut
+                                                 options:UIViewAnimationOptionCurveEaseIn
                                               animations:^ {
                                                   self.dayLabel.center = center;
                                                   self.dayLabel.alpha = 1.0;
@@ -187,18 +207,18 @@ NSInteger daysAdded = 0;
 }
 
 - (IBAction)forwardButtonPressed:(UIButton*)sender {
-    if(daysAdded < 6) {
-        daysAdded++;
-        if(daysAdded == 6) {
+    if(delegate.daysAdded < 6) {
+        delegate.daysAdded++;
+        if(delegate.daysAdded == 6) {
             self.forwardButton.hidden = true;
-        } else if(daysAdded == 1)
+        } else if(delegate.daysAdded == 1)
             self.backButton.hidden = false;
         [self updateVisibleMenu];
         CGFloat textWidth = [[self.dayLabel text] sizeWithAttributes:@{NSFontAttributeName:[self.dayLabel font]}].width;
         CGPoint center = self.dayLabel.center;
-        [UIView animateWithDuration:0.2
+        [UIView animateWithDuration:0.5
                               delay:0.0
-                            options:UIViewAnimationCurveEaseInOut
+                            options:UIViewAnimationOptionCurveEaseIn
                          animations:^ {
                              self.dayLabel.alpha = 0.0;
                              self.dayLabel.center = CGPointMake(0-(textWidth/2), self.dayLabel.center.y);
@@ -209,7 +229,7 @@ NSInteger daysAdded = 0;
                              self.dayLabel.center = CGPointMake(320+(newWidth/2), self.dayLabel.center.y);
                              [UIView animateWithDuration:0.2
                                                    delay:0.0
-                                                 options:UIViewAnimationCurveEaseInOut
+                                                 options:UIViewAnimationOptionCurveEaseIn
                                               animations:^ {
                                                   self.dayLabel.center = center;
                                                   self.dayLabel.alpha = 1.0;
@@ -222,7 +242,7 @@ NSInteger daysAdded = 0;
 }
 
 - (NSString *)getTextForCurrentDay {
-    NSDate *newDate = [[NSDate date] dateByAddingTimeInterval:60*60*24*daysAdded];
+    NSDate *newDate = [[NSDate date] dateByAddingTimeInterval:60*60*24*delegate.daysAdded];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"EEEE"];
     return [dateFormatter stringFromDate:newDate];
@@ -231,5 +251,6 @@ NSInteger daysAdded = 0;
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
+
 
 @end

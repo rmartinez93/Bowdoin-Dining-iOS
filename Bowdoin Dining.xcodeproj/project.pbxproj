@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		4507E6CC1971B289000628DE /* 128.png in Resources */ = {isa = PBXBuildFile; fileRef = 4507E6CB1971B289000628DE /* 128.png */; };
+		4507E70419726E3A000628DE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4507E70119726E3A000628DE /* CoreGraphics.framework */; };
+		4507E70519726E3A000628DE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4507E70219726E3A000628DE /* Foundation.framework */; };
+		4507E70619726E3A000628DE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4507E70319726E3A000628DE /* UIKit.framework */; };
 		451C9E6A1970A229006007AE /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 451C9E691970A229006007AE /* GDataXMLNode.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4530A1001970CE75000CCBCC /* Course.m in Sources */ = {isa = PBXBuildFile; fileRef = 4530A0FF1970CE75000CCBCC /* Course.m */; };
 		4530A1051970DD31000CCBCC /* Menus.m in Sources */ = {isa = PBXBuildFile; fileRef = 4530A1041970DD31000CCBCC /* Menus.m */; };
@@ -32,6 +35,9 @@
 
 /* Begin PBXFileReference section */
 		4507E6CB1971B289000628DE /* 128.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 128.png; path = "Bowdoin Dining/128.png"; sourceTree = "<group>"; };
+		4507E70119726E3A000628DE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		4507E70219726E3A000628DE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		4507E70319726E3A000628DE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		451C9E681970A229006007AE /* GDataXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDataXMLNode.h; sourceTree = "<group>"; };
 		451C9E691970A229006007AE /* GDataXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDataXMLNode.m; sourceTree = "<group>"; };
 		4530A0FF1970CE75000CCBCC /* Course.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Course.m; sourceTree = "<group>"; };
@@ -59,6 +65,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4507E70419726E3A000628DE /* CoreGraphics.framework in Frameworks */,
+				4507E70519726E3A000628DE /* Foundation.framework in Frameworks */,
+				4507E70619726E3A000628DE /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,9 +81,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4507E70719726E53000628DE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4507E70119726E3A000628DE /* CoreGraphics.framework */,
+				4507E70219726E3A000628DE /* Foundation.framework */,
+				4507E70319726E3A000628DE /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		45AAB57F1970636E0078A7F9 = {
 			isa = PBXGroup;
 			children = (
+				4507E70719726E53000628DE /* Frameworks */,
 				45AAB58A1970636E0078A7F9 /* Bowdoin Dining */,
 				45AAB5A41970636F0078A7F9 /* Bowdoin DiningTests */,
 				45AAB5891970636E0078A7F9 /* Products */,

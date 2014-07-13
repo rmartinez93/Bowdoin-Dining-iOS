@@ -8,9 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SecondViewController : UIViewController
-@property (weak, nonatomic) IBOutlet UISegmentedControl *meals;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loading;
+@interface SecondViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *menuItems;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loading;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *meals;
+@property (weak, nonatomic) IBOutlet UILabel *dayLabel;
+@property (weak, nonatomic) IBOutlet UIButton *backButton;
+@property (weak, nonatomic) IBOutlet UIButton *forwardButton;
 - (IBAction)indexDidChangeForSegmentedControl: sender;
+- (IBAction)backButtonPressed: sender;
+- (IBAction)forwardButtonPressed: sender;
 @end
