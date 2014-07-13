@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import "FirstViewController.h"
 
 @interface AppDelegate ()
             
@@ -22,17 +21,6 @@
     self.thorneId = 1;
     self.moultonId = 0;
     self.daysAdded = 0;
-    FirstViewController* mainController = (FirstViewController*) self.window.rootViewController;
-    UIImageView*imageView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"128.png"]];
-    
-    [[mainController view] addSubview:imageView];
-    [[mainController view] bringSubviewToFront:imageView];
-    
-    // as usual
-    [self.window makeKeyAndVisible];
-    
-    //now fade out splash image
-    [UIView transitionWithView:self.window duration:1.0f options:UIViewAnimationOptionTransitionNone animations:^(void){imageView.alpha=0.0f;} completion:^(BOOL finished){[imageView removeFromSuperview];}];
     
     return YES;
 }
