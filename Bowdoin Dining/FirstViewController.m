@@ -22,6 +22,7 @@ AppDelegate *delegate;
     [self.menuItems setDelegate:self];
     self.meals.selectedSegmentIndex = [self segmentIndexOfCurrentMeal: [NSDate date]];
     delegate.selectedSegment = self.meals.selectedSegmentIndex;
+    [self.tabBarController.tabBar setBarStyle:UIBarStyleBlack];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -101,6 +102,9 @@ AppDelegate *delegate;
         if([Course.allFavoritedItems containsObject: (NSString *)thiscourse.itemIds[indexPath.row]]) {
             cell.backgroundColor = [UIColor colorWithRed:1 green:0.84 blue:0 alpha:1];
         } else cell.backgroundColor = [UIColor whiteColor];
+        
+        cell.textLabel.numberOfLines = 0;
+        [cell.textLabel sizeToFit];
     }
     return cell;
 }

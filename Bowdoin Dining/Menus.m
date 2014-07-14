@@ -111,16 +111,22 @@ NSString *serverURL = @"http://www.bowdoin.edu/atreus/lib/xml/";
             
             GDataXMLElement *item_name = [[item elementsForName:@"item_name"] firstObject];
             GDataXMLElement *item_id = [[item elementsForName:@"itemID"] firstObject];
-            NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\(+(GF|VE|V|L)+[A-Z ]*\\)" options:0 error:&error];
+            NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\b(GF|VE|V|L)\\b" options:0 error:&error];
             NSArray *specials  = [regex matchesInString:item_name.stringValue options:0 range:NSMakeRange(0, [item_name.stringValue length])];
-            
+
             NSString *detail = @"";
             if(specials.count) {
-                NSTextCheckingResult *special = (NSTextCheckingResult *) [specials firstObject];
-                detail = [item_name.stringValue substringWithRange: special.range];
+                for(int i = 0; i < specials.count; i++) {
+                    NSTextCheckingResult *special = (NSTextCheckingResult *) [specials objectAtIndex:i];
+                    detail = [[detail stringByAppendingString:[[item_name.stringValue substringWithRange: special.range] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]]] stringByAppendingString:@" "];
+                }
             }
             
-            NSString *cleaned = [regex stringByReplacingMatchesInString:item_name.stringValue options:0 range:NSMakeRange(0, [item_name.stringValue length]) withTemplate:@""];
+            NSString *cleaned = [[[regex stringByReplacingMatchesInString:item_name.stringValue
+                                        options:0
+                                        range:NSMakeRange(0, [item_name.stringValue length]) withTemplate:@""]
+                                        stringByReplacingOccurrencesOfString:@"(" withString:@""]
+                                        stringByReplacingOccurrencesOfString:@")" withString:@""];
             
             if(coursePosition >= 0) {
                 Course *thiscourse = courses[coursePosition];
