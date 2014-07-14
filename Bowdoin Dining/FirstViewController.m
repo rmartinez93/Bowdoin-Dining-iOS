@@ -280,6 +280,7 @@ AppDelegate *delegate;
         //if we're no longer on the last day, show forward button
         else if(delegate.daysAdded == 5)
             self.forwardButton.hidden = false;
+        
         //update menu to new current day
         [self updateVisibleMenu];
         
@@ -315,23 +316,32 @@ AppDelegate *delegate;
 }
 
 - (IBAction)forwardButtonPressed:(UIButton*)sender {
+    //if we're NOT on the last day, allow action
     if(delegate.daysAdded < 6) {
-        delegate.daysAdded++;
-        if(delegate.daysAdded == 6) {
+        delegate.daysAdded++; //increment days added
+        //if we're now on the last day, hide forward button
+        if(delegate.daysAdded == 6)
             self.forwardButton.hidden = true;
-        } else if(delegate.daysAdded == 1)
+        //if we're no longer on the first day, show forward button
+        else if(delegate.daysAdded == 1)
             self.backButton.hidden = false;
+        
+        //update menu to current day
+        [self updateVisibleMenu];
+        
+        //begin animating day text by storing current width and position (reverses above)
         CGFloat textWidth = [[self.dayLabel text] sizeWithAttributes:@{NSFontAttributeName:[self.dayLabel font]}].width;
         CGPoint center = self.dayLabel.center;
         [UIView animateWithDuration:0.3
                               delay:0.0
                             options:UIViewAnimationOptionCurveEaseIn
                          animations:^ {
+                             //at end of animation, make text off-screen and invisible
                              self.dayLabel.alpha = 0.0;
                              self.dayLabel.center = CGPointMake(0-(textWidth/2), self.dayLabel.center.y);
                          }
                          completion:^(BOOL finished) {
-                             [self updateVisibleMenu];
+                             //when done, change text to new day and begin animate in
                              self.dayLabel.text = [self getTextForCurrentDay];
                              CGFloat newWidth = [[self.dayLabel text] sizeWithAttributes:@{NSFontAttributeName:[self.dayLabel font]}].width;
                              self.dayLabel.center = CGPointMake(320+(newWidth/2), self.dayLabel.center.y);
@@ -339,6 +349,7 @@ AppDelegate *delegate;
                                                    delay:0.0
                                                  options:UIViewAnimationOptionCurveEaseIn
                                               animations:^ {
+                                                  //at end of animation, be centered and fully visible
                                                   self.dayLabel.center = center;
                                                   self.dayLabel.alpha = 1.0;
                                               }
