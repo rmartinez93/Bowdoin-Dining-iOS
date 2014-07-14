@@ -103,24 +103,28 @@ NSString *serverURL = @"http://www.bowdoin.edu/atreus/lib/xml/";
     }
 }
 
+//creates a Menu (NSMutableArray*) from an NSData* XML file for a given meal/location and filters
 + (NSMutableArray *)createMenuFromXML:(NSData *) xmlData ForMeal: (NSUInteger) mealId AtLocation: (NSUInteger) locationId withFilters: (NSMutableArray *) filters {
     NSError *error;
+    //Create Google XML parsing object from NSData, grab "<meal>"s below root
     GDataXMLDocument *doc = [[GDataXMLDocument alloc] initWithData:xmlData options:0 error:&error];
-    
     GDataXMLElement *root = doc.rootElement;
-    
     NSArray *meals = [root elementsForName:@"meal"];
     GDataXMLElement *meal = [meals objectAtIndex: mealId];
     
+    //each meal has two units (locations), create an XML Element for this locationId's menu
     NSArray *units = [meal elementsForName:@"unit"];
     GDataXMLElement *unit = [units objectAtIndex: locationId];
-    
     GDataXMLElement *menu = [[unit elementsForName: @"menu"] firstObject];
     
+    //create array for records (menu items), initialize array of courses (a menu item attribute)
     NSArray *menuItems = [menu elementsForName: @"record"];
     NSMutableArray *courses = [[NSMutableArray alloc] init];
+    
+    //if there are menu items available, loop through them
     if(menuItems.count > 0) {
         for(GDataXMLElement *item in menuItems) {
+            //determine course for this item and check if it already exists in our courses array
             GDataXMLElement *courseObject = (GDataXMLElement *) [[item elementsForName: @"course"] firstObject];
             NSInteger coursePosition = -1;
             for(int i = 0; i < courses.count; i++) {
@@ -129,13 +133,17 @@ NSString *serverURL = @"http://www.bowdoin.edu/atreus/lib/xml/";
                     coursePosition = i;
             }
             
+            //grab information about this menu item: name & id
             GDataXMLElement *item_name = [[item elementsForName:@"formal_name"] firstObject];
             GDataXMLElement *item_id = [[item elementsForName:@"itemID"] firstObject];
+            
+            //create regex for removing diet attributes from item name, find matches in string
             NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\b(GF|VE|V|L)\\b" options:0 error:&error];
             NSArray *details  = [regex matchesInString:item_name.stringValue options:0 range:NSMakeRange(0, [item_name.stringValue length])];
-
+            
+            //store returned attributes into string for presentation
             NSString *detail = @"";
-            if(details.count) {
+            if(details.count) { //if there were matches, loop through them and add them to string
                 for(int i = 0; i < details.count; i++) {
                     NSTextCheckingResult *special = (NSTextCheckingResult *) [details objectAtIndex:i];
                     detail = [[detail stringByAppendingString: [[item_name.stringValue
@@ -145,24 +153,30 @@ NSString *serverURL = @"http://www.bowdoin.edu/atreus/lib/xml/";
                 }
             }
             
-            NSArray *attributes = [detail componentsSeparatedByString:@" "];
-            
+            //replace matches with empty space
             NSString *cleaned = [[[regex stringByReplacingMatchesInString:item_name.stringValue
                                         options:0
                                         range:NSMakeRange(0, [item_name.stringValue length]) withTemplate:@""]
                                         stringByReplacingOccurrencesOfString:@"(" withString:@""]
                                         stringByReplacingOccurrencesOfString:@")" withString:@""];
             
+            //break up string of diet attributes in array for filtering
+            NSArray *attributes = [detail componentsSeparatedByString:@" "];
+            
+            //check if diet attributes match our filter
             NSMutableSet *overlap = [NSMutableSet setWithArray:filters];
             [overlap intersectSet:[NSSet setWithArray:attributes]];
             
+            //if there is no active filter, or this item passes our filter
             if(!filters.count || [overlap allObjects].count) {
+                //if course exists in our array
                 if(coursePosition >= 0) {
+                    //grab a copy of it, and and add this item to the course
                     Course *thiscourse = courses[coursePosition];
                     [thiscourse.items addObject: cleaned];
                     [thiscourse.itemIds addObject: item_id.stringValue];
                     [thiscourse.descriptions addObject: detail];
-                } else {
+                } else { //new course, create it and add item to it
                     Course *thiscourse = [[Course alloc] init];
                     thiscourse.courseName = courseObject.stringValue;
                     thiscourse.items = [[NSMutableArray alloc] init];
@@ -175,14 +189,16 @@ NSString *serverURL = @"http://www.bowdoin.edu/atreus/lib/xml/";
                 }
             }
         }
-    } else {
+    }
+    //no menu items available, add error item to courses array
+    else {
         Course *closed = [[Course alloc] init];
         closed.courseName = @"";
         closed.items = [[NSMutableArray alloc] init];
         [closed.items addObject: @"No Menu Available."];
         [courses addObject: closed];
     }
-    return courses;
+    return courses; //return array of courses
 }
 
 @end

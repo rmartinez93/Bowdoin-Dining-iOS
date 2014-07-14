@@ -14,6 +14,7 @@
 
 @implementation Course
 
+//array of all favorited items grabbed from our favorites file
 + (NSMutableArray *) allFavoritedItems {
     NSString *documentFolder = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     NSString *filePath = [documentFolder stringByAppendingFormat:@"/favorites.plist"];
@@ -24,6 +25,7 @@
     return favoritedItems;
 }
 
+//add this item to the array of our favorited items and update plist
 + (void) addToFavoritedItems:(NSString *)item_id_string {
     NSMutableArray *favoritedItems = [Course allFavoritedItems];
     [favoritedItems addObject: item_id_string];
@@ -35,6 +37,7 @@
     [array writeToFile:filePath atomically:YES];
 }
 
+//remove this item from the array of our favorited items and update plist
 + (void) removeFromFavoritedItems:(NSString *)item_id_string {
     NSMutableArray *favoritedItems = [Course allFavoritedItems];
     [favoritedItems removeObject: item_id_string];

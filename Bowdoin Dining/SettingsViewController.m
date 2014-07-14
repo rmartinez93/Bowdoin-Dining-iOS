@@ -24,7 +24,10 @@ AppDelegate *delegate;
 - (void)viewWillAppear:(BOOL)animated {
     
 }
+
+//user selected a filter (or turnd off)
 - (IBAction)indexDidChangeForSegmentedControl: (UISegmentedControl *) sender {
+    //remove all active filters, add a new one if selected
     [delegate.filters removeAllObjects];
     switch(sender.selectedSegmentIndex) {
         case 0:
@@ -39,6 +42,8 @@ AppDelegate *delegate;
             break;
         case 3:
             [delegate.filters addObject: @"L"];
+            break;
+        default:
             break;
     }
 
