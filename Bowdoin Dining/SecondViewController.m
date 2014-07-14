@@ -170,6 +170,7 @@ AppDelegate *delegate;
                 [self.menuItems insertSections:[NSIndexSet indexSetWithIndexesInRange:newRange] withRowAnimation:UITableViewRowAnimationRight];
                 [self.loading stopAnimating];
                 [self.menuItems endUpdates];
+                [self.menuItems setContentOffset:CGPointZero animated:YES];
                 [self.meals setUserInteractionEnabled:TRUE];
             }
         });
