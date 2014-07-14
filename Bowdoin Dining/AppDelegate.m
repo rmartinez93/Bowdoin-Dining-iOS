@@ -18,6 +18,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    //initialize base settings
     self.filters = [[NSMutableArray alloc] init];
     self.thorneId = 1;
     self.moultonId = 0;

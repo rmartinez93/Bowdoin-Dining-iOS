@@ -13,32 +13,51 @@
 @interface FirstViewController ()
 @end
 
+//Thorne View Controller
 @implementation FirstViewController
 AppDelegate *delegate;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    //assign app delegate as delegate
     delegate  = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    //handle UITableView display
     [self.menuItems setDelegate:self];
+    
+    //set selected segment to current meal on launch
     self.meals.selectedSegmentIndex = [self segmentIndexOfCurrentMeal: [NSDate date]];
+    
+    //share selected segment between Moulton/Thorne
     delegate.selectedSegment = self.meals.selectedSegmentIndex;
+    
+    //style
     [self.tabBarController.tabBar setBarStyle:UIBarStyleBlack];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    //set the text label to day we're browsing
     self.dayLabel.text = [self getTextForCurrentDay];
+    
+    //update selected segment in case changed elsewhere
     self.meals.selectedSegmentIndex = delegate.selectedSegment;
+    
+    //if day is today, hide the back button
     if(delegate.daysAdded == 0) {
         self.backButton.hidden = true;
-    } else if(delegate.daysAdded == 6) {
+    }
+    //if day is a week from now, hide forward button
+    else if(delegate.daysAdded == 6) {
         self.forwardButton.hidden = true;
     }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+    //load menu based on delegate settings
     [self updateVisibleMenu];
 }
 
+//calculates which meal should be selected based on an NSDate
 - (NSInteger)segmentIndexOfCurrentMeal:(NSDate *)now {
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     [calendar setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en-US"]];
@@ -60,55 +79,65 @@ AppDelegate *delegate;
     return 0;
 }
 
+//UITableView delegate method, returns number of sections/courses in loaded menu
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return delegate.courses.count;
 }
 
+//UITableView delegate method, returns number of rows/meal items in a given section/course
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    //if this is a valid section, return number of menu items in section
     if(section < delegate.courses.count) {
         Course *thiscourse = [delegate.courses objectAtIndex:section];
         return thiscourse.items.count;
     } else return 0;
 }
 
+//UITableView delegate method, returns name of section/course
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    //if this is a valid section, return name of course, else there's no title
     if(section < delegate.courses.count) {
         Course *thiscourse = [delegate.courses objectAtIndex:section];
         return thiscourse.courseName;
     } else return @"";
 }
 
+//UITableView delegate method, sets section header styles
 - (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
+    //set style to light gray with dark blue text
     UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
     [header.textLabel setTextColor:[UIColor colorWithRed:0 green:0.4 blue:0.8 alpha:1]];
     header.contentView.backgroundColor = [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1];
 }
 
+//UITableView delegate method, sets settings for cell/menu item to be displayed at a given section->row
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *simpleTableIdentifier = @"SimpleTableCell";
-    
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
-    
-    if (cell == nil) {
+    if (!cell)
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:simpleTableIdentifier];
-    }
     
+    //if this is a valid section->row, grab right menu item from course and set cell properties
     if(indexPath.section < delegate.courses.count && indexPath.row < [delegate.courses[indexPath.section] items].count) {
         Course *thiscourse = [delegate.courses objectAtIndex: indexPath.section];
         cell.textLabel.text = [thiscourse.items objectAtIndex: indexPath.row];
         cell.detailTextLabel.text = [thiscourse.descriptions objectAtIndex: indexPath.row];
-        cell.detailTextLabel.textColor = [UIColor lightGrayColor];
         
+        //style
+        cell.detailTextLabel.textColor = [UIColor lightGrayColor];
+        //if favorited, make item gold, else white background
         if([Course.allFavoritedItems containsObject: (NSString *)thiscourse.itemIds[indexPath.row]]) {
             cell.backgroundColor = [UIColor colorWithRed:1 green:0.84 blue:0 alpha:1];
         } else cell.backgroundColor = [UIColor whiteColor];
         
+        //if text is too long, make cell taller
         cell.textLabel.numberOfLines = 0;
         [cell.textLabel sizeToFit];
     }
     return cell;
 }
 
+//UITableView delegate method, creates animation when displaying cell
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
     //1. Setup the CATransform3D structure
     CATransform3D rotation;
@@ -132,14 +161,61 @@ AppDelegate *delegate;
     [UIView commitAnimations];
 }
 
+//UITableView delegate method, what to do after side-swiping cell
+- (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+    //first, load in menu course this cell belongs to
+    Course *course = [delegate.courses objectAtIndex:indexPath.section];
+    //if this cell is NOT favorited, show favoriting action
+    if(![Course.allFavoritedItems containsObject: (NSString *) course.itemIds[indexPath.row]]) {
+        //create favoriting action
+        UITableViewRowAction *faveAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Favorite" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+            //if item is favorited, save it to our centralized list of favorited items
+            [Course addToFavoritedItems: [course.itemIds objectAtIndex:indexPath.row]];
+            
+            //update styling of cell
+            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+            cell.backgroundColor = [UIColor colorWithRed:1 green:0.84 blue:0 alpha:1];
+            [tableView setEditing:NO];
+        }];
+        //style of action
+        faveAction.backgroundColor = [UIColor colorWithRed:1 green:0.84 blue:0 alpha:1];
+        return @[faveAction];
+    }
+    //otherwise if this cell is favorited, show un-favoriting action
+    else {
+        //create unfavoriting action
+        UITableViewRowAction *unfaveAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Remove" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+            //if item is unfavorited, remove it from our centralized list of favorited items
+            [Course removeFromFavoritedItems: [course.itemIds objectAtIndex:indexPath.row]];
+            
+            //update styling of cell
+            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+            cell.backgroundColor = [UIColor whiteColor];
+            [tableView setEditing:NO];
+        }];
+        //style of action
+        unfaveAction.backgroundColor = [UIColor lightGrayColor];
+        return @[unfaveAction];
+    }
+}
+
+//UITableView delegate method, needed because of bug in iOS 8 for now
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    // No statement or algorithm is needed in here. Just the implementation
+}
+
+//user selected a different meal
 - (IBAction)indexDidChangeForSegmentedControl:(UISegmentedControl *)sender {
+    //if this was a valid selection, update our delegate and update the menu
     if (UISegmentedControlNoSegment != sender.selectedSegmentIndex) {
         delegate.selectedSegment = self.meals.selectedSegmentIndex;
         [self updateVisibleMenu];
     }
 }
 
+//handles all logic related to updating the tableView with new menu items
 - (void)updateVisibleMenu {
+    //creates date based on days added to current day, saves to delegate
     NSDate *date = [[NSDate date] dateByAddingTimeInterval:60*60*24*delegate.daysAdded];
     NSArray *formattedDate = [Menus formatDate: date];
     delegate.day     = [formattedDate[0] integerValue];
@@ -147,19 +223,25 @@ AppDelegate *delegate;
     delegate.year    = [formattedDate[2] integerValue];
     delegate.offset  = [formattedDate[3] integerValue];
     
+    //firstly, remove everything from the UITableView
     NSRange originalRange = NSMakeRange(0, delegate.courses.count);
     [self.menuItems beginUpdates];
     [self.menuItems deleteSections:[NSIndexSet indexSetWithIndexesInRange:originalRange] withRowAnimation:UITableViewRowAnimationRight];
     [delegate.courses removeAllObjects];
     
+    //disable user interaction on segmented control and begin loading indicator
     [self.meals setUserInteractionEnabled:FALSE];
     [self.loading startAnimating];
     
+    //create a new thread...
     dispatch_queue_t downloadQueue = dispatch_queue_create("Download queue", NULL);
     dispatch_async(downloadQueue, ^{
+        //in new thread, load menu for this day
         NSData *xml = [Menus loadMenuForDay: delegate.day Month: delegate.month Year: delegate.year Offset: delegate.offset];
+        //go back to main thread
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (xml == nil) {
+            //if the response was nil, handle
+            if (!xml) {
                 [self.loading stopAnimating];
                 [self.menuItems reloadData];
                 UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Network Error"
@@ -168,10 +250,16 @@ AppDelegate *delegate;
                                                         cancelButtonTitle:@"OK"
                                                         otherButtonTitles:nil];
                 [message show];
-            } else {
+            }
+            //else we successfully loaded XML!
+            else {
+                //create a menu from this data and save it to delegate
                 delegate.courses = [Menus createMenuFromXML:xml ForMeal:[self.meals selectedSegmentIndex] AtLocation:delegate.thorneId withFilters: delegate.filters];
+                //insert new menu items to UITableView
                 NSRange newRange = NSMakeRange(0, delegate.courses.count);
                 [self.menuItems insertSections:[NSIndexSet indexSetWithIndexesInRange:newRange] withRowAnimation:UITableViewRowAnimationRight];
+                
+                //stop loading indicator, end updates to UITableView, scroll to top and reenable user interaction
                 [self.loading stopAnimating];
                 [self.menuItems endUpdates];
                 [self.menuItems setContentOffset:CGPointZero animated:YES];
@@ -181,52 +269,33 @@ AppDelegate *delegate;
     });
 }
 
-- (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
-    Course *course = [delegate.courses objectAtIndex:indexPath.section];
-    if(![Course.allFavoritedItems containsObject: (NSString *) course.itemIds[indexPath.row]]) {
-        UITableViewRowAction *faveAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Favorite" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
-            [Course addToFavoritedItems: [course.itemIds objectAtIndex:indexPath.row]];
-            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            cell.backgroundColor = [UIColor colorWithRed:1 green:0.84 blue:0 alpha:1];
-            [tableView setEditing:NO];
-        }];
-        faveAction.backgroundColor = [UIColor colorWithRed:1 green:0.84 blue:0 alpha:1];
-        return @[faveAction];
-    } else {
-        UITableViewRowAction *unfaveAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Remove" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
-            [Course removeFromFavoritedItems: [course.itemIds objectAtIndex:indexPath.row]];
-            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            cell.backgroundColor = [UIColor whiteColor];
-            [tableView setEditing:NO];
-        }];
-        unfaveAction.backgroundColor = [UIColor lightGrayColor];
-        return @[unfaveAction];
-    }
-    
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    // No statement or algorithm is needed in here. Just the implementation
-}
-
+//user pressed back button
 - (IBAction)backButtonPressed: (UIButton*)sender {
+    //if we're NOT on the current day, allow action
     if(delegate.daysAdded > 0) {
-        delegate.daysAdded--;
-        if(delegate.daysAdded == 0) {
+        delegate.daysAdded--; //decrement days added
+        //if we're now on the current day, hide back button
+        if(delegate.daysAdded == 0)
             self.backButton.hidden = true;
-        } else if(delegate.daysAdded == 5)
+        //if we're no longer on the last day, show forward button
+        else if(delegate.daysAdded == 5)
             self.forwardButton.hidden = false;
+        //update menu to new current day
         [self updateVisibleMenu];
+        
+        //begin animating day text by storing current width and position
         CGFloat textWidth = [[self.dayLabel text] sizeWithAttributes:@{NSFontAttributeName:[self.dayLabel font]}].width;
         CGPoint center = self.dayLabel.center;
         [UIView animateWithDuration:0.5
                               delay:0.0
                             options:UIViewAnimationOptionCurveEaseIn
                          animations:^ {
+                             //at end of animation, make text off-screen and invisible
                              self.dayLabel.alpha = 0.0;
                              self.dayLabel.center = CGPointMake(320+(textWidth/2), self.dayLabel.center.y);
                          }
                          completion:^(BOOL finished) {
+                             //when done, change text to new day and begin animate in
                              self.dayLabel.text = [self getTextForCurrentDay];
                              CGFloat newWidth = [[self.dayLabel text] sizeWithAttributes:@{NSFontAttributeName:[self.dayLabel font]}].width;
                              self.dayLabel.center = CGPointMake(0-(newWidth/2), self.dayLabel.center.y);
@@ -234,6 +303,7 @@ AppDelegate *delegate;
                                                    delay:0.0
                                                  options:UIViewAnimationOptionCurveEaseIn
                                               animations:^ {
+                                                  //at end of animation, be centered and fully visible
                                                   self.dayLabel.center = center;
                                                   self.dayLabel.alpha = 1.0;
                                               }
@@ -279,10 +349,12 @@ AppDelegate *delegate;
     }
 }
 
+//detects swipe...to be removed
 - (IBAction)sideSwipe:(UISwipeGestureRecognizer *)sender {
     NSLog(@"Swipe detected");
 }
 
+//wordifies whatever day we're currently browsing
 - (NSString *)getTextForCurrentDay {
     NSDate *newDate = [[NSDate date] dateByAddingTimeInterval:60*60*24*delegate.daysAdded];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
