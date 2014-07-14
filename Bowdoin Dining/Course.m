@@ -15,7 +15,6 @@
 @implementation Course
 
 + (NSMutableArray *) allFavoritedItems {
-
     NSString *documentFolder = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     NSString *filePath = [documentFolder stringByAppendingFormat:@"/favorites.plist"];
     NSMutableArray *favoritedItems;

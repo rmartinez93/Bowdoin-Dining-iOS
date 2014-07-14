@@ -18,10 +18,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    self.filters = [[NSMutableArray alloc] init];
     self.thorneId = 1;
     self.moultonId = 0;
     self.daysAdded = 0;
-    
     return YES;
 }
 

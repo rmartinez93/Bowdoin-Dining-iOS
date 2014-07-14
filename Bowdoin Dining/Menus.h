@@ -13,6 +13,6 @@
 }
 + (NSMutableArray *)formatDate: (NSDate *) todayDate;
 + (NSData *)loadMenuForDay: (NSInteger) day Month: (NSInteger) month Year: (NSInteger) year Offset: (NSInteger) offset;
-+ (NSMutableArray *)createMenuFromXML:(NSData *) xmlData ForMeal: (NSUInteger) mealId AtLocation: (NSUInteger) locationId;
++ (NSMutableArray *)createMenuFromXML:(NSData *) xmlData ForMeal: (NSUInteger) mealId AtLocation: (NSUInteger) locationId withFilters: (NSMutableArray *) filters;
 
 @end

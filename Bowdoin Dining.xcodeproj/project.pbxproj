@@ -13,6 +13,7 @@
 		4507E70619726E3A000628DE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4507E70319726E3A000628DE /* UIKit.framework */; };
 		451C9E6A1970A229006007AE /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 451C9E691970A229006007AE /* GDataXMLNode.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4523D4B819734503002426C1 /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 4523D4B719734503002426C1 /* splash.png */; };
+		4523D4BA19738CE2002426C1 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4523D4B919738CE2002426C1 /* SettingsViewController.m */; };
 		4530A1001970CE75000CCBCC /* Course.m in Sources */ = {isa = PBXBuildFile; fileRef = 4530A0FF1970CE75000CCBCC /* Course.m */; };
 		4530A1051970DD31000CCBCC /* Menus.m in Sources */ = {isa = PBXBuildFile; fileRef = 4530A1041970DD31000CCBCC /* Menus.m */; };
 		45AAB58E1970636E0078A7F9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 45AAB58D1970636E0078A7F9 /* main.m */; };
@@ -43,6 +44,8 @@
 		451C9E681970A229006007AE /* GDataXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDataXMLNode.h; sourceTree = "<group>"; };
 		451C9E691970A229006007AE /* GDataXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDataXMLNode.m; sourceTree = "<group>"; };
 		4523D4B719734503002426C1 /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash.png; sourceTree = "<group>"; };
+		4523D4B919738CE2002426C1 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		4523D4BB19738CF3002426C1 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		4530A0FF1970CE75000CCBCC /* Course.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Course.m; sourceTree = "<group>"; };
 		4530A1021970CED9000CCBCC /* Course.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Course.h; sourceTree = "<group>"; };
 		4530A1031970DD26000CCBCC /* Menus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Menus.h; sourceTree = "<group>"; };
@@ -133,6 +136,8 @@
 				45AAB5951970636E0078A7F9 /* SecondViewController.h */,
 				45AAB5961970636E0078A7F9 /* SecondViewController.m */,
 				45AAB5981970636E0078A7F9 /* Main.storyboard */,
+				4523D4B919738CE2002426C1 /* SettingsViewController.m */,
+				4523D4BB19738CF3002426C1 /* SettingsViewController.h */,
 				45AAB59B1970636E0078A7F9 /* Images.xcassets */,
 				4523D4B719734503002426C1 /* splash.png */,
 				45AAB58B1970636E0078A7F9 /* Supporting Files */,
@@ -270,6 +275,7 @@
 				45AAB5971970636E0078A7F9 /* SecondViewController.m in Sources */,
 				45AAB5911970636E0078A7F9 /* AppDelegate.m in Sources */,
 				451C9E6A1970A229006007AE /* GDataXMLNode.m in Sources */,
+				4523D4BA19738CE2002426C1 /* SettingsViewController.m in Sources */,
 				4530A1051970DD31000CCBCC /* Menus.m in Sources */,
 				45AAB5941970636E0078A7F9 /* FirstViewController.m in Sources */,
 				4530A1001970CE75000CCBCC /* Course.m in Sources */,

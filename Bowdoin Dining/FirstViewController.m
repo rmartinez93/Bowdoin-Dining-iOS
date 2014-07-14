@@ -169,7 +169,7 @@ AppDelegate *delegate;
                                                         otherButtonTitles:nil];
                 [message show];
             } else {
-                delegate.courses = [Menus createMenuFromXML:xml ForMeal:[self.meals selectedSegmentIndex] AtLocation:delegate.thorneId];
+                delegate.courses = [Menus createMenuFromXML:xml ForMeal:[self.meals selectedSegmentIndex] AtLocation:delegate.thorneId withFilters: delegate.filters];
                 NSRange newRange = NSMakeRange(0, delegate.courses.count);
                 [self.menuItems insertSections:[NSIndexSet indexSetWithIndexesInRange:newRange] withRowAnimation:UITableViewRowAnimationRight];
                 [self.loading stopAnimating];
@@ -279,6 +279,10 @@ AppDelegate *delegate;
     }
 }
 
+- (IBAction)sideSwipe:(UISwipeGestureRecognizer *)sender {
+    NSLog(@"Swipe detected");
+}
+
 - (NSString *)getTextForCurrentDay {
     NSDate *newDate = [[NSDate date] dateByAddingTimeInterval:60*60*24*delegate.daysAdded];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -289,6 +293,5 @@ AppDelegate *delegate;
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
-
 
 @end

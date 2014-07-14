@@ -83,7 +83,7 @@ NSString *serverURL = @"http://www.bowdoin.edu/atreus/lib/xml/";
     }
 }
 
-+ (NSMutableArray *)createMenuFromXML:(NSData *) xmlData ForMeal: (NSUInteger) mealId AtLocation: (NSUInteger) locationId  {
++ (NSMutableArray *)createMenuFromXML:(NSData *) xmlData ForMeal: (NSUInteger) mealId AtLocation: (NSUInteger) locationId withFilters: (NSMutableArray *) filters {
     NSError *error;
     GDataXMLDocument *doc = [[GDataXMLDocument alloc] initWithData:xmlData options:0 error:&error];
     
@@ -112,12 +112,12 @@ NSString *serverURL = @"http://www.bowdoin.edu/atreus/lib/xml/";
             GDataXMLElement *item_name = [[item elementsForName:@"formal_name"] firstObject];
             GDataXMLElement *item_id = [[item elementsForName:@"itemID"] firstObject];
             NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\b(GF|VE|V|L)\\b" options:0 error:&error];
-            NSArray *specials  = [regex matchesInString:item_name.stringValue options:0 range:NSMakeRange(0, [item_name.stringValue length])];
+            NSArray *details  = [regex matchesInString:item_name.stringValue options:0 range:NSMakeRange(0, [item_name.stringValue length])];
 
             NSString *detail = @"";
-            if(specials.count) {
-                for(int i = 0; i < specials.count; i++) {
-                    NSTextCheckingResult *special = (NSTextCheckingResult *) [specials objectAtIndex:i];
+            if(details.count) {
+                for(int i = 0; i < details.count; i++) {
+                    NSTextCheckingResult *special = (NSTextCheckingResult *) [details objectAtIndex:i];
                     detail = [[detail stringByAppendingString: [[item_name.stringValue
                                 substringWithRange: special.range]
                                 stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]]]
@@ -125,27 +125,34 @@ NSString *serverURL = @"http://www.bowdoin.edu/atreus/lib/xml/";
                 }
             }
             
+            NSArray *attributes = [detail componentsSeparatedByString:@" "];
+            
             NSString *cleaned = [[[regex stringByReplacingMatchesInString:item_name.stringValue
                                         options:0
                                         range:NSMakeRange(0, [item_name.stringValue length]) withTemplate:@""]
                                         stringByReplacingOccurrencesOfString:@"(" withString:@""]
                                         stringByReplacingOccurrencesOfString:@")" withString:@""];
             
-            if(coursePosition >= 0) {
-                Course *thiscourse = courses[coursePosition];
-                [thiscourse.items addObject: cleaned];
-                [thiscourse.itemIds addObject: item_id.stringValue];
-                [thiscourse.descriptions addObject: detail];
-            } else {
-                Course *thiscourse = [[Course alloc] init];
-                thiscourse.courseName = courseObject.stringValue;
-                thiscourse.items = [[NSMutableArray alloc] init];
-                thiscourse.itemIds = [[NSMutableArray alloc] init];
-                thiscourse.descriptions = [[NSMutableArray alloc] init];
-                [thiscourse.items addObject: cleaned];
-                [thiscourse.itemIds addObject: item_id.stringValue];
-                [thiscourse.descriptions addObject: detail];
-                [courses addObject: thiscourse];
+            NSMutableSet *overlap = [NSMutableSet setWithArray:filters];
+            [overlap intersectSet:[NSSet setWithArray:attributes]];
+            
+            if(!filters.count || [overlap allObjects].count) {
+                if(coursePosition >= 0) {
+                    Course *thiscourse = courses[coursePosition];
+                    [thiscourse.items addObject: cleaned];
+                    [thiscourse.itemIds addObject: item_id.stringValue];
+                    [thiscourse.descriptions addObject: detail];
+                } else {
+                    Course *thiscourse = [[Course alloc] init];
+                    thiscourse.courseName = courseObject.stringValue;
+                    thiscourse.items = [[NSMutableArray alloc] init];
+                    thiscourse.itemIds = [[NSMutableArray alloc] init];
+                    thiscourse.descriptions = [[NSMutableArray alloc] init];
+                    [thiscourse.items addObject: cleaned];
+                    [thiscourse.itemIds addObject: item_id.stringValue];
+                    [thiscourse.descriptions addObject: detail];
+                    [courses addObject: thiscourse];
+                }
             }
         }
     } else {

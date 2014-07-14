@@ -165,7 +165,7 @@ AppDelegate *delegate;
                                                         otherButtonTitles:nil];
                 [message show];
             } else {
-                delegate.courses = [Menus createMenuFromXML:xml ForMeal:[self.meals selectedSegmentIndex] AtLocation:delegate.moultonId];
+                delegate.courses = [Menus createMenuFromXML:xml ForMeal:[self.meals selectedSegmentIndex] AtLocation:delegate.moultonId withFilters: delegate.filters];
                 NSRange newRange = NSMakeRange(0, delegate.courses.count);
                 [self.menuItems insertSections:[NSIndexSet indexSetWithIndexesInRange:newRange] withRowAnimation:UITableViewRowAnimationRight];
                 [self.loading stopAnimating];

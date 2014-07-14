@@ -13,6 +13,7 @@
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) NSString *myProperty;
 @property (strong, nonatomic) NSMutableArray *courses;
+@property (strong, nonatomic) NSMutableArray *filters;
 @property NSInteger day;
 @property NSInteger month;
 @property NSInteger year;
