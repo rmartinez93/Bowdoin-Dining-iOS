@@ -17,22 +17,30 @@
 
 NSString *serverURL = @"http://www.bowdoin.edu/atreus/lib/xml/";
 @implementation Menus
+
+//format an NSDate for our use
 + (NSMutableArray *)formatDate: (NSDate *) todayDate {
+    //load gregorian calendar
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     [calendar setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en-US"]];
     
+    //create DateComponents from the NSDate and NSCalendar
     NSDateComponents *today = [calendar components:NSCalendarUnitYear | NSCalendarUnitWeekOfYear | NSCalendarUnitWeekday fromDate:todayDate];
     
+    //calculate offset from sunday (day menu begins)
     NSInteger offset  = [today weekday];
     
+    //set current day to sunday (first day) of this week, and create NSDateComponents for that day
     [today setWeekday:1]; //Sunday
     NSDate *lastSundayDate = [calendar dateFromComponents:today];
     NSDateComponents *lastSunday = [calendar components:NSCalendarUnitDay | NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday fromDate:lastSundayDate];
     
+    //store info about last sunday's date for use with Bowdoin XML API
     NSInteger day     = [lastSunday day];
     NSInteger month   = [lastSunday month]-1;
     NSInteger year    = [lastSunday year];
     
+    //return info in array
     NSMutableArray *results  = [[NSMutableArray alloc] init];
     [results addObject: [NSNumber numberWithLong:day]];
     [results addObject: [NSNumber numberWithLong:month]];
@@ -41,6 +49,7 @@ NSString *serverURL = @"http://www.bowdoin.edu/atreus/lib/xml/";
     return results;
 }
 
+//create a menu url for a given day
 + (NSString *)getMenuUrlForDay: (NSInteger) day Month: (NSInteger) month Year: (NSInteger) year Offset: (NSInteger) offset {
     NSString* url = [[[[serverURL
                 stringByAppendingString: [NSString stringWithFormat:@"%ld",  (long)year]]
@@ -49,6 +58,8 @@ NSString *serverURL = @"http://www.bowdoin.edu/atreus/lib/xml/";
                 stringByAppendingString: [NSString stringWithFormat:@"/%ld.xml", (long)offset]];
     return url;
 }
+
+//create a local path for a given day
 + (NSString *)getLocalPathForDay: (NSInteger) day Month: (NSInteger) month Year: (NSInteger) year Offset: (NSInteger) offset {
     NSString* local = [[[[@"local"
                 stringByAppendingString: [NSString stringWithFormat:@"-%ld",  (long)year]]
@@ -61,24 +72,33 @@ NSString *serverURL = @"http://www.bowdoin.edu/atreus/lib/xml/";
     return path;
 }
 
+//load menu for a given day
 + (NSData *)loadMenuForDay: (NSInteger) day Month: (NSInteger) month Year: (NSInteger) year Offset: (NSInteger) offset {
+    //first, search local path in case cached
     NSString* path = [self getLocalPathForDay: day Month: month Year: year Offset: offset];
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:path];
     if(fileExists) {
+        //if cached, return cached file
         NSData *cached = [NSData dataWithContentsOfFile: path];
         return cached;
-    } else {
+    } else { //else not cached
+        //begin network activity
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
         
+        //download menu for this day
         NSString *urlString = [self getMenuUrlForDay: day Month: month Year: year Offset: offset];
         NSURL *url = [[NSURL alloc] initWithString: urlString];
         NSError *error = nil;
         NSData *xmlData = [NSMutableData dataWithContentsOfURL: url options: 0 error: &error];
         if(error) NSLog(@"%@", [error debugDescription]);
+        
+        //end network activity
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         
+        //cache file
         [xmlData writeToFile:path atomically:YES];
-
+        
+        //return downloaded file
         return xmlData;
     }
 }
