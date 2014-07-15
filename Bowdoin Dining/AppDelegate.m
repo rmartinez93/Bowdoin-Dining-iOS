@@ -25,7 +25,7 @@
     self.moultonId = 0;
     self.daysAdded = 0;
     
-    //set any filters set before
+    //get & apply any filters set before
     [self updateDietFilter:[[NSUserDefaults standardUserDefaults] integerForKey:@"diet-filter"]];
     return YES;
 }

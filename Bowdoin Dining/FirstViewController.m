@@ -126,7 +126,8 @@ AppDelegate *delegate;
         //style
         cell.detailTextLabel.textColor = [UIColor lightGrayColor];
         //if favorited, make item gold, else white background
-        if([Course.allFavoritedItems containsObject: (NSString *)thiscourse.itemIds[indexPath.row]]) {
+        NSMutableArray *favorited = [Course allFavoritedItems];
+        if([favorited containsObject: (NSString *)thiscourse.itemIds[indexPath.row]]) {
             cell.backgroundColor = [UIColor colorWithRed:1 green:0.84 blue:0 alpha:1];
         } else cell.backgroundColor = [UIColor whiteColor];
         
@@ -165,12 +166,16 @@ AppDelegate *delegate;
 - (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     //first, load in menu course this cell belongs to
     Course *course = [delegate.courses objectAtIndex:indexPath.section];
+    
+    //load favorited items
+    NSMutableArray *favorited = [Course allFavoritedItems];
+    
     //if this cell is NOT favorited, show favoriting action
-    if(![Course.allFavoritedItems containsObject: (NSString *) course.itemIds[indexPath.row]]) {
+    if(![favorited containsObject: (NSString *) course.itemIds[indexPath.row]]) {
         //create favoriting action
         UITableViewRowAction *faveAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Favorite" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
             //if item is favorited, save it to our centralized list of favorited items
-            [Course addToFavoritedItems: [course.itemIds objectAtIndex:indexPath.row]];
+            [Course addToFavoritedItems:[course.itemIds objectAtIndex:indexPath.row]];
             
             //update styling of cell
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
