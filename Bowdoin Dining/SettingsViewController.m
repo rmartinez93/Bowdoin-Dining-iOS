@@ -19,33 +19,23 @@ AppDelegate *delegate;
 - (void)viewDidLoad {
     [super viewDidLoad];
     delegate  = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    
+    //if a filter was set, set it again in the view
+    [self.dietFilter setSelectedSegmentIndex: [[NSUserDefaults standardUserDefaults] integerForKey:@"diet-filter"]];
 }
 
 //user selected a filter (or turnd off)
 - (IBAction)indexDidChangeForSegmentedControl: (UISegmentedControl *) sender {
-    //remove all active filters, add a new one if selected
-    [delegate.filters removeAllObjects];
-    switch(sender.selectedSegmentIndex) {
-        case 0:
-            [delegate.filters addObject: @"V"];
-            [delegate.filters addObject: @"VE"];
-            break;
-        case 1:
-            [delegate.filters addObject: @"VE"];
-            break;
-        case 2:
-            [delegate.filters addObject: @"GF"];
-            break;
-        case 3:
-            [delegate.filters addObject: @"L"];
-            break;
-        default:
-            break;
-    }
-
+    //tell delegate to update diet filter
+    [delegate updateDietFilter:sender.selectedSegmentIndex];
+    
+    //save to preferences
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setInteger:self.dietFilter.selectedSegmentIndex forKey:@"diet-filter"];
+    [userDefaults synchronize];
 }
+
 @end

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
-
+- (void)updateDietFilter:(NSInteger) filterIndex;
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) NSString *myProperty;
 @property (strong, nonatomic) NSMutableArray *courses;

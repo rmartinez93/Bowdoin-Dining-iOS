@@ -24,7 +24,32 @@
     self.thorneId = 1;
     self.moultonId = 0;
     self.daysAdded = 0;
+    
+    //set any filters set before
+    [self updateDietFilter:[[NSUserDefaults standardUserDefaults] integerForKey:@"diet-filter"]];
     return YES;
+}
+
+- (void)updateDietFilter:(NSInteger) filterIndex {
+    //remove all active filters, add a new one if selected
+    [self.filters removeAllObjects];
+    switch(filterIndex) {
+        case 0:
+            [self.filters addObject: @"V"];
+            [self.filters addObject: @"VE"];
+            break;
+        case 1:
+            [self.filters addObject: @"VE"];
+            break;
+        case 2:
+            [self.filters addObject: @"GF"];
+            break;
+        case 3:
+            [self.filters addObject: @"L"];
+            break;
+        default:
+            break;
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

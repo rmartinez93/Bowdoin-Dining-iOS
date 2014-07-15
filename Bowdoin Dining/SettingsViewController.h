@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 @interface SettingsViewController : UIViewController
 - (IBAction)indexDidChangeForSegmentedControl: (UISegmentedControl *) sender;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *dietFilter;
 
 @end

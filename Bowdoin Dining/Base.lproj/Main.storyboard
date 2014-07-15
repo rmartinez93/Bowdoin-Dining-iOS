@@ -299,6 +299,9 @@
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Settings" id="8En-Z8-b8u"/>
+                    <connections>
+                        <outlet property="dietFilter" destination="c3t-UT-RFx" id="xbO-YJ-HWh"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WZB-AF-vyo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
