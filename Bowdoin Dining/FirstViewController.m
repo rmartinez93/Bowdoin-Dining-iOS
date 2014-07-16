@@ -9,6 +9,7 @@
 #import "Menus.h"
 #import "Course.h"
 #import "AppDelegate.h"
+#import "CSGoldController.h"
 
 @interface FirstViewController ()
 @end
@@ -19,6 +20,8 @@ AppDelegate *delegate;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    CSGoldController *controller = [[CSGoldController alloc] init];
+    //[controller getCSGoldDataWithUserName: @"rmartin" password: @"*****"];
     
     //assign app delegate as delegate
     delegate  = (AppDelegate *)[[UIApplication sharedApplication] delegate];

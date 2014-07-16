@@ -8,6 +8,5 @@
 #import <UIKit/UIKit.h>
 
 @interface PubViewController : UIViewController
-@property UIDocumentInteractionController *documentInteractionController;
 @property (weak, nonatomic) IBOutlet UIWebView *MageesMenu;
 @end
