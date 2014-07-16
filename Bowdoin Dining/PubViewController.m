@@ -17,10 +17,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     //open menu PDF in WebView
     NSURL *URL = [[NSBundle mainBundle] URLForResource:@"magees-menu" withExtension:@"pdf"];
     NSURLRequest *request = [NSURLRequest requestWithURL:URL];
     [self.MageesMenu loadRequest:request];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    //hide the status bar
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
 }
 
 @end

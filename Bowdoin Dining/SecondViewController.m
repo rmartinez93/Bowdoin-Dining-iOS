@@ -19,6 +19,7 @@ AppDelegate *delegate;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     delegate  = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [self.menuItems setDelegate:self];
     self.meals.selectedSegmentIndex = [self segmentIndexOfCurrentMeal: [NSDate date]];
@@ -26,6 +27,9 @@ AppDelegate *delegate;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    //show status bar
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    
     self.dayLabel.text = [self getTextForCurrentDay];
     self.meals.selectedSegmentIndex = delegate.selectedSegment;
     if(delegate.daysAdded == 0) {
@@ -280,11 +284,18 @@ AppDelegate *delegate;
     }
 }
 
+//wordifies whatever day we're currently browsing
 - (NSString *)getTextForCurrentDay {
-    NSDate *newDate = [[NSDate date] dateByAddingTimeInterval:60*60*24*delegate.daysAdded];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"EEEE"];
-    return [dateFormatter stringFromDate:newDate];
+    if(delegate.daysAdded == 0)
+        return @"Today";
+    else if(delegate.daysAdded == 1)
+        return @"Tomorrow";
+    else {
+        NSDate *newDate = [[NSDate date] dateByAddingTimeInterval:60*60*24*delegate.daysAdded];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"EEEE"];
+        return [dateFormatter stringFromDate:newDate];
+    }
 }
 
 - (void)didReceiveMemoryWarning {

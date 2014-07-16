@@ -18,11 +18,15 @@ AppDelegate *delegate;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     delegate  = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    //hide the status bar
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    
     //if a filter was set, set it again in the view
     [self.dietFilter setSelectedSegmentIndex: [[NSUserDefaults standardUserDefaults] integerForKey:@"diet-filter"]];
 }

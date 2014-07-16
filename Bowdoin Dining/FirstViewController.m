@@ -19,6 +19,7 @@ AppDelegate *delegate;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     //assign app delegate as delegate
     delegate  = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
@@ -36,6 +37,9 @@ AppDelegate *delegate;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    //show status bar
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+
     //set the text label to day we're browsing
     self.dayLabel.text = [self getTextForCurrentDay];
     
