@@ -274,34 +274,26 @@ AppDelegate *delegate;
     });
 }
 
-//user pressed back button
 - (IBAction)backButtonPressed: (UIButton*)sender {
-    //if we're NOT on the current day, allow action
     if(delegate.daysAdded > 0) {
-        delegate.daysAdded--; //decrement days added
-        //if we're now on the current day, hide back button
-        if(delegate.daysAdded == 0)
+        delegate.daysAdded--;
+        if(delegate.daysAdded == 0) {
             self.backButton.hidden = true;
-        //if we're no longer on the last day, show forward button
-        else if(delegate.daysAdded == 5)
+        } else if(delegate.daysAdded == 5)
             self.forwardButton.hidden = false;
         
-        //update menu to new current day
         [self updateVisibleMenu];
         
-        //begin animating day text by storing current width and position
         CGFloat textWidth = [[self.dayLabel text] sizeWithAttributes:@{NSFontAttributeName:[self.dayLabel font]}].width;
         CGPoint center = self.dayLabel.center;
         [UIView animateWithDuration:0.5
                               delay:0.0
                             options:UIViewAnimationOptionCurveEaseIn
                          animations:^ {
-                             //at end of animation, make text off-screen and invisible
                              self.dayLabel.alpha = 0.0;
                              self.dayLabel.center = CGPointMake(320+(textWidth/2), self.dayLabel.center.y);
                          }
                          completion:^(BOOL finished) {
-                             //when done, change text to new day and begin animate in
                              self.dayLabel.text = [self getTextForCurrentDay];
                              CGFloat newWidth = [[self.dayLabel text] sizeWithAttributes:@{NSFontAttributeName:[self.dayLabel font]}].width;
                              self.dayLabel.center = CGPointMake(0-(newWidth/2), self.dayLabel.center.y);
@@ -309,7 +301,6 @@ AppDelegate *delegate;
                                                    delay:0.0
                                                  options:UIViewAnimationOptionCurveEaseIn
                                               animations:^ {
-                                                  //at end of animation, be centered and fully visible
                                                   self.dayLabel.center = center;
                                                   self.dayLabel.alpha = 1.0;
                                               }
@@ -321,32 +312,23 @@ AppDelegate *delegate;
 }
 
 - (IBAction)forwardButtonPressed:(UIButton*)sender {
-    //if we're NOT on the last day, allow action
     if(delegate.daysAdded < 6) {
-        delegate.daysAdded++; //increment days added
-        //if we're now on the last day, hide forward button
-        if(delegate.daysAdded == 6)
+        delegate.daysAdded++;
+        if(delegate.daysAdded == 6) {
             self.forwardButton.hidden = true;
-        //if we're no longer on the first day, show forward button
-        else if(delegate.daysAdded == 1)
+        } else if(delegate.daysAdded == 1)
             self.backButton.hidden = false;
-        
-        //update menu to current day
-        [self updateVisibleMenu];
-        
-        //begin animating day text by storing current width and position (reverses above)
         CGFloat textWidth = [[self.dayLabel text] sizeWithAttributes:@{NSFontAttributeName:[self.dayLabel font]}].width;
         CGPoint center = self.dayLabel.center;
         [UIView animateWithDuration:0.3
                               delay:0.0
                             options:UIViewAnimationOptionCurveEaseIn
                          animations:^ {
-                             //at end of animation, make text off-screen and invisible
                              self.dayLabel.alpha = 0.0;
                              self.dayLabel.center = CGPointMake(0-(textWidth/2), self.dayLabel.center.y);
                          }
                          completion:^(BOOL finished) {
-                             //when done, change text to new day and begin animate in
+                             [self updateVisibleMenu];
                              self.dayLabel.text = [self getTextForCurrentDay];
                              CGFloat newWidth = [[self.dayLabel text] sizeWithAttributes:@{NSFontAttributeName:[self.dayLabel font]}].width;
                              self.dayLabel.center = CGPointMake(320+(newWidth/2), self.dayLabel.center.y);
@@ -354,7 +336,6 @@ AppDelegate *delegate;
                                                    delay:0.0
                                                  options:UIViewAnimationOptionCurveEaseIn
                                               animations:^ {
-                                                  //at end of animation, be centered and fully visible
                                                   self.dayLabel.center = center;
                                                   self.dayLabel.alpha = 1.0;
                                               }
@@ -367,10 +348,16 @@ AppDelegate *delegate;
 
 //wordifies whatever day we're currently browsing
 - (NSString *)getTextForCurrentDay {
-    NSDate *newDate = [[NSDate date] dateByAddingTimeInterval:60*60*24*delegate.daysAdded];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"EEEE"];
-    return [dateFormatter stringFromDate:newDate];
+    if(delegate.daysAdded == 0)
+        return @"Today";
+    else if(delegate.daysAdded == 1)
+        return @"Tomorrow";
+    else {
+        NSDate *newDate = [[NSDate date] dateByAddingTimeInterval:60*60*24*delegate.daysAdded];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"EEEE"];
+        return [dateFormatter stringFromDate:newDate];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
