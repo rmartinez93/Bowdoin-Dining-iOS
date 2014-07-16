@@ -10,6 +10,7 @@
 #import "Course.h"
 #import "AppDelegate.h"
 #import "CSGoldController.h"
+#import "SplashView.h"
 
 @interface FirstViewController ()
 @end
@@ -20,8 +21,13 @@ AppDelegate *delegate;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    CSGoldController *controller = [[CSGoldController alloc] init];
-    //[controller getCSGoldDataWithUserName: @"rmartin" password: @"*****"];
+    
+    SplashView* splash = [[SplashView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+    splash.backgroundColor = [UIColor blackColor];
+    [self.view addSubview:splash];
+    
+//    CSGoldController *controller = [[CSGoldController alloc] init];
+//    [controller getCSGoldDataWithUserName: @"rmartin" password: @"*****"];
     
     //assign app delegate as delegate
     delegate  = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -62,7 +68,7 @@ AppDelegate *delegate;
 - (void)viewDidAppear:(BOOL)animated {
     //load menu based on delegate settings
     [self updateVisibleMenu];
-}
+    }
 
 //calculates which meal should be selected based on an NSDate
 - (NSInteger)segmentIndexOfCurrentMeal:(NSDate *)now {
@@ -88,14 +94,14 @@ AppDelegate *delegate;
 
 //UITableView delegate method, returns number of sections/courses in loaded menu
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return delegate.courses.count;
+    return self.courses.count;
 }
 
 //UITableView delegate method, returns number of rows/meal items in a given section/course
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     //if this is a valid section, return number of menu items in section
-    if(section < delegate.courses.count) {
-        Course *thiscourse = [delegate.courses objectAtIndex:section];
+    if(section < self.courses.count) {
+        Course *thiscourse = [self.courses objectAtIndex:section];
         return thiscourse.items.count;
     } else return 0;
 }
@@ -103,8 +109,8 @@ AppDelegate *delegate;
 //UITableView delegate method, returns name of section/course
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     //if this is a valid section, return name of course, else there's no title
-    if(section < delegate.courses.count) {
-        Course *thiscourse = [delegate.courses objectAtIndex:section];
+    if(section < self.courses.count) {
+        Course *thiscourse = [self.courses objectAtIndex:section];
         return thiscourse.courseName;
     } else return @"";
 }
@@ -125,8 +131,8 @@ AppDelegate *delegate;
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:simpleTableIdentifier];
     
     //if this is a valid section->row, grab right menu item from course and set cell properties
-    if(indexPath.section < delegate.courses.count && indexPath.row < [delegate.courses[indexPath.section] items].count) {
-        Course *thiscourse = [delegate.courses objectAtIndex: indexPath.section];
+    if(indexPath.section < self.courses.count && indexPath.row < [self.courses[indexPath.section] items].count) {
+        Course *thiscourse = [self.courses objectAtIndex: indexPath.section];
         cell.textLabel.text = [thiscourse.items objectAtIndex: indexPath.row];
         cell.detailTextLabel.text = [thiscourse.descriptions objectAtIndex: indexPath.row];
         
@@ -172,7 +178,7 @@ AppDelegate *delegate;
 //UITableView delegate method, what to do after side-swiping cell
 - (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     //first, load in menu course this cell belongs to
-    Course *course = [delegate.courses objectAtIndex:indexPath.section];
+    Course *course = [self.courses objectAtIndex:indexPath.section];
     
     //load favorited items
     NSMutableArray *favorited = [Course allFavoritedItems];
@@ -236,10 +242,10 @@ AppDelegate *delegate;
     delegate.offset  = [formattedDate[3] integerValue];
     
     //firstly, remove everything from the UITableView
-    NSRange originalRange = NSMakeRange(0, delegate.courses.count);
+    NSRange originalRange = NSMakeRange(0, self.courses.count);
     [self.menuItems beginUpdates];
     [self.menuItems deleteSections:[NSIndexSet indexSetWithIndexesInRange:originalRange] withRowAnimation:UITableViewRowAnimationRight];
-    [delegate.courses removeAllObjects];
+    [self.courses removeAllObjects];
     
     //disable user interaction on segmented control and begin loading indicator
     [self.meals setUserInteractionEnabled:FALSE];
@@ -266,9 +272,9 @@ AppDelegate *delegate;
             //else we successfully loaded XML!
             else {
                 //create a menu from this data and save it to delegate
-                delegate.courses = [Menus createMenuFromXML:xml ForMeal:[self.meals selectedSegmentIndex] AtLocation:delegate.thorneId withFilters: delegate.filters];
+                self.courses = [Menus createMenuFromXML:xml ForMeal:[self.meals selectedSegmentIndex] AtLocation:delegate.thorneId withFilters: delegate.filters];
                 //insert new menu items to UITableView
-                NSRange newRange = NSMakeRange(0, delegate.courses.count);
+                NSRange newRange = NSMakeRange(0, self.courses.count);
                 [self.menuItems insertSections:[NSIndexSet indexSetWithIndexesInRange:newRange] withRowAnimation:UITableViewRowAnimationRight];
                 
                 //stop loading indicator, end updates to UITableView, scroll to top and reenable user interaction

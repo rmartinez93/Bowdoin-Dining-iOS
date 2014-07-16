@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-
 @interface AppDelegate ()
             
 
@@ -19,6 +18,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+    
     //initialize base settings
     self.filters = [[NSMutableArray alloc] init];
     self.thorneId = 1;
@@ -27,6 +27,7 @@
     
     //get & apply any filters set before
     [self updateDietFilter:[[NSUserDefaults standardUserDefaults] integerForKey:@"diet-filter"]];
+
     return YES;
 }
 

@@ -15,6 +15,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *dayLabel;
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UIButton *forwardButton;
+@property (strong, nonatomic) NSMutableArray *courses;
 - (IBAction)indexDidChangeForSegmentedControl: sender;
 - (IBAction)backButtonPressed: sender;
 - (IBAction)forwardButtonPressed: sender;

@@ -65,19 +65,19 @@ AppDelegate *delegate;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return delegate.courses.count;
+    return self.courses.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if(section < delegate.courses.count) {
-        Course *thiscourse = [delegate.courses objectAtIndex:section];
+    if(section < self.courses.count) {
+        Course *thiscourse = [self.courses objectAtIndex:section];
         return thiscourse.items.count;
     } else return 0;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if(section < delegate.courses.count) {
-        Course *thiscourse = [delegate.courses objectAtIndex:section];
+    if(section < self.courses.count) {
+        Course *thiscourse = [self.courses objectAtIndex:section];
         return thiscourse.courseName;
     } else return @"";
 }
@@ -97,8 +97,8 @@ AppDelegate *delegate;
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:simpleTableIdentifier];
     }
     
-    if(indexPath.section < delegate.courses.count && indexPath.row < [delegate.courses[indexPath.section] items].count) {
-        Course *thiscourse = [delegate.courses objectAtIndex: indexPath.section];
+    if(indexPath.section < self.courses.count && indexPath.row < [self.courses[indexPath.section] items].count) {
+        Course *thiscourse = [self.courses objectAtIndex: indexPath.section];
         cell.textLabel.text = [thiscourse.items objectAtIndex: indexPath.row];
         cell.detailTextLabel.text = [thiscourse.descriptions objectAtIndex: indexPath.row];
         cell.detailTextLabel.textColor = [UIColor lightGrayColor];
@@ -148,10 +148,10 @@ AppDelegate *delegate;
     delegate.year    = [formattedDate[2] integerValue];
     delegate.offset  = [formattedDate[3] integerValue];
     
-    NSRange originalRange = NSMakeRange(0, delegate.courses.count);
+    NSRange originalRange = NSMakeRange(0, self.courses.count);
     [self.menuItems beginUpdates];
     [self.menuItems deleteSections:[NSIndexSet indexSetWithIndexesInRange:originalRange] withRowAnimation:UITableViewRowAnimationRight];
-    [delegate.courses removeAllObjects];
+    [self.courses removeAllObjects];
     
     [self.meals setUserInteractionEnabled:FALSE];
     [self.loading startAnimating];
@@ -170,8 +170,8 @@ AppDelegate *delegate;
                                                         otherButtonTitles:nil];
                 [message show];
             } else {
-                delegate.courses = [Menus createMenuFromXML:xml ForMeal:[self.meals selectedSegmentIndex] AtLocation:delegate.moultonId withFilters: delegate.filters];
-                NSRange newRange = NSMakeRange(0, delegate.courses.count);
+                self.courses = [Menus createMenuFromXML:xml ForMeal:[self.meals selectedSegmentIndex] AtLocation:delegate.moultonId withFilters: delegate.filters];
+                NSRange newRange = NSMakeRange(0, self.courses.count);
                 [self.menuItems insertSections:[NSIndexSet indexSetWithIndexesInRange:newRange] withRowAnimation:UITableViewRowAnimationRight];
                 [self.loading stopAnimating];
                 [self.menuItems endUpdates];
@@ -185,7 +185,7 @@ AppDelegate *delegate;
 
 
 - (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
-    Course *course = [delegate.courses objectAtIndex:indexPath.section];
+    Course *course = [self.courses objectAtIndex:indexPath.section];
     if(![Course.allFavoritedItems containsObject: (NSString *) course.itemIds[indexPath.row]]) {
         UITableViewRowAction *faveAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Favorite" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
             [Course addToFavoritedItems: [course.itemIds objectAtIndex:indexPath.row]];
