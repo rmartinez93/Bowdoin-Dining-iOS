@@ -106,9 +106,6 @@
                             <constraint firstItem="37H-86-X0v" firstAttribute="centerY" secondItem="tsR-hK-woN" secondAttribute="centerY" id="zVg-3B-7Zi"/>
                         </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
-                        <connections>
-                            <outletCollection property="gestureRecognizers" destination="hNM-NO-73T" appends="YES" id="vc5-oK-ei9"/>
-                        </connections>
                     </view>
                     <tabBarItem key="tabBarItem" title="Thorne" image="second" id="acW-dT-cKf"/>
                     <connections>
@@ -121,11 +118,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="right" id="hNM-NO-73T">
-                    <connections>
-                        <action selector="sideSwipe:" destination="9pv-A4-QxB" id="2dG-N2-DUK"/>
-                    </connections>
-                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="3042" y="665"/>
         </scene>
@@ -298,7 +290,7 @@
                         </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Settings" id="8En-Z8-b8u"/>
+                    <tabBarItem key="tabBarItem" title="Settings" image="gear-a" id="8En-Z8-b8u"/>
                     <connections>
                         <outlet property="dietFilter" destination="c3t-UT-RFx" id="xbO-YJ-HWh"/>
                     </connections>
@@ -588,6 +580,41 @@
             </objects>
             <point key="canvasLocation" x="2573" y="1833"/>
         </scene>
+        <!--Pub View Controller - Pub-->
+        <scene sceneID="L47-34-Lm6">
+            <objects>
+                <viewController id="TdJ-7k-evO" customClass="PubViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="XhF-Ky-OOg"/>
+                        <viewControllerLayoutGuide type="bottom" id="CoY-dg-vXS"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="5I2-lF-ibw">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" scalesPageToFit="YES" allowsInlineMediaPlayback="NO" mediaPlaybackRequiresUserAction="NO" mediaPlaybackAllowsAirPlay="NO" keyboardDisplayRequiresUserAction="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q4Z-Ob-l5N">
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="431"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="CoY-dg-vXS" firstAttribute="top" secondItem="q4Z-Ob-l5N" secondAttribute="bottom" id="91i-AW-LF2"/>
+                            <constraint firstItem="q4Z-Ob-l5N" firstAttribute="top" secondItem="5I2-lF-ibw" secondAttribute="top" id="Bhd-81-TAY"/>
+                            <constraint firstAttribute="trailing" secondItem="q4Z-Ob-l5N" secondAttribute="trailing" id="ZVk-4f-Dh0"/>
+                            <constraint firstItem="q4Z-Ob-l5N" firstAttribute="leading" secondItem="5I2-lF-ibw" secondAttribute="leading" id="wwI-zy-ezH"/>
+                        </constraints>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Pub" image="pizza" id="ixW-pV-7dh"/>
+                    <connections>
+                        <outlet property="MageesMenu" destination="q4Z-Ob-l5N" id="zvq-UQ-cqS"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="npK-Yp-JyD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1564" y="1730"/>
+        </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">
             <objects>
@@ -601,18 +628,21 @@
                     <connections>
                         <segue destination="9pv-A4-QxB" kind="relationship" relationship="viewControllers" id="u7Y-xg-7CH"/>
                         <segue destination="8rJ-Kc-sve" kind="relationship" relationship="viewControllers" id="lzU-1b-eKA"/>
+                        <segue destination="TdJ-7k-evO" kind="relationship" relationship="viewControllers" id="cRM-xz-r7g"/>
                         <segue destination="Gse-RL-w28" kind="relationship" relationship="viewControllers" id="yZa-6K-RFF"/>
                         <segue destination="cho-qD-bXK" kind="relationship" relationship="viewControllers" id="qjE-a6-9EI"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2434" y="998"/>
+            <point key="canvasLocation" x="1582" y="1020"/>
         </scene>
     </scenes>
     <resources>
         <image name="clock" width="48" height="48"/>
         <image name="first" width="30" height="30"/>
+        <image name="gear-a" width="48" height="48"/>
+        <image name="pizza" width="48" height="48"/>
         <image name="second" width="30" height="30"/>
     </resources>
 </document>

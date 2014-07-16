@@ -16,6 +16,8 @@
 		4523D4BA19738CE2002426C1 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4523D4B919738CE2002426C1 /* SettingsViewController.m */; };
 		4530A1001970CE75000CCBCC /* Course.m in Sources */ = {isa = PBXBuildFile; fileRef = 4530A0FF1970CE75000CCBCC /* Course.m */; };
 		4530A1051970DD31000CCBCC /* Menus.m in Sources */ = {isa = PBXBuildFile; fileRef = 4530A1041970DD31000CCBCC /* Menus.m */; };
+		455280D81975FB16006C2DEA /* PubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 455280D71975FB16006C2DEA /* PubViewController.m */; };
+		455280DB1975FD27006C2DEA /* magees-menu.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 455280DA1975FD27006C2DEA /* magees-menu.pdf */; };
 		45AAB58E1970636E0078A7F9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 45AAB58D1970636E0078A7F9 /* main.m */; };
 		45AAB5911970636E0078A7F9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 45AAB5901970636E0078A7F9 /* AppDelegate.m */; };
 		45AAB5941970636E0078A7F9 /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45AAB5931970636E0078A7F9 /* FirstViewController.m */; };
@@ -50,6 +52,9 @@
 		4530A1021970CED9000CCBCC /* Course.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Course.h; sourceTree = "<group>"; };
 		4530A1031970DD26000CCBCC /* Menus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Menus.h; sourceTree = "<group>"; };
 		4530A1041970DD31000CCBCC /* Menus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Menus.m; sourceTree = "<group>"; };
+		455280D71975FB16006C2DEA /* PubViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PubViewController.m; sourceTree = "<group>"; };
+		455280D91975FB24006C2DEA /* PubViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PubViewController.h; sourceTree = "<group>"; };
+		455280DA1975FD27006C2DEA /* magees-menu.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = "magees-menu.pdf"; path = "Bowdoin Dining/magees-menu.pdf"; sourceTree = "<group>"; };
 		45AAB5881970636E0078A7F9 /* Bowdoin Dining.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bowdoin Dining.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		45AAB58C1970636E0078A7F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		45AAB58D1970636E0078A7F9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -110,6 +115,7 @@
 				451C9E681970A229006007AE /* GDataXMLNode.h */,
 				451C9E691970A229006007AE /* GDataXMLNode.m */,
 				4507E6CB1971B289000628DE /* 128.png */,
+				455280DA1975FD27006C2DEA /* magees-menu.pdf */,
 			);
 			sourceTree = "<group>";
 		};
@@ -136,6 +142,8 @@
 				45AAB5951970636E0078A7F9 /* SecondViewController.h */,
 				45AAB5961970636E0078A7F9 /* SecondViewController.m */,
 				45AAB5981970636E0078A7F9 /* Main.storyboard */,
+				455280D71975FB16006C2DEA /* PubViewController.m */,
+				455280D91975FB24006C2DEA /* PubViewController.h */,
 				4523D4B919738CE2002426C1 /* SettingsViewController.m */,
 				4523D4BB19738CF3002426C1 /* SettingsViewController.h */,
 				45AAB59B1970636E0078A7F9 /* Images.xcassets */,
@@ -251,6 +259,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				455280DB1975FD27006C2DEA /* magees-menu.pdf in Resources */,
 				4523D4B819734503002426C1 /* splash.png in Resources */,
 				4507E6CC1971B289000628DE /* 128.png in Resources */,
 				45AAB59A1970636E0078A7F9 /* Main.storyboard in Resources */,
@@ -275,6 +284,7 @@
 				45AAB5971970636E0078A7F9 /* SecondViewController.m in Sources */,
 				45AAB5911970636E0078A7F9 /* AppDelegate.m in Sources */,
 				451C9E6A1970A229006007AE /* GDataXMLNode.m in Sources */,
+				455280D81975FB16006C2DEA /* PubViewController.m in Sources */,
 				4523D4BA19738CE2002426C1 /* SettingsViewController.m in Sources */,
 				4530A1051970DD31000CCBCC /* Menus.m in Sources */,
 				45AAB5941970636E0078A7F9 /* FirstViewController.m in Sources */,

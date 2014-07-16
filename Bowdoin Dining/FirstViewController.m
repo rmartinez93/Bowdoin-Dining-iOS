@@ -365,11 +365,6 @@ AppDelegate *delegate;
     }
 }
 
-//detects swipe...to be removed
-- (IBAction)sideSwipe:(UISwipeGestureRecognizer *)sender {
-    NSLog(@"Swipe detected");
-}
-
 //wordifies whatever day we're currently browsing
 - (NSString *)getTextForCurrentDay {
     NSDate *newDate = [[NSDate date] dateByAddingTimeInterval:60*60*24*delegate.daysAdded];
