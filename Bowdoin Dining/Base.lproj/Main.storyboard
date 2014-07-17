@@ -241,7 +241,7 @@
         <!--Settings View Controller - Settings-->
         <scene sceneID="JW8-XU-IiB">
             <objects>
-                <viewController id="cho-qD-bXK" customClass="SettingsViewController" sceneMemberID="viewController">
+                <viewController id="cho-qD-bXK" customClass="SettingsViewController" customModule="Bowdoin_Dining" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Wp6-kl-nds"/>
                         <viewControllerLayoutGuide type="bottom" id="nUd-mV-55c"/>
@@ -271,7 +271,7 @@
                                 </segments>
                                 <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
-                                    <action selector="indexDidChangeForSegmentedControl:" destination="cho-qD-bXK" eventType="valueChanged" id="7IJ-uv-s8e"/>
+                                    <action selector="indexDidChangeForSegmentedControl:" destination="cho-qD-bXK" eventType="valueChanged" id="AjN-EF-zIb"/>
                                 </connections>
                             </segmentedControl>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Filter:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gmW-LS-ASf">
@@ -298,7 +298,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="logout:" destination="cho-qD-bXK" eventType="touchUpInside" id="o2E-0l-Vkg"/>
+                                    <action selector="logout:" destination="cho-qD-bXK" eventType="touchUpInside" id="SXa-B8-g4Z"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -323,8 +323,8 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Settings" image="gear-a" id="8En-Z8-b8u"/>
                     <connections>
-                        <outlet property="dietFilter" destination="c3t-UT-RFx" id="xbO-YJ-HWh"/>
-                        <outlet property="logoutButton" destination="X0R-ww-76E" id="COK-Nj-KkH"/>
+                        <outlet property="dietFilter" destination="c3t-UT-RFx" id="sia-kA-LpM"/>
+                        <outlet property="logoutButton" destination="X0R-ww-76E" id="QtV-HX-BNi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WZB-AF-vyo" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -615,7 +615,7 @@
         <!--Pub View Controller - Pub-->
         <scene sceneID="L47-34-Lm6">
             <objects>
-                <viewController id="TdJ-7k-evO" customClass="PubViewController" sceneMemberID="viewController">
+                <viewController id="TdJ-7k-evO" customClass="PubViewController" customModule="Bowdoin_Dining" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="XhF-Ky-OOg"/>
                         <viewControllerLayoutGuide type="bottom" id="CoY-dg-vXS"/>
@@ -641,7 +641,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Pub" image="pizza" id="ixW-pV-7dh"/>
                     <connections>
-                        <outlet property="MageesMenu" destination="q4Z-Ob-l5N" id="zvq-UQ-cqS"/>
+                        <outlet property="MageesMenu" destination="q4Z-Ob-l5N" id="vCy-Ee-MwG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="npK-Yp-JyD" userLabel="First Responder" sceneMemberID="firstResponder"/>

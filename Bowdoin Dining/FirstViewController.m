@@ -8,7 +8,7 @@
 #import "FirstViewController.h"
 #import "Menus.h"
 #import "Course.h"
-#import "AppDelegate.h"
+#import "BowdoinDining-Swift.h"
 #import "SplashView.h"
 
 @interface FirstViewController ()
@@ -223,6 +223,7 @@ AppDelegate *delegate;
     //if this was a valid selection, update our delegate and update the menu
     if (UISegmentedControlNoSegment != sender.selectedSegmentIndex) {
         delegate.selectedSegment = self.meals.selectedSegmentIndex;
+        NSLog(@"%ld", (long)self.meals.selectedSegmentIndex);
         [self updateVisibleMenu];
     }
 }

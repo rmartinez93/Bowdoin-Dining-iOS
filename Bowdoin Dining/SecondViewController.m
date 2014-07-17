@@ -8,7 +8,7 @@
 #import "SecondViewController.h"
 #import "Menus.h"
 #import "Course.h"
-#import "AppDelegate.h"
+#import "BowdoinDining-Swift.h"
 
 @interface SecondViewController ()
 @end
@@ -22,8 +22,6 @@ AppDelegate *delegate;
     
     delegate  = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [self.menuItems setDelegate:self];
-    self.meals.selectedSegmentIndex = [self segmentIndexOfCurrentMeal: [NSDate date]];
-    delegate.selectedSegment = self.meals.selectedSegmentIndex;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
