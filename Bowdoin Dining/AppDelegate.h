@@ -10,6 +10,7 @@
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 - (void)updateDietFilter:(NSInteger) filterIndex;
+@property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) NSMutableArray *filters;
 @property NSInteger day;
 @property NSInteger month;

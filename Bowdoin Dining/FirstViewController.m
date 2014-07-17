@@ -9,7 +9,6 @@
 #import "Menus.h"
 #import "Course.h"
 #import "AppDelegate.h"
-#import "CSGoldController.h"
 #import "SplashView.h"
 
 @interface FirstViewController ()
@@ -25,9 +24,6 @@ AppDelegate *delegate;
     SplashView* splash = [[SplashView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
     splash.backgroundColor = [UIColor blackColor];
     [self.view addSubview:splash];
-    
-//    CSGoldController *controller = [[CSGoldController alloc] init];
-//    [controller getCSGoldDataWithUserName: @"rmartin" password: @"*****"];
     
     //assign app delegate as delegate
     delegate  = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -68,7 +64,7 @@ AppDelegate *delegate;
 - (void)viewDidAppear:(BOOL)animated {
     //load menu based on delegate settings
     [self updateVisibleMenu];
-    }
+}
 
 //calculates which meal should be selected based on an NSDate
 - (NSInteger)segmentIndexOfCurrentMeal:(NSDate *)now {

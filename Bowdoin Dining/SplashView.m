@@ -64,7 +64,7 @@ UIColor *trueBlue;
 
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
     if([[anim valueForKey:@"id"] isEqualToString:@"grow"] && flag) {
-        [UIView animateWithDuration:0.2
+        [UIView animateWithDuration:0.5
                          animations:^{
                              self.alpha = 0;
                          }
@@ -73,8 +73,6 @@ UIColor *trueBlue;
                          }];
     }
 }
-
-#define DEGREES_TO_RADIANS(angle) ((angle) / 180.0 * M_PI)
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -86,32 +84,6 @@ UIColor *trueBlue;
     splashView.contentMode  = UIViewContentModeScaleAspectFit;
     splashView.clipsToBounds = YES;
     [self addSubview:splashView];
-    
-    // Drawing Rect
-    [trueBlue setFill];
-//    CGContextRef context = UIGraphicsGetCurrentContext();
-//    float size = 128;
-//    CGRect centerRect = CGRectMake(self.bounds.size.width/2 - size/2, self.bounds.size.height/2 - size/2, size, size);
-//    CGContextFillEllipseInRect(context, centerRect);
-    
-    
-//    UIBezierPath* circlePath = [UIBezierPath bezierPathWithArcCenter:CGPointMake(100.0, 100.0) radius:200 startAngle:DEGREES_TO_RADIANS(270) endAngle:DEGREES_TO_RADIANS(270.01) clockwise:NO];
-//    
-//    CAShapeLayer *circle = [CAShapeLayer layer];
-//    circle.path = circlePath.CGPath;
-//    circle.fillColor   = (__bridge CGColorRef)(trueBlue);
-//    circle.strokeEnd   = 1.0;
-//    
-//    [self.layer addSublayer:circle];
-    
-    
-//    [UIView animateWithDuration:0.3
-//                     animations:^{
-//                         // scale up 10%
-//                         centerRect = CGSizeMake(300, 300);
-//                     } completion:^(BOOL finished) {
-//                     }];
-    //UIRectFill(CGRectInset(self.bounds, 128, 128));
 }
 
 @end
