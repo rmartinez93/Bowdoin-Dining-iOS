@@ -35,17 +35,17 @@
     //remove all active filters, add a new one if selected
     [self.filters removeAllObjects];
     switch(filterIndex) {
-        case 0:
+        case 1:
             [self.filters addObject: @"V"];
             [self.filters addObject: @"VE"];
             break;
-        case 1:
+        case 2:
             [self.filters addObject: @"VE"];
             break;
-        case 2:
+        case 3:
             [self.filters addObject: @"GF"];
             break;
-        case 3:
+        case 4:
             [self.filters addObject: @"L"];
             break;
         default:

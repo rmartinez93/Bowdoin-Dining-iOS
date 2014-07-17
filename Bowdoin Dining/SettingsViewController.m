@@ -20,13 +20,11 @@ AppDelegate *delegate;
     [super viewDidLoad];
     
     delegate  = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     //hide the status bar
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
-    
     //if a filter was set, set it again in the view
     [self.dietFilter setSelectedSegmentIndex: [[NSUserDefaults standardUserDefaults] integerForKey:@"diet-filter"]];
     
@@ -35,6 +33,7 @@ AppDelegate *delegate;
     NSString *password = [userDefaults objectForKey:@"bowdoin_password"];
     if(!username || !password) {
         [self.logoutButton setEnabled: FALSE];
+        [self.logoutButton setBackgroundColor:[UIColor lightGrayColor]];
     }
 }
 
@@ -55,5 +54,6 @@ AppDelegate *delegate;
     [userDefaults removeObjectForKey: @"bowdoin_password"];
     [userDefaults synchronize];
     [self.logoutButton setEnabled: FALSE];
+    [self.logoutButton setBackgroundColor:[UIColor lightGrayColor]];
 }
 @end

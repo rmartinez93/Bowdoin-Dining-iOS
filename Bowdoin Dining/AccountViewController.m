@@ -48,17 +48,11 @@
 
 - (IBAction)userDidLogin:(UIStoryboardSegue *)segue {
     [self.loginButton    setHidden: TRUE];
-    [self.loadingPoints  startAnimating];
-    [self.loadingMeals   startAnimating];
-    [self.loadingBalance startAnimating];
 }
 
 -(void)userDidLoad:(NSNotification *) notification {
     NSDictionary *userInfo = notification.userInfo;
     self.user = [userInfo objectForKey:@"User"];
-    [self.loadingPoints  stopAnimating];
-    [self.loadingMeals   stopAnimating];
-    [self.loadingBalance stopAnimating];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.points  setText: [NSString stringWithFormat:@"$%.2f", self.user.polarPoints]];

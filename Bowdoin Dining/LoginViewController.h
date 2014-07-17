@@ -17,5 +17,7 @@
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loggingIn;
 @property (weak, nonatomic) IBOutlet UITextView *instructions;
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;
+- (IBAction)nextItem:(UITextField *)textField;
+- (IBAction)hideKeyboard:(UITextField *)textField;
 
 @end
