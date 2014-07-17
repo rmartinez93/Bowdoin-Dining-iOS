@@ -25,16 +25,14 @@
     
     CSGoldController *controller = [[CSGoldController alloc] init];
     NSData *userData = [controller getCSGoldDataWithUserName: username password: password];
-    [self parseData:userData];
     
-    //return user to waiting classes
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:self forKey:@"User"];
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"UserFinishedLoading"
-     object:nil
-     userInfo:userInfo];
-    NSLog(@"Returned from init");
-    return self;
+    if(userData != nil) {
+        [self parseData:userData];
+        
+        return self;
+    } else {
+        return nil;
+    }
 }
 
 -(void)parseData:(NSData *)userData {
@@ -57,10 +55,16 @@
     
     [self setFirstname: firstName.stringValue];
     [self setLastname: lastName.stringValue];
-    [self setCardBalance: [balance.stringValue intValue]];
-    [self setPolarPoints: [ppoints.stringValue intValue]];
+    [self setCardBalance: [balance.stringValue doubleValue]/100.0];
+    [self setPolarPoints: [ppoints.stringValue doubleValue]/100.0];
     [self setMealsLeft:   [@"123" intValue]]; //TBD
-    NSLog(@"Finished parsing: %@", firstName.stringValue);
+    
+    //return user to waiting classes
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:self forKey:@"User"];
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"UserFinishedLoading"
+     object:nil
+     userInfo:userInfo];
 }
 
 @end

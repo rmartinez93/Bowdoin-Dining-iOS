@@ -16,17 +16,24 @@
 //Account View Controller
 @implementation AccountViewController
 - (void)viewDidLoad {
-    /*TODO: load username & password from NSDefaults*/
-    
-    if(self.user == nil) {
-        [self.loginButton setHidden: TRUE];
-        [self performSegueWithIdentifier:@"LoginAction" sender:self];
-    }
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(userDidLoad:)
                                                  name:@"UserFinishedLoading"
                                                object:nil];
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *username = [userDefaults objectForKey:@"bowdoin_username"];
+    NSString *password = [userDefaults objectForKey:@"bowdoin_password"];
+    if(username && password) {
+        dispatch_queue_t downloadQueue = dispatch_queue_create("Download queue", NULL);
+        dispatch_async(downloadQueue, ^{
+            //in new thread, load user info
+            [[User alloc] initWithUsername:username password:password];
+        });
+    } else {
+        [self.loginButton setHidden: TRUE];
+        [self performSegueWithIdentifier:@"LoginAction" sender:self];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -44,26 +51,20 @@
     [self.loadingPoints  startAnimating];
     [self.loadingMeals   startAnimating];
     [self.loadingBalance startAnimating];
-    if(self.user != nil) {
-        NSLog(@"NOT LOGGED IN");
-    }
 }
 
 -(void)userDidLoad:(NSNotification *) notification {
-    
-    NSLog(@"User did Load");
     NSDictionary *userInfo = notification.userInfo;
     self.user = [userInfo objectForKey:@"User"];
-    
     [self.loadingPoints  stopAnimating];
     [self.loadingMeals   stopAnimating];
     [self.loadingBalance stopAnimating];
     
-    [self.points  setText: [NSString stringWithFormat:@"%i", self.user.polarPoints]];
-    [self.meals   setText: [NSString stringWithFormat:@"%i", self.user.mealsLeft]];
-    [self.balance setText: [NSString stringWithFormat:@"%i", self.user.cardBalance]];
-    
-    NSLog(@"Text was set");
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.points  setText: [NSString stringWithFormat:@"$%.2f", self.user.polarPoints]];
+        [self.meals   setText: [NSString stringWithFormat:@"%i", self.user.mealsLeft]];
+        [self.balance setText: [NSString stringWithFormat:@"$%.2f", self.user.cardBalance]];
+    });
 }
 
 - (IBAction)presentLoginViewController:(UIButton *)sender {

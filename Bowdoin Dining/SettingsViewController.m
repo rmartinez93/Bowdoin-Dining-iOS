@@ -29,6 +29,13 @@ AppDelegate *delegate;
     
     //if a filter was set, set it again in the view
     [self.dietFilter setSelectedSegmentIndex: [[NSUserDefaults standardUserDefaults] integerForKey:@"diet-filter"]];
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *username = [userDefaults objectForKey:@"bowdoin_username"];
+    NSString *password = [userDefaults objectForKey:@"bowdoin_password"];
+    if(!username || !password) {
+        [self.logoutButton setEnabled: FALSE];
+    }
 }
 
 //user selected a filter (or turnd off)
@@ -42,4 +49,11 @@ AppDelegate *delegate;
     [userDefaults synchronize];
 }
 
+- (IBAction)logout:(UIButton *)sender {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults removeObjectForKey: @"bowdoin_username"];
+    [userDefaults removeObjectForKey: @"bowdoin_password"];
+    [userDefaults synchronize];
+    [self.logoutButton setEnabled: FALSE];
+}
 @end

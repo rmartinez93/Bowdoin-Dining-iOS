@@ -17,25 +17,42 @@
 //Account View Controller
 @implementation LoginViewController
 - (void)viewDidLoad {
-
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    UIButton *trigger = (UIButton *)sender;
-    //login button
-    if(trigger.tag == 0) {
-        //create a new thread...
-        dispatch_queue_t downloadQueue = dispatch_queue_create("Download queue", NULL);
-        dispatch_async(downloadQueue, ^{
-            //in new thread, load user; automatically returned by NSNotificationCenter
-            [[User alloc] initWithUsername:[self.usernameField text] password:[self.passwordField text]];
-        });
-    }
-    
-    //cancel button
-    if(trigger.tag == 1) {
+- (IBAction)login:(id)sender {
+    [self.loggingIn startAnimating];
+    [self.loginButton setTitle:@"    " forState:UIControlStateNormal];
+    [self.usernameField setEnabled:FALSE];
+    [self.passwordField setEnabled:FALSE];
 
-    }
+    //create a new thread...
+    dispatch_queue_t downloadQueue = dispatch_queue_create("Download queue", NULL);
+    dispatch_async(downloadQueue, ^{
+        //in new thread, load user info
+        User* thisUser = [[User alloc] initWithUsername:[self.usernameField text] password:[self.passwordField text]];
+        //go back to main thread
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //check if we got a response
+            if(thisUser == nil) {
+                [self.loggingIn stopAnimating];
+                [self.loginButton setTitle:@"Login" forState:UIControlStateNormal];
+                [self.instructions setTextColor:[UIColor redColor]];
+                [self.usernameField setEnabled:TRUE];
+                [self.passwordField setEnabled:TRUE];
+                [self.instructions setText: @"Sorry, that username or password is invalid."];
+            } else {
+                if(self.remember.isOn) {
+                    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+                    [userDefaults setObject: [self.usernameField text] forKey: @"bowdoin_username"];
+                    [userDefaults setObject: [self.passwordField text] forKey: @"bowdoin_password"];
+                    [userDefaults synchronize];
+                }
+                
+                [self performSegueWithIdentifier:@"userDidLogin" sender:self];
+                [self.loggingIn stopAnimating];
+            }
+        });
+    });
 }
 
 @end

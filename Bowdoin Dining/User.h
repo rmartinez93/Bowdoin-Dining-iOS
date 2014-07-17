@@ -15,8 +15,8 @@
 @property (strong, atomic) NSString *password;
 @property (strong, atomic) NSString *firstname;
 @property (strong, atomic) NSString *lastname;
-@property int polarPoints;
-@property int cardBalance;
+@property double polarPoints;
+@property double cardBalance;
 @property int mealsLeft;
 
 

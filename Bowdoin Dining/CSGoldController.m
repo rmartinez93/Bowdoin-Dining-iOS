@@ -37,7 +37,6 @@
     
     NSData *userInfo = [self createSOAPRequestWithEnvelope:[self returnSoapEnvelopeForService:@"<tem:GetCSGoldSVCBalances/>"]];
     
-    NSLog(@"Returned userInfo");
 	return userInfo;
 }
 
