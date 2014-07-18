@@ -14,7 +14,7 @@ class PubViewController: UIViewController {
     override func viewDidLoad() {
         var url = NSBundle.mainBundle().URLForResource("magees-menu", withExtension: "pdf");
         var request = NSURLRequest(URL: url);
-        
+
         self.MageesMenu.loadRequest(request);
         
         super.viewDidLoad()

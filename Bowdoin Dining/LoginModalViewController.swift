@@ -44,7 +44,7 @@ class LoginModalViewController : UIViewController {
                     self.loginButton.setTitle("Login", forState: UIControlState.Normal)
                     self.usernameField.enabled = true
                     self.passwordField.enabled = true
-                    self.insutructions.text = "Sorry, that username or password is invalid."
+                    self.insutructions.text = "Username or password is invalid."
                 } else {
                     if self.remember.on {
                         var userDefaults = NSUserDefaults.standardUserDefaults()

@@ -64,7 +64,7 @@ UIColor *trueBlue;
 
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
     if([[anim valueForKey:@"id"] isEqualToString:@"grow"] && flag) {
-        [UIView animateWithDuration:0.5
+        [UIView animateWithDuration:1
                          animations:^{
                              self.alpha = 0;
                          }

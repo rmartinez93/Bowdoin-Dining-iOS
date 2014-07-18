@@ -7,7 +7,6 @@
 //
 #import "FirstViewController.h"
 #import "Menus.h"
-#import "Course.h"
 #import "SplashView.h"
 #import "BowdoinDining-Swift.h"
 
@@ -87,7 +86,7 @@ AppDelegate *delegate;
     //if this is a valid section, return number of menu items in section
     if(section < self.courses.count) {
         Course *thiscourse = [self.courses objectAtIndex:section];
-        return thiscourse.items.count;
+        return thiscourse.menuItems.count;
     } else return 0;
 }
 
@@ -108,16 +107,18 @@ AppDelegate *delegate;
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:simpleTableIdentifier];
     
     //if this is a valid section->row, grab right menu item from course and set cell properties
-    if(indexPath.section < self.courses.count && indexPath.row < [self.courses[indexPath.section] items].count) {
+    if(indexPath.section < self.courses.count && indexPath.row < [self.courses[indexPath.section] menuItems].count) {
         Course *thiscourse = [self.courses objectAtIndex: indexPath.section];
-        cell.textLabel.text = [thiscourse.items objectAtIndex: indexPath.row];
-        cell.detailTextLabel.text = [thiscourse.descriptions objectAtIndex: indexPath.row];
+        MenuItem *thisitem = [thiscourse.menuItems objectAtIndex: indexPath.row];
+
+        cell.textLabel.text       = thisitem.name;
+        cell.detailTextLabel.text = thisitem.descriptors;
         
         //style
         cell.detailTextLabel.textColor = [UIColor lightGrayColor];
         //if favorited, make item gold, else white background
         NSMutableArray *favorited = [Course allFavoritedItems];
-        if([favorited containsObject: (NSString *)thiscourse.itemIds[indexPath.row]]) {
+        if([favorited containsObject: thisitem.itemId]) {
             cell.backgroundColor = [UIColor colorWithRed:1 green:0.84 blue:0 alpha:1];
         } else cell.backgroundColor = [UIColor whiteColor];
         
@@ -130,19 +131,19 @@ AppDelegate *delegate;
 
 //UITableView delegate method, what to do after side-swiping cell
 - (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
-    //first, load in menu course this cell belongs to
+    //first, load in menuitem this cell belongs to
     Course *course = [self.courses objectAtIndex:indexPath.section];
+    MenuItem *item = [course.menuItems objectAtIndex: indexPath.row];
     
     //load favorited items
     NSMutableArray *favorited = [Course allFavoritedItems];
     
     //if this cell is NOT favorited, show favoriting action
-    if(![favorited containsObject: (NSString *) course.itemIds[indexPath.row]]) {
+    if(![favorited containsObject: item.itemId]) {
         //create favoriting action
         UITableViewRowAction *faveAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Favorite" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
             //if item is favorited, save it to our centralized list of favorited items
-            [Course addToFavoritedItems:[course.itemIds objectAtIndex:indexPath.row]];
-            
+            [Course addToFavoritedItems:item.itemId];
             //update styling of cell
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             cell.backgroundColor = [UIColor colorWithRed:1 green:0.84 blue:0 alpha:1];
@@ -157,7 +158,7 @@ AppDelegate *delegate;
         //create unfavoriting action
         UITableViewRowAction *unfaveAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Remove" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
             //if item is unfavorited, remove it from our centralized list of favorited items
-            [Course removeFromFavoritedItems: [course.itemIds objectAtIndex:indexPath.row]];
+            [Course removeFromFavoritedItems: item.itemId];
             
             //update styling of cell
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
@@ -173,10 +174,6 @@ AppDelegate *delegate;
 //UITableView delegate method, needed because of bug in iOS 8 for now
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     // No statement or algorithm is needed in here. Just the implementation
-}
-
-- (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
-    return NO;
 }
 
 //UITableView delegate method, creates animation when displaying cell
@@ -244,15 +241,14 @@ AppDelegate *delegate;
     delegate.offset  = [formattedDate[3] integerValue];
     
     //firstly, remove everything from the UITableView
-    NSRange originalRange = NSMakeRange(0, self.courses.count);
-    [self.menuItems beginUpdates];
-    [self.menuItems deleteSections:[NSIndexSet indexSetWithIndexesInRange:originalRange] withRowAnimation:UITableViewRowAnimationRight];
     [self.courses removeAllObjects];
+    [self.menuItems reloadData];
     
     //disable user interaction on segmented control and begin loading indicator
     [self.meals setUserInteractionEnabled:FALSE];
     [self.loading startAnimating];
     
+    [self.menuItems beginUpdates];
     //create a new thread...
     dispatch_queue_t downloadQueue = dispatch_queue_create("Download queue", NULL);
     dispatch_async(downloadQueue, ^{
@@ -275,6 +271,7 @@ AppDelegate *delegate;
             else {
                 //create a menu from this data and save it to delegate
                 self.courses = [Menus createMenuFromXML:xml ForMeal:[self.meals selectedSegmentIndex] AtLocation:delegate.thorneId withFilters: delegate.filters];
+
                 //insert new menu items to UITableView
                 NSRange newRange = NSMakeRange(0, self.courses.count);
                 [self.menuItems insertSections:[NSIndexSet indexSetWithIndexesInRange:newRange] withRowAnimation:UITableViewRowAnimationRight];
@@ -294,8 +291,6 @@ AppDelegate *delegate;
         delegate.daysAdded--;
         [self makeCorrectButtonsVisible];
         
-        [self updateVisibleMenu];
-        
         CGFloat textWidth = [[self.dayLabel text] sizeWithAttributes:@{NSFontAttributeName:[self.dayLabel font]}].width;
         CGPoint center = self.dayLabel.center;
         [UIView animateWithDuration:0.5
@@ -306,6 +301,7 @@ AppDelegate *delegate;
                              self.dayLabel.center = CGPointMake(320+(textWidth/2), self.dayLabel.center.y);
                          }
                          completion:^(BOOL finished) {
+                             [self updateVisibleMenu];
                              self.dayLabel.text = [self getTextForCurrentDay];
                              CGFloat newWidth = [[self.dayLabel text] sizeWithAttributes:@{NSFontAttributeName:[self.dayLabel font]}].width;
                              self.dayLabel.center = CGPointMake(0-(newWidth/2), self.dayLabel.center.y);
@@ -326,8 +322,6 @@ AppDelegate *delegate;
         delegate.daysAdded++;
         [self makeCorrectButtonsVisible];
         
-        [self updateVisibleMenu];
-        
         CGFloat textWidth = [[self.dayLabel text] sizeWithAttributes:@{NSFontAttributeName:[self.dayLabel font]}].width;
         CGPoint center = self.dayLabel.center;
         [UIView animateWithDuration:0.3
@@ -338,6 +332,7 @@ AppDelegate *delegate;
                              self.dayLabel.center = CGPointMake(0-(textWidth/2), self.dayLabel.center.y);
                          }
                          completion:^(BOOL finished) {
+                             [self updateVisibleMenu];
                              self.dayLabel.text = [self getTextForCurrentDay];
                              CGFloat newWidth = [[self.dayLabel text] sizeWithAttributes:@{NSFontAttributeName:[self.dayLabel font]}].width;
                              self.dayLabel.center = CGPointMake(320+(newWidth/2), self.dayLabel.center.y);

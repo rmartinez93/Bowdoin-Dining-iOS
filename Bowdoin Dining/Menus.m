@@ -7,9 +7,8 @@
 //
 
 #import "Menus.h"
-#import "Course.h"
 #import "GDataXMLNode.h"
-
+#import "BowdoinDining-Swift.h"
 @interface Menus ()
 
 
@@ -134,7 +133,7 @@ NSString *serverURL = @"http://www.bowdoin.edu/atreus/lib/xml/";
             }
             
             //grab information about this menu item: name & id
-            GDataXMLElement *item_name = [[item elementsForName:@"formal_name"] firstObject];
+            GDataXMLElement *item_name = [[item elementsForName:@"webLongName"] firstObject];
             GDataXMLElement *item_id = [[item elementsForName:@"itemID"] firstObject];
             
             //create regex for removing diet attributes from item name, find matches in string
@@ -169,22 +168,30 @@ NSString *serverURL = @"http://www.bowdoin.edu/atreus/lib/xml/";
             
             //if there is no active filter, or this item passes our filter
             if(!filters.count || [overlap allObjects].count) {
-                //if course exists in our array
+                //declare this course
+                Course *thiscourse;
+                
+                //if course already exists in our array
                 if(coursePosition >= 0) {
                     //grab a copy of it, and and add this item to the course
-                    Course *thiscourse = courses[coursePosition];
-                    [thiscourse.items addObject: cleaned];
-                    [thiscourse.itemIds addObject: item_id.stringValue];
-                    [thiscourse.descriptions addObject: detail];
+                    thiscourse = courses[coursePosition];
+                    
+                    MenuItem *item = [[MenuItem alloc] init];
+                    item.name = cleaned;
+                    item.itemId = item_id.stringValue;
+                    item.descriptors = detail;
+                    
+                    [thiscourse.menuItems addObject:item];
                 } else { //new course, create it and add item to it
-                    Course *thiscourse = [[Course alloc] init];
+                    thiscourse = [[Course alloc] init];
                     thiscourse.courseName = courseObject.stringValue;
-                    thiscourse.items = [[NSMutableArray alloc] init];
-                    thiscourse.itemIds = [[NSMutableArray alloc] init];
-                    thiscourse.descriptions = [[NSMutableArray alloc] init];
-                    [thiscourse.items addObject: cleaned];
-                    [thiscourse.itemIds addObject: item_id.stringValue];
-                    [thiscourse.descriptions addObject: detail];
+                    
+                    MenuItem *item = [[MenuItem alloc] init];
+                    item.name = cleaned;
+                    item.itemId = item_id.stringValue;
+                    item.descriptors = detail;
+                    
+                    [thiscourse.menuItems addObject:item];
                     [courses addObject: thiscourse];
                 }
             }
@@ -194,8 +201,10 @@ NSString *serverURL = @"http://www.bowdoin.edu/atreus/lib/xml/";
     else {
         Course *closed = [[Course alloc] init];
         closed.courseName = @"";
-        closed.items = [[NSMutableArray alloc] init];
-        [closed.items addObject: @"No Menu Available."];
+        MenuItem *item = [[MenuItem alloc] init];
+        item.name = @"No Menu Available";
+        item.itemId = @"NA";
+        [closed.menuItems addObject: item];
         [courses addObject: closed];
     }
     return courses; //return array of courses

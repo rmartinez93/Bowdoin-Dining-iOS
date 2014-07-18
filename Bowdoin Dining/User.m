@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "User.h"
-#import "Course.h"
 #import "GDataXMLNode.h"
 #import "CSGoldController.h"
+
 @interface User ()
 @end
 
