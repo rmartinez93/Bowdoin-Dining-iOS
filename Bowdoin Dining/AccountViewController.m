@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "AccountViewController.h"
-#import "LoginViewController.h"
+#import "BowdoinDining-Swift.h"
 
 @interface AccountViewController ()
 @end
@@ -32,7 +32,7 @@
         });
     } else {
         [self.loginButton setHidden: TRUE];
-        [self performSegueWithIdentifier:@"LoginAction" sender:self];
+        [self performSegueWithIdentifier:@"LoginModalAction" sender:self];
     }
 }
 

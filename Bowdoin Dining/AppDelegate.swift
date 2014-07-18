@@ -11,9 +11,9 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window    : UIWindow?
+    let thorneId  : NSInteger       = 1
+    let moultonId : NSInteger       = 0
     var filters   : NSMutableArray  = NSMutableArray()
-    var thorneId  : NSInteger       = 1
-    var moultonId : NSInteger       = 0
     var daysAdded : NSInteger       = 0
     var day       : NSInteger       = 0
     var month     : NSInteger       = 0
@@ -23,7 +23,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary?) -> Bool {
         // Override point for customization after application launch.
-        
         UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.Default, animated: false)
         
         self.updateDietFilter(NSUserDefaults.standardUserDefaults().integerForKey("diet-filter"))
