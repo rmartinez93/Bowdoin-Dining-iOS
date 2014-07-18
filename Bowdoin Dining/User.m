@@ -28,7 +28,6 @@
     
     if(userData != nil) {
         [self parseData:userData];
-        
         return self;
     } else {
         return nil;

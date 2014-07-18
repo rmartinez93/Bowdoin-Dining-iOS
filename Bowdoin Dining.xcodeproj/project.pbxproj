@@ -42,6 +42,8 @@
 		45AAB59A1970636E0078A7F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45AAB5981970636E0078A7F9 /* Main.storyboard */; };
 		45AAB59C1970636E0078A7F9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45AAB59B1970636E0078A7F9 /* Images.xcassets */; };
 		45AAB5A81970636F0078A7F9 /* Bowdoin_DiningTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 45AAB5A71970636F0078A7F9 /* Bowdoin_DiningTests.m */; };
+		45BE7FB51978567A0024167A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BE7FB41978567A0024167A /* User.swift */; };
+		45BE7FB719785BDE0024167A /* ThorneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BE7FB619785BDE0024167A /* ThorneViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -118,6 +120,8 @@
 		45AAB5A11970636F0078A7F9 /* Bowdoin DiningTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Bowdoin DiningTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		45AAB5A61970636F0078A7F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		45AAB5A71970636F0078A7F9 /* Bowdoin_DiningTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Bowdoin_DiningTests.m; sourceTree = "<group>"; };
+		45BE7FB41978567A0024167A /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		45BE7FB619785BDE0024167A /* ThorneViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThorneViewController.swift; sourceTree = "<group>"; };
 		45CC82991973320D008A391C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -235,10 +239,11 @@
 				455280FA19762FE6006C2DEA /* CSGoldController.m */,
 				4547C029197715D4003A54CA /* LoginViewController.h */,
 				4547C027197715C2003A54CA /* LoginViewController.m */,
-				45A9206019781AF400768D46 /* SettingsViewController.swift */,
 				4547C0261977102A003A54CA /* AccountViewController.h */,
 				4547C0241977101A003A54CA /* AccountViewController.m */,
+				45A9206019781AF400768D46 /* SettingsViewController.swift */,
 				45A9205E197815AB00768D46 /* PubViewController.swift */,
+				45BE7FB81978D8930024167A /* To-Be-Swifted */,
 				45AAB59B1970636E0078A7F9 /* Images.xcassets */,
 				4547C0221976C782003A54CA /* splash@2x.png */,
 				45AAB58B1970636E0078A7F9 /* Supporting Files */,
@@ -270,6 +275,15 @@
 				45AAB5A61970636F0078A7F9 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		45BE7FB81978D8930024167A /* To-Be-Swifted */ = {
+			isa = PBXGroup;
+			children = (
+				45BE7FB619785BDE0024167A /* ThorneViewController.swift */,
+				45BE7FB41978567A0024167A /* User.swift */,
+			);
+			name = "To-Be-Swifted";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -377,6 +391,7 @@
 				45AAB5971970636E0078A7F9 /* SecondViewController.m in Sources */,
 				45528117197635CC006C2DEA /* ASIHTTPRequest.m in Sources */,
 				45528119197635CC006C2DEA /* ASINetworkQueue.m in Sources */,
+				45BE7FB719785BDE0024167A /* ThorneViewController.swift in Sources */,
 				45528118197635CC006C2DEA /* ASIInputStream.m in Sources */,
 				4547C0201976C0D6003A54CA /* SplashView.m in Sources */,
 				45528114197635CC006C2DEA /* ASIDataDecompressor.m in Sources */,
@@ -396,6 +411,7 @@
 				4547C028197715C2003A54CA /* LoginViewController.m in Sources */,
 				45528112197635CC006C2DEA /* ASIAuthenticationDialog.m in Sources */,
 				45A9206319781F7A00768D46 /* AppDelegate.swift in Sources */,
+				45BE7FB51978567A0024167A /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

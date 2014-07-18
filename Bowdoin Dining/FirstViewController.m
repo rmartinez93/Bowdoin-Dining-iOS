@@ -8,8 +8,8 @@
 #import "FirstViewController.h"
 #import "Menus.h"
 #import "Course.h"
-#import "BowdoinDining-Swift.h"
 #import "SplashView.h"
+#import "BowdoinDining-Swift.h"
 
 @interface FirstViewController ()
 @end
@@ -21,6 +21,7 @@ AppDelegate *delegate;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    //show splash animation
     SplashView* splash = [[SplashView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
     splash.backgroundColor = [UIColor blackColor];
     [self.view addSubview:splash];
@@ -33,9 +34,6 @@ AppDelegate *delegate;
     
     //set selected segment to current meal on launch
     self.meals.selectedSegmentIndex = [self segmentIndexOfCurrentMeal: [NSDate date]];
-    
-    //share selected segment between Moulton/Thorne
-    delegate.selectedSegment = self.meals.selectedSegmentIndex;
     
     //style
     [self.tabBarController.tabBar setBarStyle:UIBarStyleBlack];
@@ -51,19 +49,11 @@ AppDelegate *delegate;
     //update selected segment in case changed elsewhere
     self.meals.selectedSegmentIndex = delegate.selectedSegment;
     
-    //if day is today, hide the back button
-    if(delegate.daysAdded == 0) {
-        self.backButton.hidden = true;
-    }
-    //if day is a week from now, hide forward button
-    else if(delegate.daysAdded == 6) {
-        self.forwardButton.hidden = true;
-    }
-}
-
-- (void)viewDidAppear:(BOOL)animated {
     //load menu based on delegate settings
     [self updateVisibleMenu];
+        
+    //verify correct buttons are showing
+    [self makeCorrectButtonsVisible];
 }
 
 //calculates which meal should be selected based on an NSDate
@@ -85,7 +75,6 @@ AppDelegate *delegate;
             return 2; //lunch
         }
     } else return 3;  //dinner
-    return 0;
 }
 
 //UITableView delegate method, returns number of sections/courses in loaded menu
@@ -111,14 +100,6 @@ AppDelegate *delegate;
     } else return @"";
 }
 
-//UITableView delegate method, sets section header styles
-- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
-    //set style to light gray with dark blue text
-    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
-    [header.textLabel setTextColor:[UIColor colorWithRed:0 green:0.4 blue:0.8 alpha:1]];
-    header.contentView.backgroundColor = [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1];
-}
-
 //UITableView delegate method, sets settings for cell/menu item to be displayed at a given section->row
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *simpleTableIdentifier = @"SimpleTableCell";
@@ -141,34 +122,10 @@ AppDelegate *delegate;
         } else cell.backgroundColor = [UIColor whiteColor];
         
         //if text is too long, make cell taller
-        cell.textLabel.numberOfLines = 0;
+        //cell.textLabel.numberOfLines = 0;
         [cell.textLabel sizeToFit];
     }
     return cell;
-}
-
-//UITableView delegate method, creates animation when displaying cell
--(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
-    //1. Setup the CATransform3D structure
-    CATransform3D rotation;
-    rotation = CATransform3DMakeRotation( (90.0*M_PI)/180, 0.0, 0.7, 0.4);
-    rotation.m34 = 1.0/ -600;
-    
-    //2. Define the initial state (Before the animation)
-    cell.layer.shadowColor = [[UIColor blackColor]CGColor];
-    cell.layer.shadowOffset = CGSizeMake(10, 10);
-    cell.alpha = 0;
-    
-    cell.layer.transform = rotation;
-    cell.layer.anchorPoint = CGPointMake(0, 0.5);
-    
-    //3. Define the final state (After the animation) and commit the animation
-    [UIView beginAnimations:@"rotation" context:NULL];
-    [UIView setAnimationDuration:0.8];
-    cell.layer.transform = CATransform3DIdentity;
-    cell.alpha = 1;
-    cell.layer.shadowOffset = CGSizeMake(0, 0);
-    [UIView commitAnimations];
 }
 
 //UITableView delegate method, what to do after side-swiping cell
@@ -216,6 +173,54 @@ AppDelegate *delegate;
 //UITableView delegate method, needed because of bug in iOS 8 for now
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     // No statement or algorithm is needed in here. Just the implementation
+}
+
+- (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    return NO;
+}
+
+//UITableView delegate method, creates animation when displaying cell
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+    [self animateIn: cell];
+}
+
+//UITableView delegate method, sets section header styles
+- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
+    //set style to light gray with dark blue text
+    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
+    [header.textLabel setTextColor:[UIColor colorWithRed:0 green:0.4 blue:0.8 alpha:1]];
+    header.contentView.backgroundColor = [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1];
+    
+    [self animateIn:header];
+}
+
+-(void)animateIn:(UIView *)view {
+    //1. Setup the CATransform3D structure
+    CATransform3D rotation;
+    rotation = CATransform3DMakeRotation( (90.0*M_PI)/180, 0.0, 0.7, 0.4);
+    rotation.m34 = 1.0/ -600;
+    
+    
+    //2. Define the initial state (Before the animation)
+    view.layer.shadowColor = [[UIColor blackColor]CGColor];
+    view.layer.shadowOffset = CGSizeMake(10, 10);
+    view.alpha = 0;
+    
+    view.layer.transform = rotation;
+    view.layer.anchorPoint = CGPointMake(0, 0.5);
+    
+    //!!!FIX for issue #1 Cell position wrong------------
+    if(view.layer.position.x != 0){
+        view.layer.position = CGPointMake(0, view.layer.position.y);
+    }
+    
+    //4. Define the final state (After the animation) and commit the animation
+    [UIView beginAnimations:@"rotation" context:NULL];
+    [UIView setAnimationDuration:0.8];
+    view.layer.transform = CATransform3DIdentity;
+    view.alpha = 1;
+    view.layer.shadowOffset = CGSizeMake(0, 0);
+    [UIView commitAnimations];
 }
 
 //user selected a different meal
@@ -287,10 +292,7 @@ AppDelegate *delegate;
 - (IBAction)backButtonPressed: (UIButton*)sender {
     if(delegate.daysAdded > 0) {
         delegate.daysAdded--;
-        if(delegate.daysAdded == 0) {
-            self.backButton.hidden = true;
-        } else if(delegate.daysAdded == 5)
-            self.forwardButton.hidden = false;
+        [self makeCorrectButtonsVisible];
         
         [self updateVisibleMenu];
         
@@ -314,9 +316,7 @@ AppDelegate *delegate;
                                                   self.dayLabel.center = center;
                                                   self.dayLabel.alpha = 1.0;
                                               }
-                                              completion:^(BOOL finished) {
-                                                  
-                                              }];
+                                              completion:nil];
                          }];
     }
 }
@@ -324,10 +324,10 @@ AppDelegate *delegate;
 - (IBAction)forwardButtonPressed:(UIButton*)sender {
     if(delegate.daysAdded < 6) {
         delegate.daysAdded++;
-        if(delegate.daysAdded == 6) {
-            self.forwardButton.hidden = true;
-        } else if(delegate.daysAdded == 1)
-            self.backButton.hidden = false;
+        [self makeCorrectButtonsVisible];
+        
+        [self updateVisibleMenu];
+        
         CGFloat textWidth = [[self.dayLabel text] sizeWithAttributes:@{NSFontAttributeName:[self.dayLabel font]}].width;
         CGPoint center = self.dayLabel.center;
         [UIView animateWithDuration:0.3
@@ -338,7 +338,6 @@ AppDelegate *delegate;
                              self.dayLabel.center = CGPointMake(0-(textWidth/2), self.dayLabel.center.y);
                          }
                          completion:^(BOOL finished) {
-                             [self updateVisibleMenu];
                              self.dayLabel.text = [self getTextForCurrentDay];
                              CGFloat newWidth = [[self.dayLabel text] sizeWithAttributes:@{NSFontAttributeName:[self.dayLabel font]}].width;
                              self.dayLabel.center = CGPointMake(320+(newWidth/2), self.dayLabel.center.y);
@@ -349,10 +348,20 @@ AppDelegate *delegate;
                                                   self.dayLabel.center = center;
                                                   self.dayLabel.alpha = 1.0;
                                               }
-                                              completion:^(BOOL finished) {
-                                                  
-                                              }];
+                                              completion:nil];
                          }];
+    }
+}
+
+//checks to make sure back/forward buttons are only visible when appropriate
+-(void)makeCorrectButtonsVisible {
+    if(delegate.daysAdded == 6)
+        self.forwardButton.hidden = true;
+    else if(delegate.daysAdded == 0)
+        self.backButton.hidden = true;
+    else {
+        self.backButton.hidden = false;
+        self.forwardButton.hidden = false;
     }
 }
 

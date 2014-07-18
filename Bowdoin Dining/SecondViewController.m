@@ -28,17 +28,17 @@ AppDelegate *delegate;
     //show status bar
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     
+    //set the text label to day we're browsing
     self.dayLabel.text = [self getTextForCurrentDay];
+    
+    //update selected segment in case changed elsewhere
     self.meals.selectedSegmentIndex = delegate.selectedSegment;
-    if(delegate.daysAdded == 0) {
-        self.backButton.hidden = true;
-    } else if(delegate.daysAdded == 6) {
-        self.forwardButton.hidden = true;
-    }
-}
-
-- (void)viewDidAppear:(BOOL)animated {
+    
+    //load menu based on delegate settings
     [self updateVisibleMenu];
+    
+    //verify correct buttons are showing
+    [self makeCorrectButtonsVisible];
 }
 
 - (NSInteger)segmentIndexOfCurrentMeal:(NSDate *)now {
@@ -80,12 +80,6 @@ AppDelegate *delegate;
     } else return @"";
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
-    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
-    [header.textLabel setTextColor:[UIColor colorWithRed:0 green:0.4 blue:0.8 alpha:1]];
-    header.contentView.backgroundColor = [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1];
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *simpleTableIdentifier = @"SimpleTableCell";
     
@@ -100,7 +94,6 @@ AppDelegate *delegate;
         cell.textLabel.text = [thiscourse.items objectAtIndex: indexPath.row];
         cell.detailTextLabel.text = [thiscourse.descriptions objectAtIndex: indexPath.row];
         cell.detailTextLabel.textColor = [UIColor lightGrayColor];
-        
         if([Course.allFavoritedItems containsObject: (NSString *)thiscourse.itemIds[indexPath.row]]) {
             cell.backgroundColor = [UIColor colorWithRed:1 green:0.84 blue:0 alpha:1];
         } else cell.backgroundColor = [UIColor whiteColor];
@@ -108,26 +101,72 @@ AppDelegate *delegate;
     return cell;
 }
 
+- (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+    Course *course = [self.courses objectAtIndex:indexPath.section];
+    if(![Course.allFavoritedItems containsObject: (NSString *) course.itemIds[indexPath.row]]) {
+        UITableViewRowAction *faveAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Favorite" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+            [Course addToFavoritedItems: [course.itemIds objectAtIndex:indexPath.row]];
+            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+            cell.backgroundColor = [UIColor colorWithRed:1 green:0.84 blue:0 alpha:1];
+            [tableView setEditing:NO];
+        }];
+        faveAction.backgroundColor = [UIColor colorWithRed:1 green:0.84 blue:0 alpha:1];
+        return @[faveAction];
+    } else {
+        UITableViewRowAction *unfaveAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Remove" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+            [Course removeFromFavoritedItems: [course.itemIds objectAtIndex:indexPath.row]];
+            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+            cell.backgroundColor = [UIColor whiteColor];
+            [tableView setEditing:NO];
+        }];
+        unfaveAction.backgroundColor = [UIColor lightGrayColor];
+        return @[unfaveAction];
+    }
+    
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    // No statement or algorithm is needed in here. Just the implementation
+}
+
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+    [self animateIn: cell];
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
+    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
+    [header.textLabel setTextColor:[UIColor colorWithRed:0 green:0.4 blue:0.8 alpha:1]];
+    header.contentView.backgroundColor = [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1];
+    
+    [self animateIn: header];
+}
+
+-(void)animateIn:(UIView *)view {
     //1. Setup the CATransform3D structure
     CATransform3D rotation;
     rotation = CATransform3DMakeRotation( (90.0*M_PI)/180, 0.0, 0.7, 0.4);
     rotation.m34 = 1.0/ -600;
     
+    
     //2. Define the initial state (Before the animation)
-    cell.layer.shadowColor = [[UIColor blackColor]CGColor];
-    cell.layer.shadowOffset = CGSizeMake(10, 10);
-    cell.alpha = 0;
+    view.layer.shadowColor = [[UIColor blackColor]CGColor];
+    view.layer.shadowOffset = CGSizeMake(10, 10);
+    view.alpha = 0;
     
-    cell.layer.transform = rotation;
-    cell.layer.anchorPoint = CGPointMake(0, 0.5);
+    view.layer.transform = rotation;
+    view.layer.anchorPoint = CGPointMake(0, 0.5);
     
-    //3. Define the final state (After the animation) and commit the animation
+    //!!!FIX for issue #1 Cell position wrong------------
+    if(view.layer.position.x != 0){
+        view.layer.position = CGPointMake(0, view.layer.position.y);
+    }
+    
+    //4. Define the final state (After the animation) and commit the animation
     [UIView beginAnimations:@"rotation" context:NULL];
     [UIView setAnimationDuration:0.8];
-    cell.layer.transform = CATransform3DIdentity;
-    cell.alpha = 1;
-    cell.layer.shadowOffset = CGSizeMake(0, 0);
+    view.layer.transform = CATransform3DIdentity;
+    view.alpha = 1;
+    view.layer.shadowOffset = CGSizeMake(0, 0);
     [UIView commitAnimations];
 }
 
@@ -180,44 +219,13 @@ AppDelegate *delegate;
     });
 }
 
-
-
-- (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
-    Course *course = [self.courses objectAtIndex:indexPath.section];
-    if(![Course.allFavoritedItems containsObject: (NSString *) course.itemIds[indexPath.row]]) {
-        UITableViewRowAction *faveAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Favorite" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
-            [Course addToFavoritedItems: [course.itemIds objectAtIndex:indexPath.row]];
-            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            cell.backgroundColor = [UIColor colorWithRed:1 green:0.84 blue:0 alpha:1];
-            [tableView setEditing:NO];
-        }];
-        faveAction.backgroundColor = [UIColor colorWithRed:1 green:0.84 blue:0 alpha:1];
-        return @[faveAction];
-    } else {
-        UITableViewRowAction *unfaveAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Remove" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
-            [Course removeFromFavoritedItems: [course.itemIds objectAtIndex:indexPath.row]];
-            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            cell.backgroundColor = [UIColor whiteColor];
-            [tableView setEditing:NO];
-        }];
-        unfaveAction.backgroundColor = [UIColor lightGrayColor];
-        return @[unfaveAction];
-    }
-    
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    // No statement or algorithm is needed in here. Just the implementation
-}
-
 - (IBAction)backButtonPressed: (UIButton*)sender {
     if(delegate.daysAdded > 0) {
         delegate.daysAdded--;
-        if(delegate.daysAdded == 0) {
-            self.backButton.hidden = true;
-        } else if(delegate.daysAdded == 5)
-            self.forwardButton.hidden = false;
+        [self makeCorrectButtonsVisible];
+        
         [self updateVisibleMenu];
+        
         CGFloat textWidth = [[self.dayLabel text] sizeWithAttributes:@{NSFontAttributeName:[self.dayLabel font]}].width;
         CGPoint center = self.dayLabel.center;
         [UIView animateWithDuration:0.5
@@ -248,10 +256,7 @@ AppDelegate *delegate;
 - (IBAction)forwardButtonPressed:(UIButton*)sender {
     if(delegate.daysAdded < 6) {
         delegate.daysAdded++;
-        if(delegate.daysAdded == 6) {
-            self.forwardButton.hidden = true;
-        } else if(delegate.daysAdded == 1)
-            self.backButton.hidden = false;
+        [self makeCorrectButtonsVisible];
         
         [self updateVisibleMenu];
         
@@ -279,6 +284,18 @@ AppDelegate *delegate;
                                                   
                                               }];
                          }];
+    }
+}
+
+//checks to make sure back/forward buttons are only visible when appropriate
+-(void)makeCorrectButtonsVisible {
+    if(delegate.daysAdded == 6)
+        self.forwardButton.hidden = true;
+    else if(delegate.daysAdded == 0)
+        self.backButton.hidden = true;
+    else {
+        self.backButton.hidden = false;
+        self.forwardButton.hidden = false;
     }
 }
 

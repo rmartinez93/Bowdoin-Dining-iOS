@@ -94,7 +94,7 @@
 	[SOAPRequest setValidatesSecureCertificate:YES];
 	[SOAPRequest setPostBody:(NSMutableData*)[SOAPEnvelope dataUsingEncoding:NSUTF8StringEncoding]];
 	[SOAPRequest startSynchronous];
-		
+    
 	// Makes sure authentication was successful
 	if (SOAPRequest.responseStatusCode == 200) {
 		NSLog(@"Authenticated");

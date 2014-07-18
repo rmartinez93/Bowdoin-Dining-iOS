@@ -38,6 +38,28 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                                 <color key="separatorColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" ambiguous="YES" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SimpleTableCell" textLabel="X8t-TR-E0p" detailTextLabel="3Ch-cR-cZU" style="IBUITableViewCellStyleSubtitle" id="isB-TH-XrA">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="isB-TH-XrA" id="7Qq-GT-3fi">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="X8t-TR-E0p">
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Detail" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="3Ch-cR-cZU">
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="9pv-A4-QxB" id="DSQ-ay-11d"/>
                                 </connections>
@@ -241,7 +263,7 @@
         <!--Settings View Controller - Settings-->
         <scene sceneID="JW8-XU-IiB">
             <objects>
-                <viewController id="cho-qD-bXK" customClass="SettingsViewController" customModule="Bowdoin_Dining" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="cho-qD-bXK" customClass="SettingsViewController" customModule="BowdoinDining" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Wp6-kl-nds"/>
                         <viewControllerLayoutGuide type="bottom" id="nUd-mV-55c"/>
@@ -615,7 +637,7 @@
         <!--Pub View Controller - Pub-->
         <scene sceneID="L47-34-Lm6">
             <objects>
-                <viewController id="TdJ-7k-evO" customClass="PubViewController" customModule="Bowdoin_Dining" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="TdJ-7k-evO" customClass="PubViewController" customModule="BowdoinDining" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="XhF-Ky-OOg"/>
                         <viewControllerLayoutGuide type="bottom" id="CoY-dg-vXS"/>
