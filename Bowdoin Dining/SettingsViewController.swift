@@ -20,8 +20,8 @@ class SettingsViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        UIApplication.sharedApplication().setStatusBarHidden(false, animated: false)
+        UIApplication.sharedApplication().statusBarHidden = true
+
         if NSUserDefaults.standardUserDefaults().integerForKey("diet-filter") != nil {
             self.dietFilter.selectedSegmentIndex = NSUserDefaults.standardUserDefaults().integerForKey("diet-filter")
         }

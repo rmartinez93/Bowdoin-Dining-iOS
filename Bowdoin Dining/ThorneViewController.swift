@@ -27,6 +27,9 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITableViewDa
         splash.backgroundColor = UIColor.blackColor()
         self.view.addSubview(splash)
         
+        self.menuItems.delegate = self;
+        self.menuItems.dataSource = self;
+        
         //set selected segment to current meal on launch
         self.meals.selectedSegmentIndex = self.segmentIndexOfCurrentMeal(NSDate())
         //share selected segment between Moulton/Thorne
@@ -77,7 +80,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITableViewDa
             
             var textWidth = (self.dayLabel.text as NSString).sizeWithAttributes([NSFontAttributeName:self.dayLabel.font]).width
             var center    = self.dayLabel.center
-            UIView.animateWithDuration(0.5,
+            UIView.animateWithDuration(0.2,
                 animations: {
                     self.dayLabel.alpha = 0
                     self.dayLabel.center = CGPointMake(320+(textWidth/2), self.dayLabel.center.y)
@@ -87,7 +90,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     self.dayLabel.text = self.getTextForCurrentDay()
                     var newWidth = (self.dayLabel.text as NSString).sizeWithAttributes([NSFontAttributeName:self.dayLabel.font]).width
                     self.dayLabel.center = CGPointMake(0-(newWidth/2), self.dayLabel.center.y)
-                    UIView.animateWithDuration(0.2,
+                    UIView.animateWithDuration(0.1,
                         animations: {
                             self.dayLabel.alpha = 1
                             self.dayLabel.center = center
@@ -106,7 +109,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITableViewDa
             var textWidth = (self.dayLabel.text as NSString).sizeWithAttributes([NSFontAttributeName:self.dayLabel.font]).width
             var center    = self.dayLabel.center
             
-            UIView.animateWithDuration(0.5,
+            UIView.animateWithDuration(0.2,
                 animations: {
                     self.dayLabel.alpha = 0
                     self.dayLabel.center = CGPointMake(0-(textWidth/2), self.dayLabel.center.y)
@@ -116,7 +119,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     self.dayLabel.text = self.getTextForCurrentDay()
                     var newWidth = (self.dayLabel.text as NSString).sizeWithAttributes([NSFontAttributeName:self.dayLabel.font]).width
                     self.dayLabel.center = CGPointMake(320+(newWidth/2), self.dayLabel.center.y)
-                    UIView.animateWithDuration(0.2,
+                    UIView.animateWithDuration(0.1,
                         animations: {
                             self.dayLabel.alpha = 1
                             self.dayLabel.center = center
@@ -233,7 +236,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
    
     //UITableView delegate method, what to do after side-swiping cell
-    func tableView(tableView: UITableView!, editActionsForRowAtIndexPath indexPath: NSIndexPath!) -> AnyObject[]! {
+    func tableView(tableView: UITableView!, editActionsForRowAtIndexPath indexPath: NSIndexPath!) -> [AnyObject]! {
         //first, load in menu course this cell belongs to
         var course = self.courses.objectAtIndex(indexPath.section) as Course
         //get item from course
@@ -264,7 +267,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 handler: {
                     void in
                     //otherwise if this cell is favorited, show un-favoriting action
-                    Course.addToFavoritedItems(item.itemId)
+                    Course.removeFromFavoritedItems(item.itemId)
                     //update styling of cell
                     var cell = tableView.cellForRowAtIndexPath(indexPath) as UITableViewCell
                     cell.backgroundColor = UIColor.whiteColor()
@@ -281,17 +284,17 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     //UITableView delegate method, sets section header styles
-    func tableView(tableView: UITableView!, willDisplayHeaderView view: UIView, forSection section: Int) {
+    func tableView(tableView: UITableView!, willDisplayHeaderView view: UIView!, forSection section: Int) {
         var header = UITableViewHeaderFooterView()
         header.textLabel.textColor = UIColor(red:0, green: 0.4, blue: 0.8, alpha: 1)
         header.contentView.backgroundColor = UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1)
-        
-        self.animateIn(header)
+
+//        self.animateIn(header)
     }
     
     //UITableView delegate method, creates animation when displaying cell
-    func tableView(tableView: UITableView!, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        self.animateIn(cell)
+    func tableView(tableView: UITableView!, willDisplayCell cell: UITableViewCell!, forRowAtIndexPath indexPath: NSIndexPath!) {
+//        self.animateIn(cell)
     }
     
     func divide (left: Double, right: Double) -> Double {

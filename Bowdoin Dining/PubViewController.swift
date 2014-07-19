@@ -27,7 +27,7 @@ class PubViewController: UIViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
-        UIApplication.sharedApplication().setStatusBarHidden(true, animated: true)
+        UIApplication.sharedApplication().statusBarHidden = true
     }
 
 }

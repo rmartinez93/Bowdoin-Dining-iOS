@@ -26,7 +26,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.Default, animated: false)
         
-        self.updateDietFilter(NSUserDefaults.standardUserDefaults().integerForKey("diet-filter"))
+        
+        var currentFilter : NSInteger? = NSUserDefaults.standardUserDefaults().objectForKey("diet-filter") as? NSInteger
+        if currentFilter {
+            self.updateDietFilter(currentFilter!)
+        }
         
         return true
     }

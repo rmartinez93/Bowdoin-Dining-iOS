@@ -35,8 +35,6 @@
 		45A9205F197815AB00768D46 /* PubViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A9205E197815AB00768D46 /* PubViewController.swift */; };
 		45A9206119781AF400768D46 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A9206019781AF400768D46 /* SettingsViewController.swift */; };
 		45A9206319781F7A00768D46 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A9206219781F7A00768D46 /* AppDelegate.swift */; };
-		45AAB5941970636E0078A7F9 /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45AAB5931970636E0078A7F9 /* FirstViewController.m */; };
-		45AAB5971970636E0078A7F9 /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45AAB5961970636E0078A7F9 /* SecondViewController.m */; };
 		45AAB59A1970636E0078A7F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45AAB5981970636E0078A7F9 /* Main.storyboard */; };
 		45AAB59C1970636E0078A7F9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45AAB59B1970636E0078A7F9 /* Images.xcassets */; };
 		45AAB5A81970636F0078A7F9 /* Bowdoin_DiningTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 45AAB5A71970636F0078A7F9 /* Bowdoin_DiningTests.m */; };
@@ -112,10 +110,6 @@
 		45A9206219781F7A00768D46 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		45AAB5881970636E0078A7F9 /* Bowdoin Dining.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bowdoin Dining.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		45AAB58C1970636E0078A7F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		45AAB5921970636E0078A7F9 /* FirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = "<group>"; };
-		45AAB5931970636E0078A7F9 /* FirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FirstViewController.m; sourceTree = "<group>"; };
-		45AAB5951970636E0078A7F9 /* SecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecondViewController.h; sourceTree = "<group>"; };
-		45AAB5961970636E0078A7F9 /* SecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
 		45AAB5991970636E0078A7F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		45AAB59B1970636E0078A7F9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		45AAB5A11970636F0078A7F9 /* Bowdoin DiningTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Bowdoin DiningTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -235,13 +229,6 @@
 			isa = PBXGroup;
 			children = (
 				45AAB5981970636E0078A7F9 /* Main.storyboard */,
-				45A9206219781F7A00768D46 /* AppDelegate.swift */,
-				45BE7FB619785BDE0024167A /* ThorneViewController.swift */,
-				45C2E7F1197A31E900D41105 /* MoultonViewController.swift */,
-				45AAB5921970636E0078A7F9 /* FirstViewController.h */,
-				45AAB5931970636E0078A7F9 /* FirstViewController.m */,
-				45AAB5951970636E0078A7F9 /* SecondViewController.h */,
-				45AAB5961970636E0078A7F9 /* SecondViewController.m */,
 				4547C0211976C0E8003A54CA /* SplashView.h */,
 				4547C01F1976C0D6003A54CA /* SplashView.m */,
 				4530A1031970DD26000CCBCC /* Menus.h */,
@@ -252,6 +239,9 @@
 				455280FA19762FE6006C2DEA /* CSGoldController.m */,
 				4547C0261977102A003A54CA /* AccountViewController.h */,
 				4547C0241977101A003A54CA /* AccountViewController.m */,
+				45C2E7F1197A31E900D41105 /* MoultonViewController.swift */,
+				45BE7FB619785BDE0024167A /* ThorneViewController.swift */,
+				45A9206219781F7A00768D46 /* AppDelegate.swift */,
 				45BE7FBB197995C80024167A /* Course.swift */,
 				45BE7FBD19799CC90024167A /* MenuItem.swift */,
 				45BE7FB91978E09F0024167A /* LoginModalViewController.swift */,
@@ -403,7 +393,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				45353BF1197A20B2008CC741 /* AccountViewController.m in Sources */,
-				45AAB5971970636E0078A7F9 /* SecondViewController.m in Sources */,
 				45528117197635CC006C2DEA /* ASIHTTPRequest.m in Sources */,
 				45528119197635CC006C2DEA /* ASINetworkQueue.m in Sources */,
 				45BE7FB719785BDE0024167A /* ThorneViewController.swift in Sources */,
@@ -418,7 +407,6 @@
 				4547C02C19774381003A54CA /* User.m in Sources */,
 				4530A1051970DD31000CCBCC /* Menus.m in Sources */,
 				45528113197635CC006C2DEA /* ASIDataCompressor.m in Sources */,
-				45AAB5941970636E0078A7F9 /* FirstViewController.m in Sources */,
 				45A9206119781AF400768D46 /* SettingsViewController.swift in Sources */,
 				45528116197635CC006C2DEA /* ASIFormDataRequest.m in Sources */,
 				45BE7FBE19799CC90024167A /* MenuItem.swift in Sources */,
