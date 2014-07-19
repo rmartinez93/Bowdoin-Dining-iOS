@@ -15,11 +15,15 @@
 @end
 
 @implementation User
--(id) initWithUsername:(NSString *) username password:(NSString *) password {
-    // Call superclass's initializer
-    self = [super init];
-    if( !self ) return nil;
-    
+
+-(void)logout {
+    self.dataLoaded  = false;
+    self.polarPoints = 0;
+    self.cardBalance = 0;
+    self.mealsLeft   = 0;
+}
+
+-(void)loadDataFor:(NSString *)username password:(NSString *)password {
     [self setUsername:username];
     [self setPassword:password];
     
@@ -28,10 +32,8 @@
     
     if(userData != nil) {
         [self parseData:userData];
-        return self;
-    } else {
-        return nil;
-    }
+        self.dataLoaded = true;
+    } else self.dataLoaded = false;
 }
 
 -(void)parseData:(NSData *)userData {

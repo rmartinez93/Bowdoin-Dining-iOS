@@ -90,7 +90,7 @@ NSString *serverURL = @"http://www.bowdoin.edu/atreus/lib/xml/";
         NSError *error = nil;
         NSData *xmlData = [NSMutableData dataWithContentsOfURL: url options: 0 error: &error];
         if(error) NSLog(@"%@", [error debugDescription]);
-        
+
         //end network activity
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         

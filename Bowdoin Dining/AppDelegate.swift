@@ -20,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var year      : NSInteger       = 0
     var offset    : NSInteger       = 0
     var selectedSegment : NSInteger = 0
+    var user      : User            = User()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary?) -> Bool {
         // Override point for customization after application launch.
@@ -32,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func updateDietFilter(filterIndex : NSInteger) {
         self.filters.removeAllObjects()
-        switch(filterIndex) {
+        switch filterIndex {
             case 1:
                 self.filters.addObject("V")
                 self.filters.addObject("VE")

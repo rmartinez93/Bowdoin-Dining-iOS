@@ -12,5 +12,4 @@ class MenuItem : NSObject {
     var name        : NSString = ""
     var itemId      : NSString = ""
     var descriptors : NSString = ""
-    
 }

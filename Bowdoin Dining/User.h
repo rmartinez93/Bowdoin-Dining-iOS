@@ -10,7 +10,8 @@
 
 @interface User : NSObject
 
--(id) initWithUsername:(NSString *) username password:(NSString *) password;
+-(void)loadDataFor:(NSString *)username password:(NSString *)password;
+-(void)logout;
 @property (strong, atomic) NSString *username;
 @property (strong, atomic) NSString *password;
 @property (strong, atomic) NSString *firstname;
@@ -18,6 +19,7 @@
 @property double polarPoints;
 @property double cardBalance;
 @property int mealsLeft;
+@property bool dataLoaded;
 
 
 @end

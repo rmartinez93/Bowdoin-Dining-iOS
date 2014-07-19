@@ -24,6 +24,8 @@ AppDelegate *delegate;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
     //show status bar
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     

@@ -39,6 +39,8 @@ AppDelegate *delegate;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
     //show status bar
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
 
@@ -133,6 +135,7 @@ AppDelegate *delegate;
 - (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     //first, load in menuitem this cell belongs to
     Course *course = [self.courses objectAtIndex:indexPath.section];
+    //get item from course
     MenuItem *item = [course.menuItems objectAtIndex: indexPath.row];
     
     //load favorited items

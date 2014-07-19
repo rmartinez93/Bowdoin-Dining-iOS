@@ -15,6 +15,7 @@ class LoginModalViewController : UIViewController {
     @IBOutlet var loggingIn     : UIActivityIndicatorView
     @IBOutlet var insutructions : UILabel
     @IBOutlet var loginButton   : UIButton
+    var delegate = UIApplication.sharedApplication().delegate as AppDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,11 +36,11 @@ class LoginModalViewController : UIViewController {
         var downloadQueue = dispatch_queue_create("Download queue", nil)
         dispatch_async(downloadQueue) {
             //in new thread, load user info
-            var user = User(username: self.usernameField.text, password: self.passwordField.text)
+            self.delegate.user.loadDataFor(self.usernameField.text, password: self.passwordField.text)
             
             //go back to main thread
             dispatch_async(dispatch_get_main_queue()) {
-                if user == nil {
+                if !self.delegate.user.dataLoaded {
                     self.loggingIn.stopAnimating()
                     self.loginButton.setTitle("Login", forState: UIControlState.Normal)
                     self.usernameField.enabled = true
@@ -65,7 +66,7 @@ class LoginModalViewController : UIViewController {
         // Try to find next responder
         var nextResponder = textfield.superview.viewWithTag(nextTag)
         
-        if(nextResponder) {
+        if nextResponder {
             // Found next responder, so set it.
             nextResponder.becomeFirstResponder()
         } else {

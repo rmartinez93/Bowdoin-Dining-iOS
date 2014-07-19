@@ -13,9 +13,9 @@
 		4507E70619726E3A000628DE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4507E70319726E3A000628DE /* UIKit.framework */; };
 		451C9E6A1970A229006007AE /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 451C9E691970A229006007AE /* GDataXMLNode.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4530A1051970DD31000CCBCC /* Menus.m in Sources */ = {isa = PBXBuildFile; fileRef = 4530A1041970DD31000CCBCC /* Menus.m */; };
+		45353BF1197A20B2008CC741 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4547C0241977101A003A54CA /* AccountViewController.m */; };
 		4547C0201976C0D6003A54CA /* SplashView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4547C01F1976C0D6003A54CA /* SplashView.m */; };
 		4547C0231976C782003A54CA /* splash@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4547C0221976C782003A54CA /* splash@2x.png */; };
-		4547C0251977101A003A54CA /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4547C0241977101A003A54CA /* AccountViewController.m */; };
 		4547C02C19774381003A54CA /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 4547C02B19774381003A54CA /* User.m */; };
 		455280DB1975FD27006C2DEA /* magees-menu.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 455280DA1975FD27006C2DEA /* magees-menu.pdf */; };
 		455280FB19762FE6006C2DEA /* CSGoldController.m in Sources */ = {isa = PBXBuildFile; fileRef = 455280FA19762FE6006C2DEA /* CSGoldController.m */; };
@@ -45,6 +45,10 @@
 		45BE7FBA1978E09F0024167A /* LoginModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BE7FB91978E09F0024167A /* LoginModalViewController.swift */; };
 		45BE7FBC197995C80024167A /* Course.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BE7FBB197995C80024167A /* Course.swift */; };
 		45BE7FBE19799CC90024167A /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BE7FBD19799CC90024167A /* MenuItem.swift */; };
+		45BE7FC01979B12E0024167A /* LayerKit.embeddedframework in Resources */ = {isa = PBXBuildFile; fileRef = 45BE7FBF1979B12E0024167A /* LayerKit.embeddedframework */; };
+		45BE7FC31979B1630024167A /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45BE7FC11979B1630024167A /* AddressBook.framework */; };
+		45BE7FC41979B1630024167A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45BE7FC21979B1630024167A /* CoreData.framework */; };
+		45C2E7F2197A31E900D41105 /* MoultonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C2E7F1197A31E900D41105 /* MoultonViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -122,6 +126,10 @@
 		45BE7FB91978E09F0024167A /* LoginModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginModalViewController.swift; sourceTree = "<group>"; };
 		45BE7FBB197995C80024167A /* Course.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Course.swift; sourceTree = "<group>"; };
 		45BE7FBD19799CC90024167A /* MenuItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuItem.swift; sourceTree = "<group>"; };
+		45BE7FBF1979B12E0024167A /* LayerKit.embeddedframework */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LayerKit.embeddedframework; sourceTree = "<group>"; };
+		45BE7FC11979B1630024167A /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		45BE7FC21979B1630024167A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		45C2E7F1197A31E900D41105 /* MoultonViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoultonViewController.swift; sourceTree = "<group>"; };
 		45CC82991973320D008A391C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -130,6 +138,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45BE7FC31979B1630024167A /* AddressBook.framework in Frameworks */,
+				45BE7FC41979B1630024167A /* CoreData.framework in Frameworks */,
 				4552812219763AEB006C2DEA /* libz.1.2.5.dylib in Frameworks */,
 				4552812019763AD4006C2DEA /* MobileCoreServices.framework in Frameworks */,
 				4552811E19763ACE006C2DEA /* SystemConfiguration.framework in Frameworks */,
@@ -153,6 +163,9 @@
 		4507E70719726E53000628DE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				45BE7FC11979B1630024167A /* AddressBook.framework */,
+				45BE7FC21979B1630024167A /* CoreData.framework */,
+				45BE7FBF1979B12E0024167A /* LayerKit.embeddedframework */,
 				4552812119763AEB006C2DEA /* libz.1.2.5.dylib */,
 				4552811F19763AD4006C2DEA /* MobileCoreServices.framework */,
 				4552811D19763ACE006C2DEA /* SystemConfiguration.framework */,
@@ -223,6 +236,8 @@
 			children = (
 				45AAB5981970636E0078A7F9 /* Main.storyboard */,
 				45A9206219781F7A00768D46 /* AppDelegate.swift */,
+				45BE7FB619785BDE0024167A /* ThorneViewController.swift */,
+				45C2E7F1197A31E900D41105 /* MoultonViewController.swift */,
 				45AAB5921970636E0078A7F9 /* FirstViewController.h */,
 				45AAB5931970636E0078A7F9 /* FirstViewController.m */,
 				45AAB5951970636E0078A7F9 /* SecondViewController.h */,
@@ -279,7 +294,6 @@
 		45BE7FB81978D8930024167A /* To-Be-Swifted */ = {
 			isa = PBXGroup;
 			children = (
-				45BE7FB619785BDE0024167A /* ThorneViewController.swift */,
 				45BE7FB41978567A0024167A /* User.swift */,
 			);
 			name = "To-Be-Swifted";
@@ -366,6 +380,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				455280DB1975FD27006C2DEA /* magees-menu.pdf in Resources */,
+				45BE7FC01979B12E0024167A /* LayerKit.embeddedframework in Resources */,
 				4547C0231976C782003A54CA /* splash@2x.png in Resources */,
 				4507E6CC1971B289000628DE /* 128.png in Resources */,
 				45AAB59A1970636E0078A7F9 /* Main.storyboard in Resources */,
@@ -387,6 +402,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45353BF1197A20B2008CC741 /* AccountViewController.m in Sources */,
 				45AAB5971970636E0078A7F9 /* SecondViewController.m in Sources */,
 				45528117197635CC006C2DEA /* ASIHTTPRequest.m in Sources */,
 				45528119197635CC006C2DEA /* ASINetworkQueue.m in Sources */,
@@ -405,11 +421,11 @@
 				45AAB5941970636E0078A7F9 /* FirstViewController.m in Sources */,
 				45A9206119781AF400768D46 /* SettingsViewController.swift in Sources */,
 				45528116197635CC006C2DEA /* ASIFormDataRequest.m in Sources */,
-				4547C0251977101A003A54CA /* AccountViewController.m in Sources */,
 				45BE7FBE19799CC90024167A /* MenuItem.swift in Sources */,
 				45BE7FBC197995C80024167A /* Course.swift in Sources */,
 				455280FB19762FE6006C2DEA /* CSGoldController.m in Sources */,
 				45528112197635CC006C2DEA /* ASIAuthenticationDialog.m in Sources */,
+				45C2E7F2197A31E900D41105 /* MoultonViewController.swift in Sources */,
 				45A9206319781F7A00768D46 /* AppDelegate.swift in Sources */,
 				45BE7FB51978567A0024167A /* User.swift in Sources */,
 			);
@@ -537,6 +553,10 @@
 				INFOPLIST_FILE = "Bowdoin Dining/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-lxml2";
+				"OTHER_LDFLAGS[arch=*]" = (
+					"-lxml2",
+					"-ObjC",
+				);
 				PRODUCT_MODULE_NAME = BowdoinDining;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Bowdoin Dining/Bowdoin Dining-Bridging-Header.h";
@@ -560,6 +580,10 @@
 				INFOPLIST_FILE = "Bowdoin Dining/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-lxml2";
+				"OTHER_LDFLAGS[arch=*]" = (
+					"-lxml2",
+					"-ObjC",
+				);
 				PRODUCT_MODULE_NAME = BowdoinDining;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Bowdoin Dining/Bowdoin Dining-Bridging-Header.h";

@@ -19,13 +19,18 @@ class SettingsViewController: UIViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
         UIApplication.sharedApplication().setStatusBarHidden(false, animated: false)
-        self.dietFilter.selectedSegmentIndex = NSUserDefaults.standardUserDefaults().integerForKey("diet-filter")
+        if NSUserDefaults.standardUserDefaults().integerForKey("diet-filter") != nil {
+            self.dietFilter.selectedSegmentIndex = NSUserDefaults.standardUserDefaults().integerForKey("diet-filter")
+        }
         
         var userDefaults = NSUserDefaults.standardUserDefaults()
         var username     = userDefaults.objectForKey("bowdoin_username") as NSString
         var password     = userDefaults.objectForKey("bowdoin_password") as NSString
-        if(username.length == 0 || password.length == 0) {
+        
+        if username.length == 0 || password.length == 0 {
             self.logoutButton.enabled = false;
             self.logoutButton.backgroundColor = UIColor.lightGrayColor()
         }
@@ -49,7 +54,7 @@ class SettingsViewController: UIViewController {
         userDefaults.removeObjectForKey("bowdoin_username")
         userDefaults.removeObjectForKey("bowdoin_password")
         userDefaults.synchronize()
-        
+        self.delegate.user.logout()
         self.logoutButton.enabled = false
         self.logoutButton.backgroundColor = UIColor.lightGrayColor()
     }

@@ -7,18 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "User.h"
 
 @interface AccountViewController : UIViewController
+- (void)userDidLoad:(NSNotification *) notification;
 - (IBAction)userDidLogin:(UIStoryboardSegue *)segue;
 - (IBAction)userCancelledLogin:(UIStoryboardSegue *)segue;
-- (IBAction)presentLoginViewController:(UIButton *)sender;
-- (void)userDidLoad:(NSNotification *) notification;
+- (IBAction)reloadData:(UIButton *)sender;
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;
-@property (strong, nonatomic) User* user;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingPoints;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingMeals;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingBalance;
+@property (weak, nonatomic) IBOutlet UIButton *reloadButton;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingData;
 @property (weak, nonatomic) IBOutlet UILabel *meals;
 @property (weak, nonatomic) IBOutlet UILabel *balance;
 @property (weak, nonatomic) IBOutlet UILabel *points;
