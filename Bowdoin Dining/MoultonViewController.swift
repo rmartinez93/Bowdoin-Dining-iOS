@@ -23,8 +23,6 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.menuItems.delegate = self;
-        self.menuItems.dataSource = self;
         // Do any additional setup after loading the view, typically from a nib.
     }
     

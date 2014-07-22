@@ -49,7 +49,7 @@ AppDelegate *delegate;
 }
 
 - (IBAction)userDidLogin:(UIStoryboardSegue *)segue {
-
+    [self.loginButton   setHidden: TRUE];
 }
 
 //notification of finished user download
@@ -94,7 +94,6 @@ AppDelegate *delegate;
     }
     //else, ask for user credentials
     else {
-        [self performSegueWithIdentifier:@"LoginModalAction" sender:self];
         [self.loginButton   setHidden: FALSE];
         [self.reloadButton  setHidden: TRUE];
         [self.loadingData   stopAnimating];

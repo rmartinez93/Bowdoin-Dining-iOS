@@ -27,9 +27,6 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITableViewDa
         splash.backgroundColor = UIColor.blackColor()
         self.view.addSubview(splash)
         
-        self.menuItems.delegate = self;
-        self.menuItems.dataSource = self;
-        
         //set selected segment to current meal on launch
         self.meals.selectedSegmentIndex = self.segmentIndexOfCurrentMeal(NSDate())
         //share selected segment between Moulton/Thorne

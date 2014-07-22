@@ -6,4 +6,3 @@
 #import "CSGoldController.h"
 #import "GDataXMLNode.h"
 #import "Menus.h"
-#import "SplashView.h"
