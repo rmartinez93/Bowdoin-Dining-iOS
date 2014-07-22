@@ -24,8 +24,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary?) -> Bool {
         // Override point for customization after application launch.
-        UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.Default, animated: false)
         
+        if let window = self.window {
+            window.makeKeyAndVisible()
+            
+            var splash = SplashView(frame: CGRectMake(0, 0, window.frame.width, window.frame.height))
+            splash.backgroundColor = UIColor.blackColor()
+            window.addSubview(splash)
+            window.bringSubviewToFront(splash)
+        }
+        
+        UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.Default, animated: false)
         
         var currentFilter : NSInteger? = NSUserDefaults.standardUserDefaults().objectForKey("diet-filter") as? NSInteger
         if currentFilter {

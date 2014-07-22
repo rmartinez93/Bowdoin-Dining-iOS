@@ -23,9 +23,6 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        var splash = SplashView(frame: CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height))
-        splash.backgroundColor = UIColor.blackColor()
-        self.view.addSubview(splash)
         
         //set selected segment to current meal on launch
         self.meals.selectedSegmentIndex = self.segmentIndexOfCurrentMeal(NSDate())
