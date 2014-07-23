@@ -13,12 +13,12 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var delegate = UIApplication.sharedApplication().delegate as AppDelegate
     var courses = NSMutableArray()
     
-    @IBOutlet var menuItems : UITableView
-    @IBOutlet var loading   : UIActivityIndicatorView
-    @IBOutlet var meals     : UISegmentedControl
-    @IBOutlet var dayLabel  : UILabel
-    @IBOutlet var backButton    : UIButton
-    @IBOutlet var forwardButton : UIButton
+    @IBOutlet var menuItems : UITableView!
+    @IBOutlet var loading   : UIActivityIndicatorView!
+    @IBOutlet var meals     : UISegmentedControl!
+    @IBOutlet var dayLabel  : UILabel!
+    @IBOutlet var backButton    : UIButton!
+    @IBOutlet var forwardButton : UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -368,10 +368,10 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 else {
                     //create a menu from this data and save it to delegate
                     self.courses = Menus.createMenuFromXML(xml,
-                        forMeal: self.meals.selectedSegmentIndex,
-                        atLocation: self.delegate.thorneId,
+                        forMeal:     self.meals.selectedSegmentIndex,
+                        atLocation:  self.delegate.thorneId,
                         withFilters: self.delegate.filters)
-
+                    
                     //insert new menu items to UITableView
                     var newSet   = NSMutableIndexSet()
                     newSet.addIndexesInRange(NSMakeRange(0, self.courses.count))

@@ -10,8 +10,8 @@ import UIKit
 
 class SettingsViewController: UIViewController {
     var delegate = UIApplication.sharedApplication().delegate as AppDelegate
-    @IBOutlet var dietFilter : UISegmentedControl
-    @IBOutlet var logoutButton : UIButton
+    @IBOutlet var dietFilter : UISegmentedControl!
+    @IBOutlet var logoutButton : UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()

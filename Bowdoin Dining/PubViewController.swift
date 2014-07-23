@@ -9,7 +9,7 @@
 import UIKit
 
 class PubViewController: UIViewController {
-    @IBOutlet var MageesMenu : UIWebView
+    @IBOutlet var MageesMenu : UIWebView!
     
     override func viewDidLoad() {
         var url = NSBundle.mainBundle().URLForResource("magees-menu", withExtension: "pdf");

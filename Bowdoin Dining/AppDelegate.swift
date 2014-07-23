@@ -1,6 +1,5 @@
 //
 //  AppDelegate.swift
-//  SwiftTest
 //
 //  Created by Ruben on 7/17/14.
 //  Copyright (c) 2014 Ruben. All rights reserved.
@@ -11,16 +10,16 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window    : UIWindow?
+    public var user      : User            = User()
+    var filters   : NSMutableArray  = NSMutableArray()
     let thorneId  : NSInteger       = 1
     let moultonId : NSInteger       = 0
-    var filters   : NSMutableArray  = NSMutableArray()
     var daysAdded : NSInteger       = 0
     var day       : NSInteger       = 0
     var month     : NSInteger       = 0
     var year      : NSInteger       = 0
     var offset    : NSInteger       = 0
     var selectedSegment : NSInteger = 0
-    var user      : User            = User()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary?) -> Bool {
         // Override point for customization after application launch.

@@ -13,12 +13,12 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
     var delegate = UIApplication.sharedApplication().delegate as AppDelegate
     var courses = NSMutableArray()
     
-    @IBOutlet var menuItems : UITableView
-    @IBOutlet var loading   : UIActivityIndicatorView
-    @IBOutlet var meals     : UISegmentedControl
-    @IBOutlet var dayLabel  : UILabel
-    @IBOutlet var backButton    : UIButton
-    @IBOutlet var forwardButton : UIButton
+    @IBOutlet var menuItems : UITableView!
+    @IBOutlet var loading   : UIActivityIndicatorView!
+    @IBOutlet var meals     : UISegmentedControl!
+    @IBOutlet var dayLabel  : UILabel!
+    @IBOutlet var backButton    : UIButton!
+    @IBOutlet var forwardButton : UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()

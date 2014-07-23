@@ -9,12 +9,12 @@
 import UIKit
 
 class LoginModalViewController : UIViewController {
-    @IBOutlet var usernameField : UITextField
-    @IBOutlet var passwordField : UITextField
-    @IBOutlet var remember      : UISwitch
-    @IBOutlet var loggingIn     : UIActivityIndicatorView
-    @IBOutlet var insutructions : UILabel
-    @IBOutlet var loginButton   : UIButton
+    @IBOutlet var usernameField : UITextField!
+    @IBOutlet var passwordField : UITextField!
+    @IBOutlet var remember      : UISwitch!
+    @IBOutlet var loggingIn     : UIActivityIndicatorView!
+    @IBOutlet var insutructions : UILabel!
+    @IBOutlet var loginButton   : UIButton!
     var delegate = UIApplication.sharedApplication().delegate as AppDelegate
     
     override func viewDidLoad() {

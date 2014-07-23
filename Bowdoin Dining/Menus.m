@@ -103,7 +103,7 @@ NSString *serverURL = @"http://www.bowdoin.edu/atreus/lib/xml/";
 }
 
 //creates a Menu (NSMutableArray*) from an NSData* XML file for a given meal/location and filters
-+ (NSMutableArray *)createMenuFromXML:(NSData *) xmlData ForMeal: (NSUInteger) mealId AtLocation: (NSUInteger) locationId withFilters: (NSMutableArray *) filters {
++ (NSMutableArray *)createMenuFromXML:(NSData *) xmlData ForMeal: (NSInteger) mealId AtLocation: (NSInteger) locationId withFilters: (NSMutableArray *) filters {
     NSError *error;
     //Create Google XML parsing object from NSData, grab "<meal>"s below root
     GDataXMLDocument *doc = [[GDataXMLDocument alloc] initWithData:xmlData options:0 error:&error];
