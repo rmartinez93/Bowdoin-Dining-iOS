@@ -30,12 +30,15 @@ class SettingsViewController: UIViewController {
         
         if userDefaults.objectForKey("bowdoin_username") {
             var username = userDefaults.objectForKey("bowdoin_username") as NSString
-            var password     = userDefaults.objectForKey("bowdoin_password") as NSString
+            var password = userDefaults.objectForKey("bowdoin_password") as NSString
             
             if username.length == 0 || password.length == 0 {
                 self.logoutButton.enabled = false;
                 self.logoutButton.backgroundColor = UIColor.lightGrayColor()
             }
+        } else {
+            self.logoutButton.enabled = false;
+            self.logoutButton.backgroundColor = UIColor.lightGrayColor()
         }
     }
 
