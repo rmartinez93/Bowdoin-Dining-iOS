@@ -8,7 +8,7 @@
 import UIKit
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDelegate {
     var window    : UIWindow?
     public var user      : User            = User()
     var filters   : NSMutableArray  = NSMutableArray()
@@ -42,6 +42,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             //set more navbar light gray
             (self.window!.rootViewController as UITabBarController).moreNavigationController.navigationBar.barTintColor = UIColor(red: 0.97, green:0.97, blue:0.97, alpha:1)
             (self.window!.rootViewController as UITabBarController).moreNavigationController.navigationBar.translucent = false
+            
+            //setting delegate to disable edit button in more.
+            (self.window!.rootViewController as UITabBarController).moreNavigationController.delegate = self
         }
         
         var currentFilter : NSInteger? = NSUserDefaults.standardUserDefaults().objectForKey("diet-filter") as? NSInteger
@@ -66,6 +69,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 self.filters.addObject("L")
             default:
                 break;
+        }
+    }
+    
+    func navigationController(navigationController: UINavigationController!, willShowViewController viewController: UIViewController!, animated: Bool) {
+        var morenavbar = navigationController.navigationBar;
+        var morenavitem = morenavbar.topItem;
+        
+        /* We don't need Edit button in More screen. */
+        morenavitem.rightBarButtonItem = nil;
+        
+        if (viewController.title as NSString).isEqualToString("Settings") {
+            viewController.navigationItem.title = "Settings"
+        }
+        if (viewController.title as NSString).isEqualToString("Hours") {
+            viewController.navigationItem.title = "Hours"
         }
     }
     

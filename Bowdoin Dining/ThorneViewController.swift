@@ -12,7 +12,6 @@ import QuartzCore
 class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarControllerDelegate, UITableViewDataSource {
     var delegate = UIApplication.sharedApplication().delegate as AppDelegate
     var courses = NSMutableArray()
-    
     @IBOutlet var menuItems : UITableView!
     @IBOutlet var loading   : UIActivityIndicatorView!
     @IBOutlet var meals     : UISegmentedControl!
