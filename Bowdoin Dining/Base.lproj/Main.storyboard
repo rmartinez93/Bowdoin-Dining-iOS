@@ -19,14 +19,31 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" text="Today" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="KQZ-1w-vlD">
-                                <rect key="frame" x="252" y="14" width="97" height="42"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                <gestureRecognizers/>
-                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="32"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <navigationBar contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R0v-ru-bhj">
+                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                                <color key="barTintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <textAttributes key="titleTextAttributes">
+                                    <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </textAttributes>
+                                <items>
+                                    <navigationItem title="Today" id="HHA-ir-AT6">
+                                        <barButtonItem key="leftBarButtonItem" title="&lt;" id="3FW-dO-1Ch">
+                                            <connections>
+                                                <action selector="backButtonPressed:" destination="9pv-A4-QxB" id="vn5-iU-LRl"/>
+                                            </connections>
+                                        </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" title="&gt;" id="TAk-72-4Hs">
+                                            <connections>
+                                                <action selector="forwardButtonPressed:" destination="9pv-A4-QxB" id="cU6-Vd-nyV"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                                <connections>
+                                    <outlet property="delegate" destination="9pv-A4-QxB" id="Mvv-Nb-3xi"/>
+                                </connections>
+                            </navigationBar>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="37H-86-X0v">
                                 <rect key="frame" x="290" y="290" width="20" height="20"/>
                             </activityIndicatorView>
@@ -63,32 +80,6 @@
                                     <outlet property="delegate" destination="9pv-A4-QxB" id="jYf-wB-0Ux"/>
                                 </connections>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L2O-MQ-rtX">
-                                <rect key="frame" x="0.0" y="14" width="125" height="52"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="125" id="SAE-Y4-XlZ"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="AlNile-Bold" family="Al Nile" pointSize="50"/>
-                                <state key="normal" title="&lt;">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="backButtonPressed:" destination="9pv-A4-QxB" eventType="touchUpInside" id="QfP-al-63Q"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y4d-x6-Qon">
-                                <rect key="frame" x="475" y="14" width="125" height="52"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="125" id="rDf-lw-58K"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="AlNile-Bold" family="Al Nile" pointSize="50"/>
-                                <state key="normal" title="&gt;">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="forwardButtonPressed:" destination="9pv-A4-QxB" eventType="touchUpInside" id="HF0-ss-8y3"/>
-                                </connections>
-                            </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="kam-m7-qVT">
                                 <rect key="frame" x="20" y="74" width="560" height="29"/>
                                 <segments>
@@ -106,34 +97,33 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstAttribute="centerX" secondItem="KQZ-1w-vlD" secondAttribute="centerX" id="0pI-2h-fpO"/>
                             <constraint firstItem="kam-m7-qVT" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" constant="20" symbolic="YES" id="1QX-Bl-8GY"/>
                             <constraint firstAttribute="centerX" secondItem="Tve-Pg-tbt" secondAttribute="centerX" id="4EN-db-OKJ"/>
                             <constraint firstAttribute="top" secondItem="tsR-hK-woN" secondAttribute="top" id="8qp-4k-ywN"/>
+                            <constraint firstAttribute="centerX" secondItem="R0v-ru-bhj" secondAttribute="centerX" id="9a8-yp-u1Q"/>
                             <constraint firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="9hT-Pl-9vo"/>
                             <constraint firstItem="Tve-Pg-tbt" firstAttribute="top" secondItem="kam-m7-qVT" secondAttribute="bottom" constant="8" symbolic="YES" id="BcY-wB-F8K"/>
-                            <constraint firstItem="KQZ-1w-vlD" firstAttribute="centerY" secondItem="Y4d-x6-Qon" secondAttribute="centerY" constant="-5" id="Bvt-sQ-hE9"/>
                             <constraint firstAttribute="trailing" secondItem="kam-m7-qVT" secondAttribute="trailing" constant="20" symbolic="YES" id="F3M-Ai-m1N"/>
                             <constraint firstAttribute="trailing" secondItem="tsR-hK-woN" secondAttribute="trailing" id="GCv-eZ-Lr1"/>
-                            <constraint firstAttribute="trailing" secondItem="Y4d-x6-Qon" secondAttribute="trailing" id="I81-0b-Gn4"/>
                             <constraint firstItem="Tve-Pg-tbt" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="MgF-bj-tvw"/>
+                            <constraint firstAttribute="trailing" secondItem="R0v-ru-bhj" secondAttribute="trailing" id="NC4-II-Nbd"/>
                             <constraint firstItem="37H-86-X0v" firstAttribute="centerX" secondItem="kam-m7-qVT" secondAttribute="centerX" id="PsB-lE-d79"/>
                             <constraint firstItem="Tve-Pg-tbt" firstAttribute="centerX" secondItem="37H-86-X0v" secondAttribute="centerX" id="YR1-mO-Xfd"/>
-                            <constraint firstItem="L2O-MQ-rtX" firstAttribute="centerY" secondItem="KQZ-1w-vlD" secondAttribute="centerY" constant="5" id="cQo-Pa-337"/>
                             <constraint firstItem="37H-86-X0v" firstAttribute="centerY" secondItem="tsR-hK-woN" secondAttribute="centerY" id="fEZ-6G-nor"/>
                             <constraint firstItem="4ug-Mw-9AY" firstAttribute="top" secondItem="Tve-Pg-tbt" secondAttribute="bottom" constant="-49" id="k74-O0-3BR"/>
-                            <constraint firstItem="L2O-MQ-rtX" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="rxF-me-6tv"/>
                             <constraint firstAttribute="trailing" secondItem="Tve-Pg-tbt" secondAttribute="trailing" id="sQ3-by-TW6"/>
+                            <constraint firstItem="R0v-ru-bhj" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="xPd-Cn-1hg"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Thorne" image="second" id="acW-dT-cKf"/>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackOpaque"/>
                     <connections>
-                        <outlet property="backButton" destination="L2O-MQ-rtX" id="nAZ-by-yfh"/>
-                        <outlet property="dayLabel" destination="KQZ-1w-vlD" id="fcu-uY-gWI"/>
-                        <outlet property="forwardButton" destination="Y4d-x6-Qon" id="5O2-oU-5gx"/>
+                        <outlet property="backButton" destination="3FW-dO-1Ch" id="yR3-9b-Dck"/>
+                        <outlet property="forwardButton" destination="TAk-72-4Hs" id="moq-3I-zlS"/>
                         <outlet property="loading" destination="37H-86-X0v" id="4gX-tj-dSY"/>
                         <outlet property="meals" destination="kam-m7-qVT" id="Clu-lQ-IZ9"/>
                         <outlet property="menuItems" destination="Tve-Pg-tbt" id="rSQ-wg-fpF"/>
+                        <outlet property="navBar" destination="R0v-ru-bhj" id="s2m-yG-DEf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
@@ -152,32 +142,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iLI-Sg-Um9">
-                                <rect key="frame" x="475" y="15" width="125" height="52"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="125" id="l5z-ET-ASK"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="AlNile-Bold" family="Al Nile" pointSize="50"/>
-                                <state key="normal" title="&gt;">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="forwardButtonPressed:" destination="8rJ-Kc-sve" eventType="touchUpInside" id="BaG-uk-Kkd"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hEK-yr-9QX">
-                                <rect key="frame" x="0.0" y="15" width="125" height="52"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="125" id="ahi-hV-FSs"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="AlNile-Bold" family="Al Nile" pointSize="50"/>
-                                <state key="normal" title="&lt;">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="backButtonPressed:" destination="8rJ-Kc-sve" eventType="touchUpInside" id="ptS-gS-cZp"/>
-                                </connections>
-                            </button>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="dEd-Ib-KVL">
                                 <rect key="frame" x="290" y="290" width="20" height="20"/>
                             </activityIndicatorView>
@@ -225,13 +189,23 @@
                                     <action selector="indexDidChangeForSegmentedControl:" destination="8rJ-Kc-sve" eventType="valueChanged" id="NPD-Yy-qT4"/>
                                 </connections>
                             </segmentedControl>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" text="Today" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="zEq-FU-wV5">
-                                <rect key="frame" x="252" y="14" width="97" height="42"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="32"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <navigationBar contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WRe-Ys-WNm">
+                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                                <color key="barTintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <textAttributes key="titleTextAttributes">
+                                    <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </textAttributes>
+                                <items>
+                                    <navigationItem title="Today" id="djR-Xc-jH6">
+                                        <barButtonItem key="leftBarButtonItem" title="&lt;" id="3M1-y1-Ocy"/>
+                                        <barButtonItem key="rightBarButtonItem" title="&gt;" id="7UA-tW-rxZ"/>
+                                    </navigationItem>
+                                </items>
+                                <connections>
+                                    <outlet property="delegate" destination="8rJ-Kc-sve" id="3ky-Qn-36e"/>
+                                </connections>
+                            </navigationBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -239,30 +213,29 @@
                             <constraint firstAttribute="centerX" secondItem="imo-gB-kTG" secondAttribute="centerX" id="3eu-N9-r7g"/>
                             <constraint firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailing" id="C9p-N0-R4o"/>
                             <constraint firstItem="imo-gB-kTG" firstAttribute="top" secondItem="vJv-ba-vIU" secondAttribute="bottom" constant="8" symbolic="YES" id="DMj-bF-VDI"/>
+                            <constraint firstAttribute="centerX" secondItem="WRe-Ys-WNm" secondAttribute="centerX" id="Hbx-76-nmi"/>
                             <constraint firstItem="Djb-ko-YwX" firstAttribute="top" secondItem="imo-gB-kTG" secondAttribute="bottom" constant="-49" id="L8Y-FD-eSA"/>
-                            <constraint firstItem="iLI-Sg-Um9" firstAttribute="centerY" secondItem="zEq-FU-wV5" secondAttribute="centerY" constant="6" id="MKK-Wm-krI"/>
                             <constraint firstAttribute="trailing" secondItem="imo-gB-kTG" secondAttribute="trailing" id="Oyn-LF-5Lt"/>
-                            <constraint firstItem="hEK-yr-9QX" firstAttribute="centerY" secondItem="zEq-FU-wV5" secondAttribute="centerY" constant="6" id="Pdj-5k-Buo"/>
-                            <constraint firstAttribute="trailing" secondItem="iLI-Sg-Um9" secondAttribute="trailing" id="Z7m-RW-0El"/>
                             <constraint firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leading" id="ZQW-8Y-bT4"/>
                             <constraint firstAttribute="top" secondItem="QS5-Rx-YEW" secondAttribute="top" id="dYc-7R-70W"/>
+                            <constraint firstAttribute="trailing" secondItem="WRe-Ys-WNm" secondAttribute="trailing" id="dtg-ly-cMa"/>
                             <constraint firstAttribute="trailing" secondItem="vJv-ba-vIU" secondAttribute="trailing" constant="20" symbolic="YES" id="efo-qN-OKP"/>
                             <constraint firstItem="vJv-ba-vIU" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leading" constant="20" symbolic="YES" id="gjv-dn-rA0"/>
+                            <constraint firstItem="WRe-Ys-WNm" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leading" id="gwZ-F8-9fJ"/>
                             <constraint firstItem="dEd-Ib-KVL" firstAttribute="centerX" secondItem="imo-gB-kTG" secondAttribute="centerX" id="kMg-yn-rGu"/>
                             <constraint firstItem="dEd-Ib-KVL" firstAttribute="centerX" secondItem="vJv-ba-vIU" secondAttribute="centerX" id="lWe-OZ-rDe"/>
-                            <constraint firstAttribute="centerX" secondItem="zEq-FU-wV5" secondAttribute="centerX" id="rJf-GC-CB9"/>
                             <constraint firstItem="imo-gB-kTG" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leading" id="sUG-W4-q1d"/>
-                            <constraint firstItem="hEK-yr-9QX" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leading" id="uor-UQ-iQM"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Moulton" image="first" id="cPa-gy-q4n"/>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackOpaque"/>
                     <connections>
-                        <outlet property="backButton" destination="hEK-yr-9QX" id="gBh-4a-UAl"/>
-                        <outlet property="dayLabel" destination="zEq-FU-wV5" id="nMB-CE-Pok"/>
-                        <outlet property="forwardButton" destination="iLI-Sg-Um9" id="70d-iw-Okg"/>
+                        <outlet property="backButton" destination="3M1-y1-Ocy" id="5Pg-d0-qNO"/>
+                        <outlet property="forwardButton" destination="7UA-tW-rxZ" id="YBf-ma-GQT"/>
                         <outlet property="loading" destination="dEd-Ib-KVL" id="Egz-UN-BKo"/>
                         <outlet property="meals" destination="vJv-ba-vIU" id="ScM-HA-HH1"/>
                         <outlet property="menuItems" destination="imo-gB-kTG" id="Loc-Lq-Hf2"/>
+                        <outlet property="navBar" destination="WRe-Ys-WNm" id="1Wj-Vy-T5R"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>

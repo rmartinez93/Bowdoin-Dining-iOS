@@ -23,7 +23,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary?) -> Bool {
         // Override point for customization after application launch.
-        
         if let window = self.window {
             window.makeKeyAndVisible()
             
@@ -33,15 +32,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
             window.bringSubviewToFront(splash)
         }
         
-        UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.Default, animated: false)
+        UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.BlackOpaque, animated: false)
         
         if self.window {
             //set tab bar to be light gray
-            (self.window!.rootViewController as UITabBarController).tabBar.barStyle = UIBarStyle.Default
+            (self.window!.rootViewController as UITabBarController).tabBar.barStyle = UIBarStyle.Black
             
-            //set more navbar light gray
-            (self.window!.rootViewController as UITabBarController).moreNavigationController.navigationBar.barTintColor = UIColor(red: 0.97, green:0.97, blue:0.97, alpha:1)
-            (self.window!.rootViewController as UITabBarController).moreNavigationController.navigationBar.translucent = false
             
             //setting delegate to disable edit button in more.
             (self.window!.rootViewController as UITabBarController).moreNavigationController.delegate = self
@@ -73,11 +69,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
     }
     
     func navigationController(navigationController: UINavigationController!, willShowViewController viewController: UIViewController!, animated: Bool) {
+        /* We don't need Edit button in More screen. */
         var morenavbar = navigationController.navigationBar;
         var morenavitem = morenavbar.topItem;
-        
-        /* We don't need Edit button in More screen. */
         morenavitem.rightBarButtonItem = nil;
+        
+        //style
+        viewController.navigationController.navigationBar.barTintColor
+            = UIColor(red: 0.36, green:0.36, blue:0.36, alpha:1)
+        viewController.navigationController.navigationBar.translucent = false
+        viewController.navigationController.navigationBar.barStyle = UIBarStyle.Black
         
         if (viewController.title as NSString).isEqualToString("Settings") {
             viewController.navigationItem.title = "Settings"

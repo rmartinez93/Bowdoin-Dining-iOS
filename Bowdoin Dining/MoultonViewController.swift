@@ -12,20 +12,27 @@ import QuartzCore
 class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var delegate = UIApplication.sharedApplication().delegate as AppDelegate
     var courses = NSMutableArray()
-    
+    @IBOutlet var navBar    : UINavigationBar!
     @IBOutlet var menuItems : UITableView!
     @IBOutlet var loading   : UIActivityIndicatorView!
     @IBOutlet var meals     : UISegmentedControl!
-    @IBOutlet var dayLabel  : UILabel!
-    @IBOutlet var backButton    : UIButton!
-    @IBOutlet var forwardButton : UIButton!
+    //    @IBOutlet var dayLabel  : UILabel!
+    @IBOutlet var backButton    : UIBarButtonItem!
+    @IBOutlet var forwardButton : UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view, typically from a nib.
+        
+        self.navBar.barTintColor
+            = UIColor(red: 0.36, green:0.36, blue:0.36, alpha:1)
+        self.navBar.barStyle = UIBarStyle.Black
     }
     
+    func positionForBar(bar: UIBarPositioning!) -> UIBarPosition  {
+        return UIBarPosition.TopAttached
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -38,7 +45,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
         UIApplication.sharedApplication().statusBarHidden = false;
         
         //set the text label to day we're browsing
-        self.dayLabel.text = self.getTextForCurrentDay();
+        self.navBar.topItem.title = self.getTextForDaysAdded(self.delegate.daysAdded);
         
         //update selected segment in case changed elsewhere
         self.meals.selectedSegmentIndex = self.delegate.selectedSegment;
@@ -63,74 +70,74 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    @IBAction func backButtonPressed(sender : UIButton) {
+    @IBAction func backButtonPressed(sender : AnyObject) {
         if self.delegate.daysAdded > 0 {
             self.delegate.daysAdded--;
             self.makeCorrectButtonsVisible()
+            self.updateVisibleMenu()
+            self.navBar.topItem.title = self.getTextForDaysAdded(self.delegate.daysAdded)
             
-            var textWidth = (self.dayLabel.text as NSString).sizeWithAttributes([NSFontAttributeName:self.dayLabel.font]).width
-            var center    = self.dayLabel.center
-            UIView.animateWithDuration(0.2,
-                animations: {
-                    self.dayLabel.alpha = 0
-                    self.dayLabel.center = CGPointMake(320+(textWidth/2), self.dayLabel.center.y)
-                }, completion: {
-                    (value: Bool) in
-                    self.updateVisibleMenu()
-                    self.dayLabel.text = self.getTextForCurrentDay()
-                    var newWidth = (self.dayLabel.text as NSString).sizeWithAttributes([NSFontAttributeName:self.dayLabel.font]).width
-                    self.dayLabel.center = CGPointMake(0-(newWidth/2), self.dayLabel.center.y)
-                    UIView.animateWithDuration(0.1,
-                        animations: {
-                            self.dayLabel.alpha = 1
-                            self.dayLabel.center = center
-                        }, completion: {
-                            (value: Bool) in
-                        })
-                })
+            //            var textWidth = (self.dayLabel.text as NSString).sizeWithAttributes([NSFontAttributeName:self.dayLabel.font]).width
+            //            var center    = self.dayLabel.center
+            //            UIView.animateWithDuration(0.2,
+            //                animations: {
+            //                    self.dayLabel.alpha = 0
+            //                    self.dayLabel.center = CGPointMake(320+(textWidth/2), self.dayLabel.center.y)
+            //                }, completion: {
+            //                    (value: Bool) in
+            //                    self.updateVisibleMenu()
+            //                    self.dayLabel.text = self.getTextForDaysAdded(self.delegate.daysAdded)
+            //                    var newWidth = (self.dayLabel.text as NSString).sizeWithAttributes([NSFontAttributeName:self.dayLabel.font]).width
+            //                    self.dayLabel.center = CGPointMake(0-(newWidth/2), self.dayLabel.center.y)
+            //                    UIView.animateWithDuration(0.1,
+            //                        animations: {
+            //                            self.dayLabel.alpha = 1
+            //                            self.dayLabel.center = center
+            //                        }, completion: nil)
+            //                })
         }
     }
     
-    @IBAction func forwardButtonPressed(sender : UIButton) {
+    @IBAction func forwardButtonPressed(sender : AnyObject) {
         if self.delegate.daysAdded < 6 {
             self.delegate.daysAdded++;
             self.makeCorrectButtonsVisible()
+            self.updateVisibleMenu()
+            self.navBar.topItem.title = self.getTextForDaysAdded(self.delegate.daysAdded)
             
-            var textWidth = (self.dayLabel.text as NSString).sizeWithAttributes([NSFontAttributeName:self.dayLabel.font]).width
-            var center    = self.dayLabel.center
-            
-            UIView.animateWithDuration(0.2,
-                animations: {
-                    self.dayLabel.alpha = 0
-                    self.dayLabel.center = CGPointMake(0-(textWidth/2), self.dayLabel.center.y)
-                }, completion: {
-                    (value: Bool) in
-                    self.updateVisibleMenu()
-                    self.dayLabel.text = self.getTextForCurrentDay()
-                    var newWidth = (self.dayLabel.text as NSString).sizeWithAttributes([NSFontAttributeName:self.dayLabel.font]).width
-                    self.dayLabel.center = CGPointMake(320+(newWidth/2), self.dayLabel.center.y)
-                    UIView.animateWithDuration(0.1,
-                        animations: {
-                            self.dayLabel.alpha = 1
-                            self.dayLabel.center = center
-                        }, completion: {
-                            (value: Bool) in
-                        })
-                })
+            //            var textWidth = (self.dayLabel.text as NSString).sizeWithAttributes([NSFontAttributeName:self.dayLabel.font]).width
+            //            var center    = self.dayLabel.center
+            //
+            //            UIView.animateWithDuration(0.2,
+            //                animations: {
+            //                    self.dayLabel.alpha = 0
+            //                    self.dayLabel.center = CGPointMake(0-(textWidth/2), self.dayLabel.center.y)
+            //                }, completion: {
+            //                    (value: Bool) in
+            //                    self.updateVisibleMenu()
+            //                    self.dayLabel.text = self.getTextForDaysAdded(self.delegate.daysAdded)
+            //                    var newWidth = (self.dayLabel.text as NSString).sizeWithAttributes([NSFontAttributeName:self.dayLabel.font]).width
+            //                    self.dayLabel.center = CGPointMake(320+(newWidth/2), self.dayLabel.center.y)
+            //                    UIView.animateWithDuration(0.1,
+            //                        animations: {
+            //                            self.dayLabel.alpha = 1
+            //                            self.dayLabel.center = center
+            //                        }, completion: nil)
+            //                })
         }
     }
     
     func makeCorrectButtonsVisible() {
         //handle visibility of back/foward
         if self.delegate.daysAdded == 6 {
-            self.forwardButton.hidden = true;
+            self.forwardButton.enabled = false
         }
         else if self.delegate.daysAdded == 0 {
-            self.backButton.hidden = true;
+            self.backButton.enabled = false
         }
         else {
-            self.backButton.hidden = false;
-            self.forwardButton.hidden = false;
+            self.backButton.enabled = true
+            self.forwardButton.enabled = true
         }
         
         //disable/enable segmented buttons
@@ -176,13 +183,13 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    func getTextForCurrentDay() -> NSString {
-        if self.delegate.daysAdded == 0 {
+    func getTextForDaysAdded(daysAdded : NSInteger) -> NSString {
+        if daysAdded == 0 {
             return "Today"
-        } else if self.delegate.daysAdded == 1 {
+        } else if daysAdded == 1 {
             return "Tomorrow"
         } else {
-            var newDate = NSDate(timeIntervalSinceNow: NSTimeInterval(60*60*24*self.delegate.daysAdded))
+            var newDate = NSDate(timeIntervalSinceNow: NSTimeInterval(60*60*24*daysAdded))
             var dateFormatter = NSDateFormatter()
             dateFormatter.dateFormat = "EEEE"
             return dateFormatter.stringFromDate(newDate)
@@ -300,13 +307,13 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
         var header = UITableViewHeaderFooterView()
         header.textLabel.textColor = UIColor(red:0, green: 0.4, blue: 0.8, alpha: 1)
         header.contentView.backgroundColor = UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1)
-
-//        self.animateIn(header)
+        
+        //        self.animateIn(header)
     }
     
     //UITableView delegate method, creates animation when displaying cell
     func tableView(tableView: UITableView!, willDisplayCell cell: UITableViewCell!, forRowAtIndexPath indexPath: NSIndexPath!) {
-//        self.animateIn(cell)
+        //        self.animateIn(cell)
     }
     
     func divide (left: Double, right: Double) -> Double {
@@ -386,8 +393,8 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
                 else {
                     //create a menu from this data and save it to delegate
                     self.courses = Menus.createMenuFromXML(xml,
-                        forMeal: self.meals.selectedSegmentIndex,
-                        atLocation: self.delegate.moultonId,
+                        forMeal:     self.meals.selectedSegmentIndex,
+                        atLocation:  self.delegate.moultonId,
                         withFilters: self.delegate.filters)
                     
                     //insert new menu items to UITableView
