@@ -45,6 +45,9 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         //verify correct buttons are showing
         self.makeCorrectButtonsVisible()
+        
+        //fixes issue with last item not showing, but keeps translucency
+        self.menuItems.contentInset.bottom = 50
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -118,6 +121,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func makeCorrectButtonsVisible() {
+        //handle visibility of back/foward
         if self.delegate.daysAdded == 6 {
             self.forwardButton.hidden = true;
         }
@@ -127,6 +131,27 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
         else {
             self.backButton.hidden = false;
             self.forwardButton.hidden = false;
+        }
+        
+        //disable/enable segmented buttons
+        var date = NSDate(timeIntervalSinceNow: NSTimeInterval(60*60*24*self.delegate.daysAdded))
+        var formattedDate = Menus.formatDate(date)
+        var offset = (formattedDate.lastObject as NSNumber).integerValue
+        
+        if offset < 7 && offset > 1 {
+            if self.meals.selectedSegmentIndex == 1 {
+                self.meals.selectedSegmentIndex = 0
+            }
+            self.meals.setEnabled(true,  forSegmentAtIndex: 0)
+            self.meals.setEnabled(false, forSegmentAtIndex: 1)
+            self.meals.setEnabled(true,  forSegmentAtIndex: 2)
+        } else {
+            if self.meals.selectedSegmentIndex == 0 || self.meals.selectedSegmentIndex == 2 {
+                self.meals.selectedSegmentIndex = 1
+            }
+            self.meals.setEnabled(false, forSegmentAtIndex: 0)
+            self.meals.setEnabled(true,  forSegmentAtIndex: 1)
+            self.meals.setEnabled(false, forSegmentAtIndex: 2)
         }
     }
     

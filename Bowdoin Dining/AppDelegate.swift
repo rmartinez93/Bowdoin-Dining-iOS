@@ -35,6 +35,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.Default, animated: false)
         
+        if self.window {
+            //set tab bar to be light gray
+            (self.window!.rootViewController as UITabBarController).tabBar.barStyle = UIBarStyle.Default
+            
+            //set more navbar light gray
+            (self.window!.rootViewController as UITabBarController).moreNavigationController.navigationBar.barTintColor = UIColor(red: 0.97, green:0.97, blue:0.97, alpha:1)
+            (self.window!.rootViewController as UITabBarController).moreNavigationController.navigationBar.translucent = false
+        }
+        
         var currentFilter : NSInteger? = NSUserDefaults.standardUserDefaults().objectForKey("diet-filter") as? NSInteger
         if currentFilter {
             self.updateDietFilter(currentFilter!)

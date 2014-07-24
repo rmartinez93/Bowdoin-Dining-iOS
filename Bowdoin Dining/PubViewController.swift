@@ -12,10 +12,13 @@ class PubViewController: UIViewController {
     @IBOutlet var MageesMenu : UIWebView!
     
     override func viewDidLoad() {
-        var url = NSBundle.mainBundle().URLForResource("magees-menu", withExtension: "pdf");
-        var request = NSURLRequest(URL: url);
+        var url = NSBundle.mainBundle().URLForResource("magees-menu", withExtension: "pdf")
+        var request = NSURLRequest(URL: url)
 
-        self.MageesMenu.loadRequest(request);
+        self.MageesMenu.loadRequest(request)
+        
+        //fixes issue with last item not showing, but keeps translucency
+        self.MageesMenu.scrollView.contentInset.bottom = 50
         
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
