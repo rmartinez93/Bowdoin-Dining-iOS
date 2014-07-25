@@ -12,6 +12,7 @@ import QuartzCore
 class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarControllerDelegate, UITableViewDataSource, UINavigationBarDelegate {
     var delegate = UIApplication.sharedApplication().delegate as AppDelegate
     var courses = NSMutableArray()
+    var shareGesture : UIScreenEdgePanGestureRecognizer?
     @IBOutlet var navBar    : UINavigationBar!
     @IBOutlet var menuItems : UITableView!
     @IBOutlet var loading   : UIActivityIndicatorView!
@@ -23,12 +24,16 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        //verify correct buttons are showing
+        self.makeCorrectButtonsVisible()
+
         //set selected segment to current meal on launch
         self.meals.selectedSegmentIndex = self.segmentIndexOfCurrentMeal(NSDate())
         
         //share selected segment between Moulton/Thorne
         self.delegate.selectedSegment = self.meals.selectedSegmentIndex
         
+        //set navbar style
         self.navBar.barTintColor
             = UIColor(red: 0.36, green:0.36, blue:0.36, alpha:1)
         self.navBar.barStyle = UIBarStyle.Black
@@ -43,8 +48,18 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
         // Dispose of any resources that can be recreated.
     }
     
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.delegate.window!.removeGestureRecognizer(shareGesture!)
+    }
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
+        //sharing gesture
+        self.shareGesture = UIScreenEdgePanGestureRecognizer(target: self, action: "inviteToMeal")
+        self.shareGesture!.edges = UIRectEdge.Left
+        self.delegate.window!.addGestureRecognizer(self.shareGesture!)
         
         //set the text label to day we're browsing
         self.navBar.topItem.title = self.getTextForDaysAdded(self.delegate.daysAdded);
@@ -90,6 +105,10 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
         }
     }
     
+    func isWeekday(dayOfWeek : NSInteger) -> Bool {
+        return (dayOfWeek < 7 && dayOfWeek > 1);
+    }
+    
     func makeCorrectButtonsVisible() {
         //handle visibility of back/foward
         self.backButton.enabled = true
@@ -106,20 +125,21 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
         var formattedDate = Menus.formatDate(date)
         var offset = (formattedDate.lastObject as NSNumber).integerValue
         
-        if offset < 7 && offset > 1 {
-            if self.meals.selectedSegmentIndex == 1 {
-                self.meals.selectedSegmentIndex = 0
+        //insert/remove meals depending on day of the week
+        if self.isWeekday(offset) {
+            if self.meals.titleForSegmentAtIndex(0) != "Breakfast" {
+                self.meals.removeSegmentAtIndex(0, animated: false)
+                self.meals.insertSegmentWithTitle("Breakfast", atIndex: 0, animated: false)
+                self.meals.insertSegmentWithTitle("Lunch",     atIndex: 1, animated: false)
+                self.meals.selectedSegmentIndex = self.delegate.selectedSegment
             }
-            self.meals.setEnabled(true,  forSegmentAtIndex: 0)
-            self.meals.setEnabled(false, forSegmentAtIndex: 1)
-            self.meals.setEnabled(true,  forSegmentAtIndex: 2)
         } else {
-            if self.meals.selectedSegmentIndex == 0 || self.meals.selectedSegmentIndex == 2 {
-                self.meals.selectedSegmentIndex = 1
+            if self.meals.titleForSegmentAtIndex(0) != "Brunch" {
+                self.meals.removeSegmentAtIndex(0, animated: false)
+                self.meals.removeSegmentAtIndex(0, animated: false)
+                self.meals.insertSegmentWithTitle("Brunch", atIndex: 0, animated: false)
+                self.meals.selectedSegmentIndex = self.delegate.selectedSegment
             }
-            self.meals.setEnabled(false, forSegmentAtIndex: 0)
-            self.meals.setEnabled(true,  forSegmentAtIndex: 1)
-            self.meals.setEnabled(false, forSegmentAtIndex: 2)
         }
     }
     
@@ -130,17 +150,20 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
         var today = calendar.components(NSCalendarUnit.HourCalendarUnit | NSCalendarUnit.WeekdayCalendarUnit, fromDate: now)
         var weekday = today.weekday
         var hour    = today.hour
-        
-        if hour < 11 && weekday > 1 && weekday < 7 {
-            return 0; //breakfast
-        } else if hour < 14 {
-            if weekday == 1 || weekday == 7 {
-                return 1; //brunch
+        if self.isWeekday(weekday) {
+            if hour < 11 {
+                return 0; //breakfast
+            } else if hour < 14 {
+                return 1; //lunch
             } else {
-                return 2; //lunch
+                return 2; //dinner
             }
         } else {
-            return 4; //dinner
+            if hour < 14 {
+                return 0; //brunch
+            } else {
+                return 1; //dinner
+            }
         }
     }
     
@@ -310,6 +333,15 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
         return self.courses.count
     }
     
+    //shares an invite to the currently browsed meal
+    func inviteToMeal() {
+        var invite = [AnyObject]()
+        invite.append("Let's get \(self.meals.titleForSegmentAtIndex(self.meals.selectedSegmentIndex).lowercaseString) at Thorne \(self.getTextForDaysAdded(self.delegate.daysAdded).lowercaseString)?")
+        
+        let activityViewController = UIActivityViewController(activityItems: invite, applicationActivities: nil)
+        self.presentViewController(activityViewController, animated: true, completion: nil)
+    }
+    
     //handles all logic related to updating the tableView with new menu items
     func updateVisibleMenu() {
         //creates date based on days added to current day, saves to delegate
@@ -355,6 +387,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
                     //create a menu from this data and save it to delegate
                     self.courses = Menus.createMenuFromXML(xml,
                         forMeal:     self.meals.selectedSegmentIndex,
+                        onWeekday:   self.isWeekday(self.delegate.offset),
                         atLocation:  self.delegate.thorneId,
                         withFilters: self.delegate.filters)
                     

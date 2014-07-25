@@ -103,12 +103,33 @@ NSString *serverURL = @"http://www.bowdoin.edu/atreus/lib/xml/";
 }
 
 //creates a Menu (NSMutableArray*) from an NSData* XML file for a given meal/location and filters
-+ (NSMutableArray *)createMenuFromXML:(NSData *) xmlData ForMeal: (NSInteger) mealId AtLocation: (NSInteger) locationId withFilters: (NSMutableArray *) filters {
++ (NSMutableArray *)createMenuFromXML:(NSData *) xmlData forMeal: (NSInteger) mealId onWeekday: (BOOL) weekday atLocation: (NSInteger) locationId withFilters: (NSMutableArray *) filters {
     NSError *error;
     //Create Google XML parsing object from NSData, grab "<meal>"s below root
     GDataXMLDocument *doc = [[GDataXMLDocument alloc] initWithData:xmlData options:0 error:&error];
     GDataXMLElement *root = doc.rootElement;
     NSArray *meals = [root elementsForName:@"meal"];
+    
+    //compensates for disappearing meals
+    switch (mealId) {
+        case 0:
+            if(!weekday) {
+                mealId = 1;
+            }
+            break;
+        case 1:
+            if(weekday) {
+                mealId = 2;
+            } else {
+                mealId = 3;
+            }
+            break;
+        case 2:
+            mealId = 3;
+        default:
+            break;
+    }
+
     GDataXMLElement *meal = [meals objectAtIndex: mealId];
     
     //each meal has two units (locations), create an XML Element for this locationId's menu

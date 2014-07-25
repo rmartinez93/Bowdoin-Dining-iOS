@@ -84,7 +84,6 @@
                                 <rect key="frame" x="20" y="74" width="560" height="29"/>
                                 <segments>
                                     <segment title="Breakfast"/>
-                                    <segment title="Brunch"/>
                                     <segment title="Lunch"/>
                                     <segment title="Dinner"/>
                                 </segments>
@@ -150,7 +149,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="separatorColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SimpleTableCell2" textLabel="jCb-Iq-uyK" detailTextLabel="hyh-TQ-NrP" style="IBUITableViewCellStyleSubtitle" id="QOF-ir-W6x">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SimpleTableCell2" textLabel="jCb-Iq-uyK" detailTextLabel="pab-l0-RQH" style="IBUITableViewCellStyleSubtitle" id="QOF-ir-W6x">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QOF-ir-W6x" id="H2y-eW-T1q">
                                             <autoresizingMask key="autoresizingMask"/>
@@ -161,7 +160,7 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="hyh-TQ-NrP">
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Detail" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="pab-l0-RQH">
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -176,19 +175,6 @@
                                     <outlet property="delegate" destination="8rJ-Kc-sve" id="AIb-o5-O9J"/>
                                 </connections>
                             </tableView>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="vJv-ba-vIU">
-                                <rect key="frame" x="20" y="74" width="560" height="29"/>
-                                <segments>
-                                    <segment title="Breakfast"/>
-                                    <segment title="Brunch"/>
-                                    <segment title="Lunch"/>
-                                    <segment title="Dinner"/>
-                                </segments>
-                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                <connections>
-                                    <action selector="indexDidChangeForSegmentedControl:" destination="8rJ-Kc-sve" eventType="valueChanged" id="NPD-Yy-qT4"/>
-                                </connections>
-                            </segmentedControl>
                             <navigationBar contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WRe-Ys-WNm">
                                 <rect key="frame" x="0.0" y="20" width="600" height="44"/>
                                 <color key="barTintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -214,6 +200,18 @@
                                     <outlet property="delegate" destination="8rJ-Kc-sve" id="3ky-Qn-36e"/>
                                 </connections>
                             </navigationBar>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="vJv-ba-vIU">
+                                <rect key="frame" x="20" y="74" width="560" height="29"/>
+                                <segments>
+                                    <segment title="Breakfast"/>
+                                    <segment title="Lunch"/>
+                                    <segment title="Dinner"/>
+                                </segments>
+                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <action selector="indexDidChangeForSegmentedControl:" destination="8rJ-Kc-sve" eventType="valueChanged" id="NPD-Yy-qT4"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
