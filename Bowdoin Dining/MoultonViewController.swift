@@ -87,15 +87,13 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func makeCorrectButtonsVisible() {
         //handle visibility of back/foward
+        self.backButton.enabled = true
+        self.forwardButton.enabled = true
         if self.delegate.daysAdded == 6 {
             self.forwardButton.enabled = false
         }
         else if self.delegate.daysAdded == 0 {
             self.backButton.enabled = false
-        }
-        else {
-            self.backButton.enabled = true
-            self.forwardButton.enabled = true
         }
         
         //disable/enable segmented buttons
