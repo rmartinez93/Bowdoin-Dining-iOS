@@ -9,14 +9,13 @@
 import UIKit
 import QuartzCore
 
-class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UINavigationBarDelegate {
     var delegate = UIApplication.sharedApplication().delegate as AppDelegate
     var courses = NSMutableArray()
     @IBOutlet var navBar    : UINavigationBar!
     @IBOutlet var menuItems : UITableView!
     @IBOutlet var loading   : UIActivityIndicatorView!
     @IBOutlet var meals     : UISegmentedControl!
-    //    @IBOutlet var dayLabel  : UILabel!
     @IBOutlet var backButton    : UIBarButtonItem!
     @IBOutlet var forwardButton : UIBarButtonItem!
     
@@ -33,6 +32,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
     func positionForBar(bar: UIBarPositioning!) -> UIBarPosition  {
         return UIBarPosition.TopAttached
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -40,9 +40,6 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        //show status bar
-        UIApplication.sharedApplication().statusBarHidden = false;
         
         //set the text label to day we're browsing
         self.navBar.topItem.title = self.getTextForDaysAdded(self.delegate.daysAdded);
@@ -76,25 +73,6 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.makeCorrectButtonsVisible()
             self.updateVisibleMenu()
             self.navBar.topItem.title = self.getTextForDaysAdded(self.delegate.daysAdded)
-            
-            //            var textWidth = (self.dayLabel.text as NSString).sizeWithAttributes([NSFontAttributeName:self.dayLabel.font]).width
-            //            var center    = self.dayLabel.center
-            //            UIView.animateWithDuration(0.2,
-            //                animations: {
-            //                    self.dayLabel.alpha = 0
-            //                    self.dayLabel.center = CGPointMake(320+(textWidth/2), self.dayLabel.center.y)
-            //                }, completion: {
-            //                    (value: Bool) in
-            //                    self.updateVisibleMenu()
-            //                    self.dayLabel.text = self.getTextForDaysAdded(self.delegate.daysAdded)
-            //                    var newWidth = (self.dayLabel.text as NSString).sizeWithAttributes([NSFontAttributeName:self.dayLabel.font]).width
-            //                    self.dayLabel.center = CGPointMake(0-(newWidth/2), self.dayLabel.center.y)
-            //                    UIView.animateWithDuration(0.1,
-            //                        animations: {
-            //                            self.dayLabel.alpha = 1
-            //                            self.dayLabel.center = center
-            //                        }, completion: nil)
-            //                })
         }
     }
     
@@ -104,26 +82,6 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.makeCorrectButtonsVisible()
             self.updateVisibleMenu()
             self.navBar.topItem.title = self.getTextForDaysAdded(self.delegate.daysAdded)
-            
-            //            var textWidth = (self.dayLabel.text as NSString).sizeWithAttributes([NSFontAttributeName:self.dayLabel.font]).width
-            //            var center    = self.dayLabel.center
-            //
-            //            UIView.animateWithDuration(0.2,
-            //                animations: {
-            //                    self.dayLabel.alpha = 0
-            //                    self.dayLabel.center = CGPointMake(0-(textWidth/2), self.dayLabel.center.y)
-            //                }, completion: {
-            //                    (value: Bool) in
-            //                    self.updateVisibleMenu()
-            //                    self.dayLabel.text = self.getTextForDaysAdded(self.delegate.daysAdded)
-            //                    var newWidth = (self.dayLabel.text as NSString).sizeWithAttributes([NSFontAttributeName:self.dayLabel.font]).width
-            //                    self.dayLabel.center = CGPointMake(320+(newWidth/2), self.dayLabel.center.y)
-            //                    UIView.animateWithDuration(0.1,
-            //                        animations: {
-            //                            self.dayLabel.alpha = 1
-            //                            self.dayLabel.center = center
-            //                        }, completion: nil)
-            //                })
         }
     }
     

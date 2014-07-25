@@ -16,7 +16,6 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
     @IBOutlet var menuItems : UITableView!
     @IBOutlet var loading   : UIActivityIndicatorView!
     @IBOutlet var meals     : UISegmentedControl!
-//    @IBOutlet var dayLabel  : UILabel!
     @IBOutlet var backButton    : UIBarButtonItem!
     @IBOutlet var forwardButton : UIBarButtonItem!
     
@@ -34,9 +33,11 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
             = UIColor(red: 0.36, green:0.36, blue:0.36, alpha:1)
         self.navBar.barStyle = UIBarStyle.Black
     }
+    
     func positionForBar(bar: UIBarPositioning!) -> UIBarPosition  {
         return UIBarPosition.TopAttached
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -44,9 +45,6 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        //show status bar
-        UIApplication.sharedApplication().statusBarHidden = false;
         
         //set the text label to day we're browsing
         self.navBar.topItem.title = self.getTextForDaysAdded(self.delegate.daysAdded);
@@ -80,25 +78,6 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
             self.makeCorrectButtonsVisible()
             self.updateVisibleMenu()
             self.navBar.topItem.title = self.getTextForDaysAdded(self.delegate.daysAdded)
-            
-//            var textWidth = (self.dayLabel.text as NSString).sizeWithAttributes([NSFontAttributeName:self.dayLabel.font]).width
-//            var center    = self.dayLabel.center
-//            UIView.animateWithDuration(0.2,
-//                animations: {
-//                    self.dayLabel.alpha = 0
-//                    self.dayLabel.center = CGPointMake(320+(textWidth/2), self.dayLabel.center.y)
-//                }, completion: {
-//                    (value: Bool) in
-//                    self.updateVisibleMenu()
-//                    self.dayLabel.text = self.getTextForDaysAdded(self.delegate.daysAdded)
-//                    var newWidth = (self.dayLabel.text as NSString).sizeWithAttributes([NSFontAttributeName:self.dayLabel.font]).width
-//                    self.dayLabel.center = CGPointMake(0-(newWidth/2), self.dayLabel.center.y)
-//                    UIView.animateWithDuration(0.1,
-//                        animations: {
-//                            self.dayLabel.alpha = 1
-//                            self.dayLabel.center = center
-//                        }, completion: nil)
-//                })
         }
     }
     
@@ -108,26 +87,6 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
             self.makeCorrectButtonsVisible()
             self.updateVisibleMenu()
             self.navBar.topItem.title = self.getTextForDaysAdded(self.delegate.daysAdded)
-            
-//            var textWidth = (self.dayLabel.text as NSString).sizeWithAttributes([NSFontAttributeName:self.dayLabel.font]).width
-//            var center    = self.dayLabel.center
-//            
-//            UIView.animateWithDuration(0.2,
-//                animations: {
-//                    self.dayLabel.alpha = 0
-//                    self.dayLabel.center = CGPointMake(0-(textWidth/2), self.dayLabel.center.y)
-//                }, completion: {
-//                    (value: Bool) in
-//                    self.updateVisibleMenu()
-//                    self.dayLabel.text = self.getTextForDaysAdded(self.delegate.daysAdded)
-//                    var newWidth = (self.dayLabel.text as NSString).sizeWithAttributes([NSFontAttributeName:self.dayLabel.font]).width
-//                    self.dayLabel.center = CGPointMake(320+(newWidth/2), self.dayLabel.center.y)
-//                    UIView.animateWithDuration(0.1,
-//                        animations: {
-//                            self.dayLabel.alpha = 1
-//                            self.dayLabel.center = center
-//                        }, completion: nil)
-//                })
         }
     }
     

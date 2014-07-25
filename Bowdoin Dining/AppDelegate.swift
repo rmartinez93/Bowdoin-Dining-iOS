@@ -23,6 +23,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary?) -> Bool {
         // Override point for customization after application launch.
+        //dark background, light text status bar
+        UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.BlackOpaque, animated: false)
+        
+        //show splash screen
         if let window = self.window {
             window.makeKeyAndVisible()
             
@@ -32,17 +36,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
             window.bringSubviewToFront(splash)
         }
         
-        UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.BlackOpaque, animated: false)
-        
+        //set tabBar style, moreNavigationController delegate
         if self.window {
             //set tab bar to be light gray
             (self.window!.rootViewController as UITabBarController).tabBar.barStyle = UIBarStyle.Black
             
-            
-            //setting delegate to disable edit button in more.
+            //setting delegate for styling
             (self.window!.rootViewController as UITabBarController).moreNavigationController.delegate = self
         }
         
+        //update filter to last setting
         var currentFilter : NSInteger? = NSUserDefaults.standardUserDefaults().objectForKey("diet-filter") as? NSInteger
         if currentFilter {
             self.updateDietFilter(currentFilter!)
@@ -70,15 +73,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
     
     func navigationController(navigationController: UINavigationController!, willShowViewController viewController: UIViewController!, animated: Bool) {
         /* We don't need Edit button in More screen. */
-        var morenavbar = navigationController.navigationBar;
-        var morenavitem = morenavbar.topItem;
-        morenavitem.rightBarButtonItem = nil;
+        navigationController.navigationBar.topItem.rightBarButtonItem = nil;
         
         //style
-        viewController.navigationController.navigationBar.barTintColor
-            = UIColor(red: 0.36, green:0.36, blue:0.36, alpha:1)
-        viewController.navigationController.navigationBar.translucent = false
-        viewController.navigationController.navigationBar.barStyle = UIBarStyle.Black
+        navigationController.navigationBar.titleTextAttributes
+            = [NSFontAttributeName : UIFont(name: "Helvetica Neue", size: 28)]
+        
+        navigationController.navigationBar.barTintColor = UIColor(red: 0.36, green:0.36, blue:0.36, alpha:1)
+        navigationController.navigationBar.translucent = false
+        navigationController.navigationBar.barStyle = UIBarStyle.Black
         
         if (viewController.title as NSString).isEqualToString("Settings") {
             viewController.navigationItem.title = "Settings"

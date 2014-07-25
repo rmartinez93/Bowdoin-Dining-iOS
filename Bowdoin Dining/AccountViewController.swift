@@ -8,9 +8,8 @@
 
 import Foundation
 
-class AccountViewController : UIViewController {
-    @IBOutlet var loginButton  : UIButton!
-    @IBOutlet var reloadButton : UIButton!
+class AccountViewController : UIViewController, UINavigationBarDelegate {
+    @IBOutlet var navBar       : UINavigationBar!
     @IBOutlet var loadingData  : UIActivityIndicatorView!
     @IBOutlet var meals        : UILabel!
     @IBOutlet var balance      : UILabel!
@@ -26,14 +25,18 @@ class AccountViewController : UIViewController {
             name: "UserFinishedLoading",
             object: nil)
         
-        
+        //navbar style
+        self.navBar.barTintColor
+            = UIColor(red: 0.36, green:0.36, blue:0.36, alpha:1)
+        self.navBar.barStyle = UIBarStyle.Black
+    }
+    
+    func positionForBar(bar: UIBarPositioning!) -> UIBarPosition  {
+        return UIBarPosition.TopAttached
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        //show status bar
-        UIApplication.sharedApplication().statusBarHidden = false;
         
         //if user's data has not been loaded, load their data
         if(!self.delegate.user.dataLoaded) {
@@ -43,20 +46,20 @@ class AccountViewController : UIViewController {
     }
     
     @IBAction func userDidLogin(segue : UIStoryboardSegue) {
-        self.loginButton.hidden = true;
+        self.navBar.topItem.rightBarButtonItem.enabled = false;
     }
     
     @IBAction func userCancelledLogin(segue : UIStoryboardSegue) {
         
     }
     
-    @IBAction func reloadData(sender : UIButton) {
+    @IBAction func reloadData(sender : AnyObject) {
         self.points.text = "N/A"
         self.meals.text = "N/A"
         self.balance.text = "N/A"
         self.loadingData.startAnimating()
-        self.reloadButton.hidden = true
-        self.loginButton.hidden = true
+        self.navBar.topItem.leftBarButtonItem.enabled = false;
+        self.navBar.topItem.rightBarButtonItem.enabled = false;
         
         var userDefaults = NSUserDefaults.standardUserDefaults()
         var username     = userDefaults.objectForKey("bowdoin_username") as? NSString
@@ -72,8 +75,8 @@ class AccountViewController : UIViewController {
         }
         //else, ask for user credentials
         else {
-            self.loginButton.hidden = false;
-            self.reloadButton.hidden = true;
+            self.navBar.topItem.leftBarButtonItem.enabled = false
+            self.navBar.topItem.rightBarButtonItem.enabled = true
             self.loadingData.stopAnimating()
         }
     }
@@ -85,10 +88,10 @@ class AccountViewController : UIViewController {
         
         //refresh onscreen info
         dispatch_async(dispatch_get_main_queue()) {
-            self.loadingData.stopAnimating()
-            self.reloadButton.hidden = false
-            self.reloadButton.enabled = true
-            self.loginButton.hidden = true
+            self.loadingData.stopAnimating()            
+            self.navBar.topItem.leftBarButtonItem.enabled = true
+            self.navBar.topItem.rightBarButtonItem.enabled = false
+            
             self.view.setNeedsDisplay()
             self.points.text = NSString(format: "$%.2f", self.delegate.user.polarPoints)
             self.meals.text = NSString(format: "%i", self.delegate.user.mealsLeft)
