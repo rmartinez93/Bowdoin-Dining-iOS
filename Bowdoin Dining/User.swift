@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class User {
+class User : NSObject {
     var username : NSString = ""
     var password : NSString = ""
     var lastname : NSString = ""
@@ -34,7 +34,7 @@ public class User {
         self.password = password;
         
         var controller = CSGoldController();
-        var userData   = controller.getCSGoldDataWithUserName(username, password: password)
+        var userData   = controller.getCSGoldDataWithUserName(username, password: password, forUser: self)
         if(userData != nil) {
             self.parseData(userData)
             self.dataLoaded = true
@@ -44,10 +44,12 @@ public class User {
     }
 
     func parseData(data: NSData) {
+        self.dataLoaded = true
         var error : NSError?
         
         var doc = GDataXMLDocument(data: data, options: 0, error: &error)
         var root = doc.rootElement
+        
         var soapBody = (root().elementsForName("soap:Body") as NSArray).firstObject as GDataXMLElement
         var CSGoldSVCBalancesResponse = (soapBody.elementsForName("GetCSGoldSVCBalancesResponse") as NSArray).firstObject as GDataXMLElement
         var CSGoldSVCBalancesResult

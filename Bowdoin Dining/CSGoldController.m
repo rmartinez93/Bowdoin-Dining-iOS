@@ -7,13 +7,12 @@
 //
 
 #import "CSGoldController.h"
-#import "ASIHTTPRequest.h"
-#import "ASIDownloadCache.h"
+#import "BowdoinDining-Swift.h"
 
 @implementation CSGoldController
 
 @synthesize userName, password;
-
+User *sender;
 /***** CSGold SOAP request/actions *****/
 // [soapEnvelope appendString:@"<tem:GetCSGoldGLTrans/>"];
 // [soapEnvelope appendString:@"<tem:GetCSGoldSVCBalances/>"];
@@ -24,7 +23,7 @@
 // [soapEnvelope appendString:@"<tem:GetCSGoldLineCountsHistogram/>"];
 
 //gets user account data (balance, points, meals)
-- (NSData *)getCSGoldDataWithUserName:(NSString*)user password:(NSString*)pass {
+- (NSData *)getCSGoldDataWithUserName:(NSString*)user password:(NSString*)pass forUser:(id)userSender {
     if (!user || !pass) {
 		user = @"test";
 		pass = @"testing";
@@ -32,21 +31,24 @@
 	
 	self.userName = user;
 	self.password = pass;
-	
-	NSLog(@"UN: %@ PW: %@", userName, password);
     
-    NSData *userInfo = [self createSOAPRequestWithEnvelope:[self returnSoapEnvelopeForService:@"<tem:GetCSGoldSVCBalances/>"]];
+    sender = (User *) userSender;
+    
+    NSData *userInfo = [self createSOAPRequestWithEnvelope:
+                        [self returnSoapEnvelopeForService:@"<tem:GetCSGoldSVCBalances/>"]];
     
 	return userInfo;
 }
 
 //gets line status
-- (NSData*)getCSGoldLineCountsWithUserName:(NSString*)user password:(NSString*)pass {
+- (NSData*)getCSGoldLineCountsWithUserName:(NSString*)user password:(NSString*)pass forUser:(id)userSender {
 	// Sets the CSGold controllers UserName and Password
 	self.userName = user;
 	self.password = pass;
-	
-	[self createSOAPRequestWithEnvelope:[self returnSoapEnvelopeForService:@"<tem:GetCSGoldLineCountsHistogram/>"]];
+    
+    sender = (User *) userSender;
+    
+    [self createSOAPRequestWithEnvelope:[self returnSoapEnvelopeForService:@"<tem:GetCSGoldLineCountsHistogram/>"]];
 
 	return storedDate;
 }
@@ -57,7 +59,8 @@
 	self.userName = user;
 	self.password = pass;
 	
-	[self createTransactionSOAPRequestWithEnvelope:[self returnSoapEnvelopeForService:@"<tem:GetCSGoldGLTrans/>"]];
+	[self createTransactionSOAPRequestWithEnvelope:
+     [self returnSoapEnvelopeForService:@"<tem:GetCSGoldGLTrans/>"]];
 	
 	return transactionData;
 }
@@ -76,62 +79,85 @@
 	return soapEnvelope;
 }
 
-- (NSData *)createSOAPRequestWithEnvelope:(NSMutableString*)SOAPEnvelope{
-	ASIHTTPRequest *SOAPRequest = [[ASIHTTPRequest alloc]
-									initWithURL:[NSURL URLWithString:@"https://gooseeye.bowdoin.edu/ws-csGoldShim/Service.asmx"]];
-	
-	[SOAPRequest addRequestHeader:@"Content-Type" value:@"text/xml"];	
-	[SOAPRequest addRequestHeader:@"Host" value:@"bowdoin.edu"];
-    /* ***** values need to be set here ***** */
-	[SOAPRequest setUsername:self.userName];
-	[SOAPRequest setPassword:self.password];
-	[SOAPRequest setDomain:@"bowdoincollege"];
-	[SOAPRequest setCachePolicy:ASIDoNotReadFromCacheCachePolicy];
-	[SOAPRequest setUseSessionPersistence:YES];
-	[SOAPRequest setCacheStoragePolicy:ASICacheForSessionDurationCacheStoragePolicy];
-	[SOAPRequest setUseCookiePersistence:NO];
-	[SOAPRequest setUseKeychainPersistence:NO];
-	[SOAPRequest setValidatesSecureCertificate:YES];
-	[SOAPRequest setPostBody:(NSMutableData*)[SOAPEnvelope dataUsingEncoding:NSUTF8StringEncoding]];
-	[SOAPRequest startSynchronous];
+- (NSData *)createSOAPRequestWithEnvelope:(NSMutableString*)SOAPEnvelope {
+    //create request
+    NSURL *url = [NSURL URLWithString:@"https://gooseeye.bowdoin.edu/ws-csGoldShim/Service.asmx"];
+    NSMutableURLRequest *req = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval: 5000];
+    [req addValue:@"text/xml" forHTTPHeaderField:@"Content-Type"];
+    [req addValue:@"bowdoin.edu" forHTTPHeaderField:@"Host"];
+    [req setHTTPMethod:@"POST"];
+    [req setHTTPBody: [SOAPEnvelope dataUsingEncoding:NSUTF8StringEncoding]];
     
-	// Makes sure authentication was successful
-	if (SOAPRequest.responseStatusCode == 200) {
-		NSLog(@"Authenticated");
-		NSData *responseData = [SOAPRequest responseData];
-        return responseData;
-	}
+    //begin connection
+    NSURLConnection * connection = [[NSURLConnection alloc]
+                                    initWithRequest:req
+                                    delegate:self
+                                    startImmediately:NO];
+    
+    [connection scheduleInRunLoop:[NSRunLoop mainRunLoop]
+                          forMode:NSDefaultRunLoopMode];
+    [connection start];
+    
+    return nil;
+}
+- (void)createTransactionSOAPRequestWithEnvelope:(NSMutableString*)SOAPEnvelope {
+    //create request
+    NSURL *url = [NSURL URLWithString:@"https://gooseeye.bowdoin.edu/ws-csGoldShim/Service.asmx"];
+    NSMutableURLRequest *req = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReturnCacheDataDontLoad timeoutInterval: 5000];
+    [req addValue:@"text/xml" forHTTPHeaderField:@"Content-Type"];
+    [req addValue:@"bowdoin.edu" forHTTPHeaderField:@"Host"];
+    [req setHTTPMethod:@"POST"];
+    [req setHTTPBody: [SOAPEnvelope dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    //begin connection
+    NSURLConnection * connection = [[NSURLConnection alloc]
+                                    initWithRequest:req
+                                    delegate:self
+                                    startImmediately:NO];
+    
+    [connection scheduleInRunLoop:[NSRunLoop mainRunLoop]
+                          forMode:NSDefaultRunLoopMode];
+    [connection start];
+}
+
+//takes care of HTTP Authentication
+- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+    NSString* authMethod = [[challenge protectionSpace] authenticationMethod];
+    
+    if ([authMethod isEqualToString:NSURLAuthenticationMethodNTLM]) {
+        NSURLCredential *credential = [NSURLCredential credentialWithUser:[NSString stringWithFormat:@"bowdoincollege\\%@", self.userName]
+                                                                 password:self.password
+                                                              persistence:NSURLCredentialPersistenceForSession];
+        [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
+    }
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    // Response received, clear out data
+    transactionData = [[NSMutableData alloc] init];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+    // Store received data
+    [transactionData appendData:data];
+}
+
+- (NSCachedURLResponse *)connection:(NSURLConnection *)connection
+                  willCacheResponse:(NSCachedURLResponse*)cachedResponse {
+    // Return nil to indicate not necessary to store a cached response for this connection
     return nil;
 }
 
-- (void)createTransactionSOAPRequestWithEnvelope:(NSMutableString*)SOAPEnvelope{
-	
-	
-	ASIHTTPRequest *SOAPRequest = [[ASIHTTPRequest alloc]
-								   initWithURL:[NSURL URLWithString:@"https://gooseeye.bowdoin.edu/ws-csGoldShim/Service.asmx"]];
-	
-	[SOAPRequest addRequestHeader:@"Content-Type" value:@"text/xml"];	
-	[SOAPRequest addRequestHeader:@"Host" value:@"bowdoin.edu"];
-    /* ***** values need to be set here ***** */
-	[SOAPRequest setUsername:self.userName];
-	[SOAPRequest setPassword:self.password];
-	[SOAPRequest setDomain:@"bowdoincollege"];
-	[SOAPRequest setCachePolicy:ASIDoNotReadFromCacheCachePolicy];
-	[SOAPRequest setUseSessionPersistence:YES];
-	[SOAPRequest setCacheStoragePolicy:ASICacheForSessionDurationCacheStoragePolicy];
-	[SOAPRequest setUseCookiePersistence:NO];
-	[SOAPRequest setUseKeychainPersistence:NO];
-	[SOAPRequest setValidatesSecureCertificate:YES];
-	[SOAPRequest setPostBody:(NSMutableData*)[SOAPEnvelope dataUsingEncoding:NSUTF8StringEncoding]];
-	[SOAPRequest startSynchronous];
-	
-	// Makes sure authentication was successful
-	if (SOAPRequest.responseStatusCode == 200) {
-		NSData *responseData = [SOAPRequest responseData];
-		transactionData = responseData;
-	}
-	
-	NSLog(@"Request used Cached Response? %d", [SOAPRequest didUseCachedResponse]);
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    // The request is complete and data has been received
+    // You can parse the stuff in your instance variable now
+    [sender parseData:transactionData];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    // The request has failed for some reason!
+    // Check the error var
+    NSLog(@"ERR %@", error);
 }
 
 @end

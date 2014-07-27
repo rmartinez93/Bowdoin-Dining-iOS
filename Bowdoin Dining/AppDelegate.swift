@@ -10,7 +10,7 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDelegate {
     var window    : UIWindow?
-    public var user      : User            = User()
+    var user      : User            = User()
     var filters   : NSMutableArray  = NSMutableArray()
     let thorneId  : NSInteger       = 1
     let moultonId : NSInteger       = 0

@@ -8,10 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-@interface CSGoldController : NSObject {
+@interface CSGoldController : NSObject <NSURLConnectionDelegate> {
 	
 	NSData *storedDate;
-	NSData *transactionData;
+	NSMutableData *transactionData;
 	
 }
 
@@ -20,8 +20,8 @@
 
 
 // Public Methods
-- (NSData *)getCSGoldDataWithUserName:(NSString*)user password:(NSString*)pass;
-- (NSData*)getCSGoldLineCountsWithUserName:(NSString*)user password:(NSString*)pass;
+- (NSData *)getCSGoldDataWithUserName:(NSString*)user password:(NSString*)pass forUser:(id)sender;
+- (NSData*)getCSGoldLineCountsWithUserName:(NSString*)user password:(NSString*)pass forUser:(id)sender;
 - (NSData*)getCSGoldTransactionsWithUserName:(NSString*)user password:(NSString*)pass;
 
 // Private Methods
