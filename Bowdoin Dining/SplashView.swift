@@ -8,6 +8,7 @@
 
 import Foundation
 import QuartzCore
+import UIKit
 
 class SplashView : UIView {
     var trueBlue : UIColor = UIColor(red: 0.0, green:0.50, blue:1, alpha:1)

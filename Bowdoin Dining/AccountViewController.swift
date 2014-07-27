@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 class AccountViewController : UIViewController, UINavigationBarDelegate {
     @IBOutlet var navBar       : UINavigationBar!
