@@ -2,8 +2,8 @@
 //  PubViewController.swift
 //  Bowdoin Dining
 //
-//  Created by Ruben on 7/17/14.
-//  Copyright (c) 2014 Ruben. All rights reserved.
+//  Created by Ruben Martinez Jr on 7/17/14.
+//  Copyright (c) 2014 Ruben Martinez Jr. All rights reserved.
 //
 
 import UIKit

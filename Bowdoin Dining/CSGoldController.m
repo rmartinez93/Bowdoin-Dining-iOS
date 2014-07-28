@@ -3,6 +3,7 @@
 //  Bowdoin Dining
 //
 //  Created by Ben Johnson on 9/23/10.
+//  Updated by Ruben Martinez Jr, Summer 2014
 //  Copyright Two Fourteen Software. All rights reserved.
 //
 

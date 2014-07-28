@@ -2,7 +2,7 @@
 //  AccountViewController.swift
 //  Bowdoin Dining
 //
-//  Created by Ruben on 7/22/14.
+//  Created by Ruben Martinez Jr on 7/22/14.
 //
 //
 

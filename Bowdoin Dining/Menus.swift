@@ -2,7 +2,7 @@
 //  Menus.swift
 //  Bowdoin Dining
 //
-//  Created by Ruben on 7/25/14.
+//  Created by Ruben Martinez Jr on 7/25/14.
 //
 //
 

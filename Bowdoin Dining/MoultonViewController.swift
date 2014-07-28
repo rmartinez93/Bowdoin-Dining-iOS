@@ -2,7 +2,7 @@
 //  MoultonViewController.swift
 //  Bowdoin Dining
 //
-//  Created by Ruben on 7/17/14.
+//  Created by Ruben Martinez Jr on 7/17/14.
 //
 //
 

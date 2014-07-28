@@ -2,7 +2,7 @@
 //  SplashView.swift
 //  Bowdoin Dining
 //
-//  Created by Ruben on 7/19/14.
+//  Created by Ruben Martinez Jr on 7/19/14.
 //
 //
 

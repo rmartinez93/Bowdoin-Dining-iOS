@@ -2,7 +2,7 @@
 //  MenuItem.swift
 //  Bowdoin Dining
 //
-//  Created by Ruben on 7/18/14.
+//  Created by Ruben Martinez Jr on 7/18/14.
 //
 //
 

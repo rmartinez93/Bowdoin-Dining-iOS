@@ -11,7 +11,6 @@
 		4507E70419726E3A000628DE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4507E70119726E3A000628DE /* CoreGraphics.framework */; };
 		4507E70519726E3A000628DE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4507E70219726E3A000628DE /* Foundation.framework */; };
 		4507E70619726E3A000628DE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4507E70319726E3A000628DE /* UIKit.framework */; };
-		451C9E6A1970A229006007AE /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 451C9E691970A229006007AE /* GDataXMLNode.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4547C0231976C782003A54CA /* splash@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4547C0221976C782003A54CA /* splash@2x.png */; };
 		455280DB1975FD27006C2DEA /* magees-menu.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 455280DA1975FD27006C2DEA /* magees-menu.pdf */; };
 		455280FB19762FE6006C2DEA /* CSGoldController.m in Sources */ = {isa = PBXBuildFile; fileRef = 455280FA19762FE6006C2DEA /* CSGoldController.m */; };
@@ -21,6 +20,7 @@
 		4552812219763AEB006C2DEA /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4552812119763AEB006C2DEA /* libz.1.2.5.dylib */; };
 		459524AF197B1DB800FABB82 /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459524AE197B1DB800FABB82 /* SplashView.swift */; };
 		459D4C821983199B00573069 /* Menus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459D4C811983199B00573069 /* Menus.swift */; };
+		45A64F8D1986B02600EF19DE /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A64F8C1986B02600EF19DE /* GDataXMLNode.m */; };
 		45A9205F197815AB00768D46 /* PubViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A9205E197815AB00768D46 /* PubViewController.swift */; };
 		45A9206119781AF400768D46 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A9206019781AF400768D46 /* SettingsViewController.swift */; };
 		45A9206319781F7A00768D46 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A9206219781F7A00768D46 /* AppDelegate.swift */; };
@@ -53,8 +53,6 @@
 		4507E70119726E3A000628DE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		4507E70219726E3A000628DE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4507E70319726E3A000628DE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		451C9E681970A229006007AE /* GDataXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GDataXMLNode.h; path = ../GDataXMLNode.h; sourceTree = "<group>"; };
-		451C9E691970A229006007AE /* GDataXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GDataXMLNode.m; path = ../GDataXMLNode.m; sourceTree = "<group>"; };
 		4547C0221976C782003A54CA /* splash@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "splash@2x.png"; sourceTree = "<group>"; };
 		455280DA1975FD27006C2DEA /* magees-menu.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = "magees-menu.pdf"; path = "Bowdoin Dining/magees-menu.pdf"; sourceTree = "<group>"; };
 		455280F919762FE6006C2DEA /* CSGoldController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSGoldController.h; sourceTree = "<group>"; };
@@ -65,6 +63,8 @@
 		4552812119763AEB006C2DEA /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
 		459524AE197B1DB800FABB82 /* SplashView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
 		459D4C811983199B00573069 /* Menus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Menus.swift; sourceTree = "<group>"; };
+		45A64F8B1986B02600EF19DE /* GDataXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDataXMLNode.h; sourceTree = "<group>"; };
+		45A64F8C1986B02600EF19DE /* GDataXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDataXMLNode.m; sourceTree = "<group>"; };
 		45A9205D197815AB00768D46 /* Bowdoin Dining-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bowdoin Dining-Bridging-Header.h"; sourceTree = "<group>"; };
 		45A9205E197815AB00768D46 /* PubViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PubViewController.swift; sourceTree = "<group>"; };
 		45A9206019781AF400768D46 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -171,8 +171,8 @@
 				45A9205D197815AB00768D46 /* Bowdoin Dining-Bridging-Header.h */,
 				455280F919762FE6006C2DEA /* CSGoldController.h */,
 				455280FA19762FE6006C2DEA /* CSGoldController.m */,
-				451C9E681970A229006007AE /* GDataXMLNode.h */,
-				451C9E691970A229006007AE /* GDataXMLNode.m */,
+				45A64F8B1986B02600EF19DE /* GDataXMLNode.h */,
+				45A64F8C1986B02600EF19DE /* GDataXMLNode.m */,
 				45AAB59B1970636E0078A7F9 /* Images.xcassets */,
 				4547C0221976C782003A54CA /* splash@2x.png */,
 				4507E6CB1971B289000628DE /* 128.png */,
@@ -310,9 +310,9 @@
 			files = (
 				45FDA6CA197F3F0D00C8F6BD /* AccountViewController.swift in Sources */,
 				459524AF197B1DB800FABB82 /* SplashView.swift in Sources */,
+				45A64F8D1986B02600EF19DE /* GDataXMLNode.m in Sources */,
 				45BE7FB719785BDE0024167A /* ThorneViewController.swift in Sources */,
 				45BE7FBA1978E09F0024167A /* LoginModalViewController.swift in Sources */,
-				451C9E6A1970A229006007AE /* GDataXMLNode.m in Sources */,
 				45A9205F197815AB00768D46 /* PubViewController.swift in Sources */,
 				459D4C821983199B00573069 /* Menus.swift in Sources */,
 				45A9206119781AF400768D46 /* SettingsViewController.swift in Sources */,
