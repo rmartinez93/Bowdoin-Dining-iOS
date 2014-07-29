@@ -33,14 +33,9 @@ class User : NSObject {
         self.username = username;
         self.password = password;
         
-        var controller = CSGoldController();
-        var userData   = controller.getCSGoldDataWithUserName(username, password: password, forUser: self)
-        if(userData != nil) {
-            self.parseData(userData)
-            self.dataLoaded = true
-        } else {
-            self.dataLoaded = false
-        }
+        //var controller = BowdoinAPIController();
+        var controller = BowdoinAPIController(username: username, password: password, user: self)
+        controller.getAccountData()
     }
 
     func parseData(data: NSData) {
@@ -78,5 +73,9 @@ class User : NSObject {
         NSNotificationCenter.defaultCenter().postNotificationName("UserFinishedLoading",
             object: nil,
             userInfo: userInfo)
+    }
+    
+    func dataLoadingFailed() {
+        self.dataLoaded = false
     }
 }

@@ -914,12 +914,6 @@
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7VB-JW-xd3">
                                 <rect key="frame" x="177" y="190" width="51" height="31"/>
                             </switch>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Remember Me?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ypB-sP-lFP">
-                                <rect key="frame" x="183" y="195" width="114" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="hMT-DK-xd2">
                                 <rect key="frame" x="202" y="234" width="20" height="20"/>
                             </activityIndicatorView>
@@ -929,10 +923,16 @@
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Remember Me?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ypB-sP-lFP">
+                                <rect key="frame" x="234" y="195" width="114" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="ypB-sP-lFP" firstAttribute="centerX" secondItem="zaG-QB-GfD" secondAttribute="centerX" id="2fG-RF-oqw"/>
+                            <constraint firstItem="ypB-sP-lFP" firstAttribute="centerY" secondItem="7VB-JW-xd3" secondAttribute="centerY" id="2N2-E0-pZX"/>
                             <constraint firstItem="7VB-JW-xd3" firstAttribute="top" secondItem="zaG-QB-GfD" secondAttribute="bottom" constant="8" id="4eA-VD-FHW"/>
                             <constraint firstItem="YTt-3L-kPL" firstAttribute="top" secondItem="KZp-5E-R6z" secondAttribute="bottom" constant="8" symbolic="YES" id="8Dg-MQ-Tal"/>
                             <constraint firstItem="tGT-0S-jb4" firstAttribute="leading" secondItem="zaG-QB-GfD" secondAttribute="leading" id="CAJ-rE-2xU"/>
@@ -943,8 +943,8 @@
                             <constraint firstItem="KZp-5E-R6z" firstAttribute="top" secondItem="i88-hs-bO4" secondAttribute="top" constant="20" symbolic="YES" id="MJi-3K-92M"/>
                             <constraint firstItem="YTt-3L-kPL" firstAttribute="leading" secondItem="i88-hs-bO4" secondAttribute="leading" constant="20" symbolic="YES" id="Ms3-XJ-tZX"/>
                             <constraint firstItem="tGT-0S-jb4" firstAttribute="top" secondItem="YTt-3L-kPL" secondAttribute="bottom" constant="23" id="Rsn-nt-3SF"/>
-                            <constraint firstItem="ypB-sP-lFP" firstAttribute="centerY" secondItem="7VB-JW-xd3" secondAttribute="centerY" id="Vo6-iI-PN4"/>
                             <constraint firstItem="tGT-0S-jb4" firstAttribute="trailing" secondItem="zaG-QB-GfD" secondAttribute="trailing" id="aQ1-Es-6zM"/>
+                            <constraint firstItem="ypB-sP-lFP" firstAttribute="leading" secondItem="7VB-JW-xd3" secondAttribute="trailing" constant="8" id="ajA-lU-KQW"/>
                             <constraint firstAttribute="centerX" secondItem="KZp-5E-R6z" secondAttribute="centerX" id="b8P-GZ-SYl"/>
                             <constraint firstItem="YTt-3L-kPL" firstAttribute="centerX" secondItem="KZp-5E-R6z" secondAttribute="centerX" id="dkp-U6-xzy"/>
                             <constraint firstItem="7VB-JW-xd3" firstAttribute="leading" secondItem="zaG-QB-GfD" secondAttribute="leading" id="dyI-AN-Dwz"/>
