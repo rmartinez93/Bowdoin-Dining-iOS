@@ -115,7 +115,6 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
         var formattedDate = Menus.formatDate(date)
         var offset = (formattedDate.lastObject as NSNumber).integerValue
         
-        NSLog("\(self.delegate.selectedSegment)")
         //insert/remove meals depending on day of the week
         if self.isWeekday(offset) {
             if self.meals.titleForSegmentAtIndex(0) != "Breakfast" {
@@ -283,12 +282,12 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
         header.textLabel.textColor = UIColor(red:0, green: 0.4, blue: 0.8, alpha: 1)
         header.contentView.backgroundColor = UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1)
         
-        //        self.animateIn(header)
+        self.animateIn(header)
     }
     
     //UITableView delegate method, creates animation when displaying cell
     func tableView(tableView: UITableView!, willDisplayCell cell: UITableViewCell!, forRowAtIndexPath indexPath: NSIndexPath!) {
-        //        self.animateIn(cell)
+        self.animateIn(cell)
     }
     
     func divide (left: Double, right: Double) -> Double {
@@ -296,27 +295,28 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     }
     
     //UITableView delegate method, creates animation when displaying cell
-    func animateIn(view : UIView) {
+    func animateIn(this : UIView) {
         var init_angle : Double = divide(90*M_PI, right: 180)
         var rotation = CATransform3DMakeRotation(CGFloat(init_angle), 0.0, 0.7, 0.4) as CATransform3D
         rotation.m34 = (-1.0/600.0)
         
-        view.layer.shadowColor = UIColor.blackColor().CGColor
-        view.layer.shadowOffset = CGSizeMake(10, 10)
-        view.layer.opacity = 0
+        this.layer.shadowColor = UIColor.blackColor().CGColor
+        this.layer.shadowOffset = CGSizeMake(10, 10)
+        this.layer.opacity = 0
         
-        view.layer.transform = rotation
-        view.layer.anchorPoint = CGPointMake(0, 0.5)
+        this.layer.transform = rotation
+        this.layer.anchorPoint = CGPointMake(0, 0.5)
         
-        if view.layer.position.x != 0 {
-            view.layer.position = CGPointMake(0, view.layer.position.y);
+        if this.layer.position.x != 0 {
+            this.layer.position = CGPointMake(0, this.layer.position.y);
         }
         
         UIView.beginAnimations("rotation", context: nil)
         UIView.setAnimationDuration(0.8)
-        view.layer.transform = CATransform3DIdentity
-        view.layer.opacity = 1
-        view.layer.shadowOffset = CGSizeMake(0, 0)
+        this.layer.transform = CATransform3DIdentity
+        this.layer.opacity = 1
+        this.layer.shadowOffset = CGSizeMake(0, 0)
+        UIView.commitAnimations()
     }
     
     //UITableView delegate method, returns number of sections/courses in loaded menu
