@@ -10,12 +10,12 @@
 import Foundation
 
 class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
+    var username : String
+    var password : String
+    var user     : User
     var transactionData : NSMutableData?
-    var username : NSString?
-    var password : NSString?
-    var user     : User?
     
-    init(username : NSString, password : NSString, user : User) {
+    init(username : String, password : String, user : User) {
         self.username = username
         self.password = password
         self.user     = user
@@ -38,20 +38,19 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
         self.createTransactionSOAPRequestWithEnvelope(self.returnSoapEnvelopeForService("<tem:GetCSGoldGLTrans/>"))
     }
     
-    func returnSoapEnvelopeForService(serviceRequested : NSString) -> NSMutableString {
-        var soapEnvelope : NSMutableString = NSMutableString(string: "")
-        soapEnvelope.appendString("<?xml version=\"1.0\"?>")
-        soapEnvelope.appendString("<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tem=\"http://tempuri.org/\">")
-        soapEnvelope.appendString("<soapenv:Header/>")
-        soapEnvelope.appendString("<soapenv:Body>")
-        soapEnvelope.appendString(serviceRequested)
-        soapEnvelope.appendString("</soapenv:Body>")
-        soapEnvelope.appendString("</soapenv:Envelope>")
+    func returnSoapEnvelopeForService(serviceRequested : String) -> String {
+        var soapEnvelope = "<?xml version=\"1.0\"?>"
+        soapEnvelope += "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tem=\"http://tempuri.org/\">"
+        soapEnvelope += "<soapenv:Header/>"
+        soapEnvelope += "<soapenv:Body>"
+        soapEnvelope += serviceRequested
+        soapEnvelope += "</soapenv:Body>"
+        soapEnvelope += "</soapenv:Envelope>"
         
         return soapEnvelope
     }
     
-    func createSOAPRequestWithEnvelope(soapEnvelope : NSMutableString) {
+    func createSOAPRequestWithEnvelope(soapEnvelope : String) {
         //create request
         var url = NSURL(string: "https://gooseeye.bowdoin.edu/ws-csGoldShim/Service.asmx")
         var req = NSMutableURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.UseProtocolCachePolicy, timeoutInterval: 5000)
@@ -68,7 +67,7 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
         connection.start()
     }
     
-    func createTransactionSOAPRequestWithEnvelope(soapEnvelope : NSMutableString) {
+    func createTransactionSOAPRequestWithEnvelope(soapEnvelope : String) {
         //create request
         var url = NSURL(string: "https://gooseeye.bowdoin.edu/ws-csGoldShim/Service.asmx")
         var req = NSMutableURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.UseProtocolCachePolicy, timeoutInterval: 5000)
@@ -76,7 +75,7 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
         req.addValue("text/xml",    forHTTPHeaderField: "Content-Type")
         req.addValue("bowdoin.edu", forHTTPHeaderField: "Host")
         req.HTTPMethod = "POST"
-        req.HTTPBody = soapEnvelope.dataUsingEncoding(NSUTF8StringEncoding)
+        req.HTTPBody   = soapEnvelope.dataUsingEncoding(NSUTF8StringEncoding)
         
         //begin connection
         var connection = NSURLConnection(request: req, delegate: self, startImmediately: false)
@@ -87,9 +86,9 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
     
     //takes care of HTTP Authentication
     func connection(connection: NSURLConnection!, didReceiveAuthenticationChallenge challenge: NSURLAuthenticationChallenge!) {
-        var authMethod = challenge.protectionSpace.authenticationMethod as NSString;
+        var authMethod = challenge.protectionSpace.authenticationMethod
         
-        if authMethod.isEqualToString(NSURLAuthenticationMethodNTLM) {
+        if authMethod == NSURLAuthenticationMethodNTLM {
             var credential = NSURLCredential(user: self.username,
                 password: self.password,
                 persistence: NSURLCredentialPersistence.ForSession)
@@ -112,7 +111,7 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
         //The request has failed for some reason!
         // Check the error var
         NSLog("ERR \(error)");
-        self.user?.dataLoadingFailed()
+        self.user.dataLoadingFailed()
     }
     
     func connection(connection: NSURLConnection!, willCacheResponse cachedResponse : NSCachedURLResponse) -> NSCachedURLResponse? {
@@ -120,6 +119,6 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
     }
     
     func connectionDidFinishLoading(connection: NSURLConnection!) {
-        self.user?.parseData(self.transactionData!)
+        self.user.parseData(self.transactionData!)
     }
 }

@@ -9,7 +9,7 @@
 import Foundation
 
 class MenuItem : NSObject {
-    var name        : NSString = ""
-    var itemId      : NSString = ""
-    var descriptors : NSString = ""
+    var name        = ""
+    var itemId      = ""
+    var descriptors = ""
 }

@@ -27,15 +27,7 @@ class SettingsViewController: UIViewController {
             self.dietFilter.selectedSegmentIndex = NSUserDefaults.standardUserDefaults().integerForKey("diet-filter")
         }
         
-        if userDefaults.objectForKey("bowdoin_username") {
-            var username = userDefaults.objectForKey("bowdoin_username") as NSString
-            var password = userDefaults.objectForKey("bowdoin_password") as NSString
-            
-            if username.length == 0 || password.length == 0 {
-                self.logoutButton.enabled = false;
-                self.logoutButton.backgroundColor = UIColor.lightGrayColor()
-            }
-        } else {
+        if !self.delegate.user {
             self.logoutButton.enabled = false;
             self.logoutButton.backgroundColor = UIColor.lightGrayColor()
         }
@@ -59,7 +51,7 @@ class SettingsViewController: UIViewController {
         userDefaults.removeObjectForKey("bowdoin_username")
         userDefaults.removeObjectForKey("bowdoin_password")
         userDefaults.synchronize()
-        self.delegate.user.logout()
+        self.delegate.user!.logout()
         self.logoutButton.enabled = false
         self.logoutButton.backgroundColor = UIColor.lightGrayColor()
     }

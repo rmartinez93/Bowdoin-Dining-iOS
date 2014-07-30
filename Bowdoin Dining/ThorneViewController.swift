@@ -11,7 +11,7 @@ import QuartzCore
 
 class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarControllerDelegate, UITableViewDataSource, UINavigationBarDelegate {
     var delegate = UIApplication.sharedApplication().delegate as AppDelegate
-    var courses = NSMutableArray()
+    var courses : [Course] = []
     var shareGesture : UIScreenEdgePanGestureRecognizer?
     @IBOutlet var navBar    : UINavigationBar!
     @IBOutlet var menuItems : UITableView!
@@ -183,9 +183,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
     //UITableView delegate method, returns number of rows/meal items in a given section/course
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
         if section < self.courses.count {
-            var courseObj : AnyObject! = self.courses.objectAtIndex(section)
-            var course = courseObj as Course
-            return course.menuItems.count
+            return self.courses[section].menuItems.count
         } else {
             return 0
         }
@@ -203,9 +201,9 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
         
         //if this is a valid section->row, grab right menu item from course and set cell properties
         if indexPath.section < self.courses.count {
-            var course = self.courses.objectAtIndex(indexPath.section) as Course
+            var course = self.courses[indexPath.section]
             if indexPath.row < course.menuItems.count {
-                var item = course.menuItems.objectAtIndex(indexPath.row) as MenuItem
+                var item = course.menuItems[indexPath.row]
                 
                 if item != nil {
                     cell.textLabel.text = item.name as NSString
@@ -231,7 +229,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
     //UITableView delegate method, returns name of section/course
     func tableView(tableView: UITableView!, titleForHeaderInSection section: Int) -> String! {
         if section < self.courses.count {
-            var course = self.courses.objectAtIndex(section) as Course
+            var course = self.courses[section]
             return course.courseName
         } else {
             return "Other"
@@ -241,9 +239,9 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
     //UITableView delegate method, what to do after side-swiping cell
     func tableView(tableView: UITableView!, editActionsForRowAtIndexPath indexPath: NSIndexPath!) -> [AnyObject]! {
         //first, load in menu course this cell belongs to
-        var course = self.courses.objectAtIndex(indexPath.section) as Course
+        var course = self.courses[indexPath.section]
         //get item from course
-        var item   = course.menuItems.objectAtIndex(indexPath.row) as MenuItem
+        var item   = course.menuItems[indexPath.row]
         
         //load favorited items
         var favorited = Course.allFavoritedItems()
@@ -354,7 +352,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
         self.delegate.offset = formattedDate[3] as NSInteger
         
         //firstly, remove everything from the UITableView
-        self.courses.removeAllObjects()
+        self.courses.removeAll(keepCapacity: false)
         self.menuItems.reloadData()
         
         //disable user interaction on segmented control and begin loading indicator

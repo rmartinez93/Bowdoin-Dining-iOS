@@ -33,14 +33,19 @@ class LoginModalViewController : UIViewController {
         self.usernameField.enabled = false
         self.passwordField.enabled = false
         
+        //if the user hasn't been created, create them
+        if !self.delegate.user {
+            self.delegate.user = User()
+        }
+        
         var downloadQueue = dispatch_queue_create("Download queue", nil)
         dispatch_async(downloadQueue) {
             //in new thread, load user info
-            self.delegate.user.loadDataFor(self.usernameField.text, password: self.passwordField.text)
+            self.delegate.user!.loadDataFor(self.usernameField.text, password: self.passwordField.text)
             
             //go back to main thread
             dispatch_async(dispatch_get_main_queue()) {
-                if !self.delegate.user.dataLoaded {
+                if !self.delegate.user!.dataLoaded {
                     self.loggingIn.stopAnimating()
                     self.loginButton.setTitle("Login", forState: UIControlState.Normal)
                     self.usernameField.enabled = true

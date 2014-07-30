@@ -68,7 +68,7 @@ class Menus : NSObject {
         }
     }
     
-    class func createMenuFromXML(xmlData : NSData, forMeal mealSegment : NSInteger, onWeekday weekday : Bool, atLocation locationId : NSInteger, withFilters filters : NSMutableArray) -> NSMutableArray {
+    class func createMenuFromXML(xmlData : NSData, forMeal mealSegment : NSInteger, onWeekday weekday : Bool, atLocation locationId : NSInteger, withFilters filters : NSArray) -> [Course] {
         var error : NSError?
         //Create Google XML parsing object from NSData, grab "<meal>"s below root
         var doc = GDataXMLDocument(data: xmlData, options: 0, error: &error)
@@ -105,7 +105,7 @@ class Menus : NSObject {
         
         //create array for records (menu items), initialize array of courses (a menu item attribute)
         var menuArray = menu.elementsForName("record") as NSArray?
-        var courses   = NSMutableArray()
+        var courses : [Course] = []
         
         //if there are menu items available, loop through them
         if let menuItems = menuArray {
@@ -117,7 +117,7 @@ class Menus : NSObject {
                 var coursePosition = -1;
                 for var i = 0; i < courses.count; i++ {
                     var course = courses[i] as Course
-                    if course.courseName.isEqualToString(courseObject.stringValue()) {
+                    if course.courseName == courseObject.stringValue() {
                         coursePosition = i
                     }
                 }
@@ -165,7 +165,7 @@ class Menus : NSObject {
                         item.itemId = item_id.stringValue()
                         item.descriptors = detail
                         
-                        thiscourse.menuItems.addObject(item)
+                        thiscourse.menuItems += item
                     } else { //new course, create it and add item to it
                         thiscourse = Course()
                         thiscourse.courseName = courseObject.stringValue()
@@ -175,8 +175,8 @@ class Menus : NSObject {
                         item.itemId = item_id.stringValue()
                         item.descriptors = detail
                         
-                        thiscourse.menuItems.addObject(item)
-                        courses.addObject(thiscourse)
+                        thiscourse.menuItems += item
+                        courses += thiscourse
                     }
                 }
             }
@@ -188,9 +188,9 @@ class Menus : NSObject {
             item.name = "No Menu Available"
             item.itemId = "NA"
             
-            closed.menuItems.addObject(item)
+            closed.menuItems += item
             
-            courses.addObject(closed)
+            courses += closed
         }
 
         return courses; //return array of courses

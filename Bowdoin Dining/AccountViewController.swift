@@ -40,7 +40,10 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
         super.viewWillAppear(animated)
         
         //if user's data has not been loaded, load their data
-        if(!self.delegate.user.dataLoaded) {
+        if !self.delegate.user {
+            self.delegate.user = User()
+        }
+        if !self.delegate.user!.dataLoaded {
             self.reloadData(UIButton())
         }
         
@@ -71,7 +74,9 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
             var downloadQueue = dispatch_queue_create("Download queue", nil);
             dispatch_async(downloadQueue) {
                 //in new thread, load user info
-                self.delegate.user.loadDataFor(username!, password: password!)
+                if self.delegate.user? {
+                    self.delegate.user!.loadDataFor(username!, password: password!)
+                }
             }
         }
         //else, ask for user credentials
@@ -85,18 +90,18 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
     func userDidLoad(notification : NSNotification) {
         //update our copy of the user with new info
         var userInfo = notification.userInfo as NSDictionary
-        self.delegate.user = userInfo.objectForKey("User") as User
+        self.delegate.user = userInfo.objectForKey("User") as? User
         
         //refresh onscreen info
         dispatch_async(dispatch_get_main_queue()) {
-            self.loadingData.stopAnimating()            
+            self.loadingData.stopAnimating()
             self.navBar.topItem.leftBarButtonItem.enabled = true
             self.navBar.topItem.rightBarButtonItem.enabled = false
             
             self.view.setNeedsDisplay()
-            self.points.text = NSString(format: "$%.2f", self.delegate.user.polarPoints)
-            self.meals.text = NSString(format: "%i", self.delegate.user.mealsLeft)
-            self.balance.text = NSString(format: "$%.2f", self.delegate.user.cardBalance)
+            self.points.text  = NSString(format: "$%.2f", self.delegate.user!.polarPoints!)
+            self.meals.text   = NSString(format: "%i",    self.delegate.user!.mealsLeft!)
+            self.balance.text = NSString(format: "$%.2f", self.delegate.user!.cardBalance!)
         }
     }
 }

@@ -11,7 +11,7 @@ import QuartzCore
 
 class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarControllerDelegate, UITableViewDataSource, UINavigationBarDelegate {
     var delegate = UIApplication.sharedApplication().delegate as AppDelegate
-    var courses = NSMutableArray()
+    var courses : [Course] = []
     var shareGesture : UIScreenEdgePanGestureRecognizer?
     @IBOutlet var navBar    : UINavigationBar!
     @IBOutlet var menuItems : UITableView!
@@ -24,8 +24,18 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        //verify correct buttons are showing
+        self.makeCorrectButtonsVisible()
+        
+        //set selected segment to current meal on launch
+        self.meals.selectedSegmentIndex = self.segmentIndexOfCurrentMeal(NSDate())
+        
+        //share selected segment between Moulton/Thorne
+        self.delegate.selectedSegment = self.meals.selectedSegmentIndex
+        
         //set navbar style
-        self.navBar.barTintColor = UIColor(red: 0.36, green:0.36, blue:0.36, alpha:1)
+        self.navBar.barTintColor
+            = UIColor(red: 0.36, green:0.36, blue:0.36, alpha:1)
         self.navBar.barStyle = UIBarStyle.Black
     }
     
@@ -173,9 +183,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     //UITableView delegate method, returns number of rows/meal items in a given section/course
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
         if section < self.courses.count {
-            var courseObj : AnyObject! = self.courses.objectAtIndex(section)
-            var course = courseObj as Course
-            return course.menuItems.count
+            return self.courses[section].menuItems.count
         } else {
             return 0
         }
@@ -183,7 +191,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     
     //UITableView delegate method, sets settings for cell/menu item to be displayed at a given section->row
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
-        let simpleTableIdentifier: NSString = "SimpleTableCell2"
+        let simpleTableIdentifier: NSString = "SimpleTableCell"
         
         var cell : UITableViewCell = tableView.dequeueReusableCellWithIdentifier(simpleTableIdentifier) as UITableViewCell
         
@@ -193,9 +201,9 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
         
         //if this is a valid section->row, grab right menu item from course and set cell properties
         if indexPath.section < self.courses.count {
-            var course = self.courses.objectAtIndex(indexPath.section) as Course
+            var course = self.courses[indexPath.section]
             if indexPath.row < course.menuItems.count {
-                var item = course.menuItems.objectAtIndex(indexPath.row) as MenuItem
+                var item = course.menuItems[indexPath.row]
                 
                 if item != nil {
                     cell.textLabel.text = item.name as NSString
@@ -221,7 +229,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     //UITableView delegate method, returns name of section/course
     func tableView(tableView: UITableView!, titleForHeaderInSection section: Int) -> String! {
         if section < self.courses.count {
-            var course = self.courses.objectAtIndex(section) as Course
+            var course = self.courses[section]
             return course.courseName
         } else {
             return "Other"
@@ -231,9 +239,9 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     //UITableView delegate method, what to do after side-swiping cell
     func tableView(tableView: UITableView!, editActionsForRowAtIndexPath indexPath: NSIndexPath!) -> [AnyObject]! {
         //first, load in menu course this cell belongs to
-        var course = self.courses.objectAtIndex(indexPath.section) as Course
+        var course = self.courses[indexPath.section]
         //get item from course
-        var item   = course.menuItems.objectAtIndex(indexPath.row) as MenuItem
+        var item   = course.menuItems[indexPath.row]
         
         //load favorited items
         var favorited = Course.allFavoritedItems()
@@ -311,7 +319,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
             this.layer.position = CGPointMake(0, this.layer.position.y);
         }
         
-        UIView.beginAnimations("rotation", context: nil)
+        UIView.beginAnimations("rotation",  context: nil)
         UIView.setAnimationDuration(0.8)
         this.layer.transform = CATransform3DIdentity
         this.layer.opacity = 1
@@ -344,7 +352,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
         self.delegate.offset = formattedDate[3] as NSInteger
         
         //firstly, remove everything from the UITableView
-        self.courses.removeAllObjects()
+        self.courses.removeAll(keepCapacity: false)
         self.menuItems.reloadData()
         
         //disable user interaction on segmented control and begin loading indicator

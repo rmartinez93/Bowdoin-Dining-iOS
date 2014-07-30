@@ -10,8 +10,8 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDelegate {
     var window    : UIWindow?
-    var user      : User            = User()
-    var filters   : NSMutableArray  = NSMutableArray()
+    var user      : User?
+    var filters   : [String] = []
     let thorneId  : NSInteger       = 1
     let moultonId : NSInteger       = 0
     var daysAdded : NSInteger       = 0
@@ -55,17 +55,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
     }
 
     func updateDietFilter(filterIndex : NSInteger) {
-        self.filters.removeAllObjects()
+        self.filters.removeAll(keepCapacity: false)
         switch filterIndex {
             case 1:
-                self.filters.addObject("V")
-                self.filters.addObject("VE")
+                self.filters += "V"
+                self.filters += "VE"
             case 2:
-                self.filters.addObject("VE")
+                self.filters += "VE"
             case 3:
-                self.filters.addObject("GF")
+                self.filters += "GF"
             case 4:
-                self.filters.addObject("L")
+                self.filters += "L"
             default:
                 break;
         }

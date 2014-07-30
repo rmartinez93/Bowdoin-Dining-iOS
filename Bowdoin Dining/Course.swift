@@ -9,8 +9,8 @@
 import Foundation
 
 class Course : NSObject {
-    var courseName  : NSString = ""
-    var menuItems   : NSMutableArray = []
+    var courseName = ""
+    var menuItems : [MenuItem] = []
     
     //array of all favorited items grabbed from our favorites file
     class func allFavoritedItems() -> NSMutableArray {
@@ -19,7 +19,7 @@ class Course : NSObject {
         if allFavorited {
             return NSMutableArray(array: allFavorited)
         } else {
-            return NSMutableArray()
+            return []
         }
     }
     

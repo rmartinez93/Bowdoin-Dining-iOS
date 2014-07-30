@@ -9,13 +9,13 @@
 import Foundation
 
 class User : NSObject {
-    var username : NSString = ""
-    var password : NSString = ""
-    var lastname : NSString = ""
-    var firstname : NSString = ""
-    var polarPoints : Double = 0.0
-    var cardBalance : Double = 0.0
-    var mealsLeft   : Int = 0
+    var username : String?
+    var password : String?
+    var lastname    : String?
+    var firstname   : String?
+    var polarPoints : Double?
+    var cardBalance : Double?
+    var mealsLeft   : Int?
     var dataLoaded  : Bool = false
     
     func logout() {
