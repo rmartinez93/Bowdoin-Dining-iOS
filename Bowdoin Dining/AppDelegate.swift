@@ -39,8 +39,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
         //set tabBar style, moreNavigationController delegate
         if self.window {
             //set tab bar to be light gray
-            (self.window!.rootViewController as UITabBarController).tabBar.barStyle = UIBarStyle.Black
-            
+            (self.window!.rootViewController as UITabBarController).tabBar.backgroundImage = UIImage(named: "tab.png")
+            (self.window!.rootViewController as UITabBarController).tabBar.translucent = false
             //setting delegate for styling
             (self.window!.rootViewController as UITabBarController).moreNavigationController.delegate = self
         }
@@ -77,11 +77,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
         
         //style
         navigationController.navigationBar.titleTextAttributes
-            = [NSFontAttributeName : UIFont(name: "Helvetica Neue", size: 28)]
+            = [NSFontAttributeName : UIFont(name: "Helvetica Neue", size: 28), NSForegroundColorAttributeName : UIColor.whiteColor()]
         
-        navigationController.navigationBar.barTintColor = UIColor(red: 0.36, green:0.36, blue:0.36, alpha:1)
         navigationController.navigationBar.translucent = false
-        navigationController.navigationBar.barStyle = UIBarStyle.Black
+        navigationController.navigationBar.setBackgroundImage(UIImage(named: "bar.png"), forBarMetrics: UIBarMetrics.Default)
         
         if (viewController.title as NSString).isEqualToString("Settings") {
             viewController.navigationItem.title = "Settings"

@@ -27,9 +27,7 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
             object: nil)
         
         //navbar style
-        self.navBar.barTintColor
-            = UIColor(red: 0.36, green:0.36, blue:0.36, alpha:1)
-        self.navBar.barStyle = UIBarStyle.Black
+        self.navBar.setBackgroundImage(UIImage(named: "bar.png"), forBarMetrics: UIBarMetrics.Default)
     }
     
     func positionForBar(bar: UIBarPositioning!) -> UIBarPosition  {

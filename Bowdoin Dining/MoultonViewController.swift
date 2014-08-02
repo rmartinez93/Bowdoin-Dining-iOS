@@ -24,19 +24,8 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        //verify correct buttons are showing
-        self.makeCorrectButtonsVisible()
-        
-        //set selected segment to current meal on launch
-        self.meals.selectedSegmentIndex = self.segmentIndexOfCurrentMeal(NSDate())
-        
-        //share selected segment between Moulton/Thorne
-        self.delegate.selectedSegment = self.meals.selectedSegmentIndex
-        
         //set navbar style
-        self.navBar.barTintColor
-            = UIColor(red: 0.36, green:0.36, blue:0.36, alpha:1)
-        self.navBar.barStyle = UIBarStyle.Black
+        self.navBar.setBackgroundImage(UIImage(named: "bar.png"), forBarMetrics: UIBarMetrics.Default)
     }
     
     func positionForBar(bar: UIBarPositioning!) -> UIBarPosition  {
@@ -191,7 +180,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     
     //UITableView delegate method, sets settings for cell/menu item to be displayed at a given section->row
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
-        let simpleTableIdentifier: NSString = "SimpleTableCell"
+        let simpleTableIdentifier: NSString = "SimpleTableCell2"
         
         var cell : UITableViewCell = tableView.dequeueReusableCellWithIdentifier(simpleTableIdentifier) as UITableViewCell
         
@@ -206,7 +195,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
                 var item = course.menuItems[indexPath.row]
                 
                 if item != nil {
-                    cell.textLabel.text = item.name as NSString
+                    cell.textLabel.text = item.name
                     if cell.detailTextLabel {
                         cell.detailTextLabel!.text = item.descriptors
                         cell.detailTextLabel!.textColor = UIColor.lightGrayColor()
@@ -286,9 +275,9 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     
     //UITableView delegate method, sets section header styles
     func tableView(tableView: UITableView!, willDisplayHeaderView view: UIView!, forSection section: Int) {
-        var header = UITableViewHeaderFooterView()
+        var header = view as UITableViewHeaderFooterView
         header.textLabel.textColor = UIColor(red:0, green: 0.4, blue: 0.8, alpha: 1)
-        header.contentView.backgroundColor = UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1)
+        header.contentView.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1)
         
         self.animateIn(header)
     }
@@ -370,7 +359,6 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
                 //if the response was nil, handle
                 if xml == nil {
                     self.loading.stopAnimating()
-                    self.menuItems.reloadData()
                     var alert = UIAlertController(title: "Network Error",
                         message: "Sorry, we couldn't get the menu at this time. Check your internet connection or try again later.",
                         preferredStyle: UIAlertControllerStyle.Alert)

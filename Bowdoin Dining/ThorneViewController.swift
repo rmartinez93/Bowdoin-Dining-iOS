@@ -34,9 +34,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
         self.delegate.selectedSegment = self.meals.selectedSegmentIndex
         
         //set navbar style
-        self.navBar.barTintColor
-            = UIColor(red: 0.36, green:0.36, blue:0.36, alpha:1)
-        self.navBar.barStyle = UIBarStyle.Black
+        self.navBar.setBackgroundImage(UIImage(named: "bar.png"), forBarMetrics: UIBarMetrics.Default)
     }
     
     func positionForBar(bar: UIBarPositioning!) -> UIBarPosition  {
@@ -286,9 +284,9 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
     
     //UITableView delegate method, sets section header styles
     func tableView(tableView: UITableView!, willDisplayHeaderView view: UIView!, forSection section: Int) {
-        var header = UITableViewHeaderFooterView()
+        var header = view as UITableViewHeaderFooterView
         header.textLabel.textColor = UIColor(red:0, green: 0.4, blue: 0.8, alpha: 1)
-        header.contentView.backgroundColor = UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1)
+        header.contentView.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1)
 
         self.animateIn(header)
     }

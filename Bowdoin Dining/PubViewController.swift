@@ -25,9 +25,7 @@ class PubViewController: UIViewController, UINavigationBarDelegate {
         self.MageesMenu.scrollView.contentInset.bottom = 50
         
         //sets navbar style
-        self.navBar.barTintColor
-            = UIColor(red: 0.36, green:0.36, blue:0.36, alpha:1)
-        self.navBar.barStyle = UIBarStyle.Black
+        self.navBar.setBackgroundImage(UIImage(named: "bar.png"), forBarMetrics: UIBarMetrics.Default)
         
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
