@@ -81,13 +81,13 @@
                                 </connections>
                             </tableView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="kam-m7-qVT">
-                                <rect key="frame" x="20" y="74" width="560" height="29"/>
+                                <rect key="frame" x="20" y="73" width="560" height="29"/>
                                 <segments>
                                     <segment title="Breakfast"/>
                                     <segment title="Lunch"/>
                                     <segment title="Dinner"/>
                                 </segments>
-                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="tintColor" white="0.19716546474358976" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <action selector="indexDidChangeForSegmentedControl:" destination="9pv-A4-QxB" eventType="valueChanged" id="egu-ZD-FxI"/>
                                 </connections>
@@ -101,7 +101,7 @@
                             <constraint firstAttribute="top" secondItem="tsR-hK-woN" secondAttribute="top" id="8qp-4k-ywN"/>
                             <constraint firstAttribute="centerX" secondItem="R0v-ru-bhj" secondAttribute="centerX" id="9a8-yp-u1Q"/>
                             <constraint firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="9hT-Pl-9vo"/>
-                            <constraint firstItem="Tve-Pg-tbt" firstAttribute="top" secondItem="kam-m7-qVT" secondAttribute="bottom" constant="8" symbolic="YES" id="BcY-wB-F8K"/>
+                            <constraint firstItem="Tve-Pg-tbt" firstAttribute="top" secondItem="kam-m7-qVT" secondAttribute="bottom" constant="9" id="BcY-wB-F8K"/>
                             <constraint firstAttribute="trailing" secondItem="kam-m7-qVT" secondAttribute="trailing" constant="20" symbolic="YES" id="F3M-Ai-m1N"/>
                             <constraint firstAttribute="trailing" secondItem="tsR-hK-woN" secondAttribute="trailing" id="GCv-eZ-Lr1"/>
                             <constraint firstItem="Tve-Pg-tbt" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="MgF-bj-tvw"/>
@@ -201,13 +201,13 @@
                                 </connections>
                             </navigationBar>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="vJv-ba-vIU">
-                                <rect key="frame" x="20" y="74" width="560" height="29"/>
+                                <rect key="frame" x="20" y="73" width="560" height="29"/>
                                 <segments>
                                     <segment title="Breakfast"/>
                                     <segment title="Lunch"/>
                                     <segment title="Dinner"/>
                                 </segments>
-                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="tintColor" white="0.19851762820512819" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <action selector="indexDidChangeForSegmentedControl:" destination="8rJ-Kc-sve" eventType="valueChanged" id="NPD-Yy-qT4"/>
                                 </connections>
@@ -218,7 +218,7 @@
                             <constraint firstItem="dEd-Ib-KVL" firstAttribute="centerY" secondItem="QS5-Rx-YEW" secondAttribute="centerY" id="0By-34-4q3"/>
                             <constraint firstAttribute="centerX" secondItem="imo-gB-kTG" secondAttribute="centerX" id="3eu-N9-r7g"/>
                             <constraint firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailing" id="C9p-N0-R4o"/>
-                            <constraint firstItem="imo-gB-kTG" firstAttribute="top" secondItem="vJv-ba-vIU" secondAttribute="bottom" constant="8" symbolic="YES" id="DMj-bF-VDI"/>
+                            <constraint firstItem="imo-gB-kTG" firstAttribute="top" secondItem="vJv-ba-vIU" secondAttribute="bottom" constant="9" id="DMj-bF-VDI"/>
                             <constraint firstAttribute="centerX" secondItem="WRe-Ys-WNm" secondAttribute="centerX" id="Hbx-76-nmi"/>
                             <constraint firstItem="Djb-ko-YwX" firstAttribute="top" secondItem="imo-gB-kTG" secondAttribute="bottom" constant="-49" id="L8Y-FD-eSA"/>
                             <constraint firstAttribute="trailing" secondItem="imo-gB-kTG" secondAttribute="trailing" id="Oyn-LF-5Lt"/>
