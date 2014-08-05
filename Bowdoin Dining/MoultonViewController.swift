@@ -196,7 +196,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
                 
                 if item != nil {
                     cell.textLabel.text = item.name
-                    if cell.detailTextLabel {
+                    if cell.detailTextLabel != nil {
                         cell.detailTextLabel!.text = item.descriptors
                         cell.detailTextLabel!.textColor = UIColor.lightGrayColor()
                     }

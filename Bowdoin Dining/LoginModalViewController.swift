@@ -34,7 +34,7 @@ class LoginModalViewController : UIViewController {
         self.passwordField.enabled = false
         
         //if the user hasn't been created, create them
-        if !self.delegate.user {
+        if self.delegate.user == nil {
             self.delegate.user = User()
         }
         
@@ -69,11 +69,11 @@ class LoginModalViewController : UIViewController {
     @IBAction func nextItem(textfield : UITextField) {
         var nextTag = textfield.tag + 1
         // Try to find next responder
-        var nextResponder = textfield.superview.viewWithTag(nextTag)
+        var nextResponder = textfield.superview?.viewWithTag(nextTag)
         
-        if nextResponder {
+        if nextResponder != nil {
             // Found next responder, so set it.
-            nextResponder.becomeFirstResponder()
+            nextResponder!.becomeFirstResponder()
         } else {
             // Not found, so remove keyboard.
             textfield.resignFirstResponder()

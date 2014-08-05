@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>4143BBFC-F137-408D-9553-37E2BA3C9C6A</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Bowdoin Dining</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>3FB71E811CC7B7EDBB049E8E6EFA745A41D788D0</key>
+		<string>https://github.com/rmartinez93/Bowdoin-Dining---iOS.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Bowdoin Dining.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>3FB71E811CC7B7EDBB049E8E6EFA745A41D788D0</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/rmartinez93/Bowdoin-Dining---iOS.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>3FB71E811CC7B7EDBB049E8E6EFA745A41D788D0</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>3FB71E811CC7B7EDBB049E8E6EFA745A41D788D0</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Bowdoin%20Dining</string>
+		</dict>
+	</array>
+</dict>
+</plist>

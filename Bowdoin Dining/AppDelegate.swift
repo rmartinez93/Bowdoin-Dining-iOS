@@ -37,7 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
         }
         
         //set tabBar style, moreNavigationController delegate
-        if self.window {
+        if self.window != nil {
             //set tab bar to be light gray
             (self.window!.rootViewController as UITabBarController).tabBar.backgroundImage = UIImage(named: "tab.png")
             (self.window!.rootViewController as UITabBarController).tabBar.translucent = false
@@ -46,8 +46,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
         }
         
         //update filter to last setting
-        var currentFilter : NSInteger? = NSUserDefaults.standardUserDefaults().objectForKey("diet-filter") as? NSInteger
-        if currentFilter {
+        var currentFilter = NSUserDefaults.standardUserDefaults().objectForKey("diet-filter") as NSInteger?
+        if currentFilter != nil {
             self.updateDietFilter(currentFilter!)
         }
         
@@ -58,14 +58,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
         self.filters.removeAll(keepCapacity: false)
         switch filterIndex {
             case 1:
-                self.filters += "V"
-                self.filters += "VE"
+                self.filters.append("V")
+                self.filters.append("VE")
             case 2:
-                self.filters += "VE"
+                self.filters.append("VE")
             case 3:
-                self.filters += "GF"
+                self.filters.append("GF")
             case 4:
-                self.filters += "L"
+                self.filters.append("L")
             default:
                 break;
         }

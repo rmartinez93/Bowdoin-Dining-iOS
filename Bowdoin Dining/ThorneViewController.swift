@@ -205,7 +205,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
                 
                 if item != nil {
                     cell.textLabel.text = item.name as NSString
-                    if cell.detailTextLabel {
+                    if cell.detailTextLabel != nil {
                         cell.detailTextLabel!.text = item.descriptors
                         cell.detailTextLabel!.textColor = UIColor.lightGrayColor()
                     }

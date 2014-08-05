@@ -16,7 +16,7 @@ class Course : NSObject {
     class func allFavoritedItems() -> NSMutableArray {
         var userDefaults = NSUserDefaults.standardUserDefaults()
         var allFavorited : NSArray? = userDefaults.objectForKey("favorited") as? NSArray
-        if allFavorited {
+        if allFavorited != nil {
             return NSMutableArray(array: allFavorited)
         } else {
             return []

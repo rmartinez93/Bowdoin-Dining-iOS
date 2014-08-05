@@ -27,7 +27,7 @@ class SettingsViewController: UIViewController {
             self.dietFilter.selectedSegmentIndex = NSUserDefaults.standardUserDefaults().integerForKey("diet-filter")
         }
         
-        if !self.delegate.user {
+        if self.delegate.user == nil {
             self.logoutButton.enabled = false;
             self.logoutButton.backgroundColor = UIColor.lightGrayColor()
         }

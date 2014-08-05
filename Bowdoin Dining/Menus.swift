@@ -165,7 +165,7 @@ class Menus : NSObject {
                         item.itemId = item_id.stringValue()
                         item.descriptors = detail
                         
-                        thiscourse.menuItems += item
+                        thiscourse.menuItems.append(item)
                     } else { //new course, create it and add item to it
                         thiscourse = Course()
                         thiscourse.courseName = courseObject.stringValue()
@@ -175,8 +175,8 @@ class Menus : NSObject {
                         item.itemId = item_id.stringValue()
                         item.descriptors = detail
                         
-                        thiscourse.menuItems += item
-                        courses += thiscourse
+                        thiscourse.menuItems.append(item)
+                        courses.append(thiscourse)
                     }
                 }
             }
@@ -188,9 +188,9 @@ class Menus : NSObject {
             item.name = "No Menu Available"
             item.itemId = "NA"
             
-            closed.menuItems += item
+            closed.menuItems.append(item)
             
-            courses += closed
+            courses.append(closed)
         }
 
         return courses; //return array of courses

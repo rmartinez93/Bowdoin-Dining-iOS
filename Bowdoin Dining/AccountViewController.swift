@@ -38,7 +38,7 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
         super.viewWillAppear(animated)
         
         //if user's data has not been loaded, load their data
-        if !self.delegate.user {
+        if self.delegate.user != nil {
             self.delegate.user = User()
         }
         if !self.delegate.user!.dataLoaded {
@@ -68,11 +68,11 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
         var password     = userDefaults.objectForKey("bowdoin_password") as? NSString
         
         //if we have user info saved, download their data
-        if username && password {
+        if username != nil && password != nil {
             var downloadQueue = dispatch_queue_create("Download queue", nil);
             dispatch_async(downloadQueue) {
                 //in new thread, load user info
-                if self.delegate.user? {
+                if self.delegate.user != nil {
                     self.delegate.user!.loadDataFor(username!, password: password!)
                 }
             }

@@ -13,8 +13,12 @@ import UIKit
 class SplashView : UIView {
     var trueBlue : UIColor = UIColor(red: 0.0, green:0.50, blue:1, alpha:1)
     
-    init(frame: CGRect) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
+    }
+    
+    required init(coder: NSCoder) {
+        fatalError("NSCoding not supported")
     }
     
     override class func layerClass() -> AnyClass {

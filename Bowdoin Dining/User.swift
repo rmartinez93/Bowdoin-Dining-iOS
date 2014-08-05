@@ -65,8 +65,8 @@ class User : NSObject {
         
         self.firstname = firstName
         self.lastname  = lastName
-        self.cardBalance = balance.bridgeToObjectiveC().doubleValue/100.0
-        self.polarPoints = ppoints.bridgeToObjectiveC().doubleValue/100.0
+        self.cardBalance = (balance as NSString).doubleValue/100.0
+        self.polarPoints = (ppoints as NSString).doubleValue/100.0
         self.mealsLeft   = 123 //TBD
 
         var userInfo = NSDictionary(object: self, forKey: "User")
