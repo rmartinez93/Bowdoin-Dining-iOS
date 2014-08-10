@@ -79,7 +79,6 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     @IBAction func backButtonPressed(sender : AnyObject) {
         if self.delegate.daysAdded > 0 {
             self.delegate.daysAdded--;
-            self.makeCorrectButtonsVisible()
             self.updateVisibleMenu()
             self.navBar.topItem.title = self.getTextForDaysAdded(self.delegate.daysAdded)
         }
@@ -88,7 +87,6 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     @IBAction func forwardButtonPressed(sender : AnyObject) {
         if self.delegate.daysAdded < 6 {
             self.delegate.daysAdded++;
-            self.makeCorrectButtonsVisible()
             self.updateVisibleMenu()
             self.navBar.topItem.title = self.getTextForDaysAdded(self.delegate.daysAdded)
         }
@@ -96,6 +94,12 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     
     func isWeekday(dayOfWeek : NSInteger) -> Bool {
         return (dayOfWeek < 7 && dayOfWeek > 1);
+    }
+    
+    func disableAllButtons() {
+        self.backButton.enabled = false
+        self.forwardButton.enabled = false
+        self.meals.enabled = false
     }
     
     func makeCorrectButtonsVisible() {
@@ -130,6 +134,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
                 self.meals.selectedSegmentIndex = self.delegate.selectedSegment
             }
         }
+        self.meals.enabled = true
     }
     
     func segmentIndexOfCurrentMeal(now: NSDate) -> NSInteger {
@@ -344,8 +349,8 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
         self.courses.removeAll(keepCapacity: false)
         self.menuItems.reloadData()
         
-        //disable user interaction on segmented control and begin loading indicator
-        self.meals.userInteractionEnabled = false
+        //disable user interaction and begin loading indicator
+        self.disableAllButtons()
         self.loading.startAnimating()
         self.menuItems.beginUpdates()
         
@@ -387,7 +392,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
                     self.loading.stopAnimating()
                     self.menuItems.endUpdates()
                     self.menuItems.setContentOffset(CGPointZero, animated: true)
-                    self.meals.userInteractionEnabled = true;
+                    self.makeCorrectButtonsVisible()
                 }
             }
         }

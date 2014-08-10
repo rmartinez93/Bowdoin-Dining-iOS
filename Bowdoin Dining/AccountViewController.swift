@@ -38,7 +38,7 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
         super.viewWillAppear(animated)
         
         //if user's data has not been loaded, load their data
-        if self.delegate.user != nil {
+        if self.delegate.user == nil {
             self.delegate.user = User()
         }
         if !self.delegate.user!.dataLoaded {

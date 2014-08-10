@@ -15,9 +15,12 @@ class PubViewController: UIViewController, UINavigationBarDelegate {
     @IBOutlet var navBar     : UINavigationBar!
     
     override func viewDidLoad() {
-        var url = NSBundle.mainBundle().URLForResource("magees-menu", withExtension: "pdf")
-        var request = NSURLRequest(URL: url)
+        super.viewDidLoad()
+        // Do any additional setup after loading the view, typically from a nib.
         
+        var url = NSBundle.mainBundle().URLForResource("pub-menu", withExtension: "pdf")
+        var request = NSURLRequest(URL: url)
+
         //load menu
         self.MageesMenu.loadRequest(request)
         
@@ -26,9 +29,6 @@ class PubViewController: UIViewController, UINavigationBarDelegate {
         
         //sets navbar style
         self.navBar.setBackgroundImage(UIImage(named: "bar.png"), forBarMetrics: UIBarMetrics.Default)
-        
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
     }
     
     func positionForBar(bar: UIBarPositioning!) -> UIBarPosition  {
