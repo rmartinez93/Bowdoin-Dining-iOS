@@ -38,7 +38,7 @@ class Menus : NSObject {
     }
     
     //load menu for a given day
-    class func loadMenuForDay(day : NSInteger, month : NSInteger, year : NSInteger, offset : NSInteger) -> NSData {
+    class func loadMenuForDay(day : NSInteger, month : NSInteger, year : NSInteger, offset : NSInteger) -> NSData? {
         //first, search local path in case cached
         var path = self.localURLForDay(day, month: month, year: year, offset: offset)
         var fileExists = NSFileManager.defaultManager().fileExistsAtPath(path) as Bool
@@ -54,6 +54,7 @@ class Menus : NSObject {
 
             //download menu for this day
             var urlString = self.externalURLForDay(day, month: month, year: year, offset: offset)
+            NSLog(urlString)
             var url = NSURL(string: urlString)
             var error : NSError?
             var xmlData = NSMutableData.dataWithContentsOfURL(url, options: nil, error: &error)
@@ -62,9 +63,11 @@ class Menus : NSObject {
             UIApplication.sharedApplication().networkActivityIndicatorVisible = false
             
             //cache file, return
-            xmlData.writeToFile(path, atomically: true)
-            
-            return xmlData
+            if xmlData != nil {
+                xmlData.writeToFile(path, atomically: true)
+                return xmlData
+            }
+            return nil
         }
     }
     

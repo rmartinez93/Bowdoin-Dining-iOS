@@ -20,6 +20,14 @@ class LoginModalViewController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        NSNotificationCenter.defaultCenter().addObserver(self,
+            selector: "userDidLoad:",
+            name: "UserFinishedLoading",
+            object: nil)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     override func didReceiveMemoryWarning() {
@@ -42,26 +50,28 @@ class LoginModalViewController : UIViewController {
         dispatch_async(downloadQueue) {
             //in new thread, load user info
             self.delegate.user!.loadDataFor(self.usernameField.text, password: self.passwordField.text)
-            
-            //go back to main thread
-            dispatch_async(dispatch_get_main_queue()) {
-                if !self.delegate.user!.dataLoaded {
-                    self.loggingIn.stopAnimating()
-                    self.loginButton.setTitle("Login", forState: UIControlState.Normal)
-                    self.usernameField.enabled = true
-                    self.passwordField.enabled = true
-                    self.insutructions.text = "Username or password is invalid."
-                } else {
-                    if self.remember.on {
-                        var userDefaults = NSUserDefaults.standardUserDefaults()
-                        userDefaults.setObject(self.usernameField.text, forKey: "bowdoin_username")
-                        userDefaults.setObject(self.passwordField.text, forKey: "bowdoin_password")
-                        userDefaults.synchronize()
-                    }
-                    
-                    self.loggingIn.stopAnimating()
-                    self.performSegueWithIdentifier("userDidLogin", sender: self)
+        }
+    }
+    
+    func userDidLoad(notification : NSNotification) {
+        //go to main thread
+        dispatch_async(dispatch_get_main_queue()) {
+            if !self.delegate.user!.dataLoaded {
+                self.loggingIn.stopAnimating()
+                self.loginButton.setTitle("Login", forState: UIControlState.Normal)
+                self.usernameField.enabled = true
+                self.passwordField.enabled = true
+                self.insutructions.text = "Username or password is invalid."
+            } else {
+                if self.remember.on {
+                    var userDefaults = NSUserDefaults.standardUserDefaults()
+                    userDefaults.setObject(self.usernameField.text, forKey: "bowdoin_username")
+                    userDefaults.setObject(self.passwordField.text, forKey: "bowdoin_password")
+                    userDefaults.synchronize()
                 }
+                
+                self.loggingIn.stopAnimating()
+                self.performSegueWithIdentifier("userDidLogin", sender: self)
             }
         }
     }

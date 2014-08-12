@@ -377,7 +377,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
                     //else we successfully loaded XML!
                 else {
                     //create a menu from this data and save it to delegate
-                    self.courses = Menus.createMenuFromXML(xml,
+                    self.courses = Menus.createMenuFromXML(xml!,
                         forMeal:     self.meals.selectedSegmentIndex,
                         onWeekday:   self.isWeekday(self.delegate.offset),
                         atLocation:  self.delegate.moultonId,

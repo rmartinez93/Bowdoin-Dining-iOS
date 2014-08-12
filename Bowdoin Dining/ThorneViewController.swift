@@ -373,21 +373,21 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
                 //if the response was nil, handle
                 if xml == nil {
                     self.loading.stopAnimating()
-                    self.menuItems.reloadData()
-                    var alert = UIAlertController(title: "Network Error",
-                        message: "Sorry, we couldn't get the menu at this time. Check your internet connection or try again later.",
-                        preferredStyle: UIAlertControllerStyle.Alert)
-                    alert.addAction(UIAlertAction(title: "OK",
-                        style: UIAlertActionStyle.Default,
-                        handler: nil))
-                    self.presentViewController(alert,
-                        animated: true,
-                        completion: nil)
+                    self.menuItems.endUpdates()
+                    self.menuItems.setContentOffset(CGPointZero, animated: true)
+                    
+                    var alert = UIAlertView(title: "Network Error",
+                        message: "Sorry, we could not load the menu at this time. Check your network connection and try again later.",
+                        delegate: self,
+                        cancelButtonTitle: "OK")
+                    alert.show()
+                    
+                    self.makeCorrectButtonsVisible()
                 }
                 //else we successfully loaded XML!
                 else {
                     //create a menu from this data and save it to delegate
-                    self.courses = Menus.createMenuFromXML(xml,
+                    self.courses = Menus.createMenuFromXML(xml!,
                         forMeal:     self.meals.selectedSegmentIndex,
                         onWeekday:   self.isWeekday(self.delegate.offset),
                         atLocation:  self.delegate.thorneId,

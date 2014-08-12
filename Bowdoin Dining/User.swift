@@ -33,7 +33,6 @@ class User : NSObject {
         self.username = username;
         self.password = password;
         
-        //var controller = BowdoinAPIController();
         var controller = BowdoinAPIController(username: username, password: password, user: self)
         controller.getAccountData()
     }
@@ -44,7 +43,6 @@ class User : NSObject {
         
         var doc = GDataXMLDocument(data: data, options: 0, error: &error)
         var root = doc.rootElement
-        
         var soapBody = (root().elementsForName("soap:Body") as NSArray).firstObject as GDataXMLElement
         var CSGoldSVCBalancesResponse = (soapBody.elementsForName("GetCSGoldSVCBalancesResponse") as NSArray).firstObject as GDataXMLElement
         var CSGoldSVCBalancesResult
@@ -58,16 +56,16 @@ class User : NSObject {
         var dtCSGoldSVCBalances2
             = (DocumentElement.elementsForName("dtCSGoldSVCBalances") as NSArray).lastObject as GDataXMLElement
         
-        var firstName = (dtCSGoldSVCBalances1.elementsForName("FIRSTNAME") as NSArray).firstObject.stringValue
-        var lastName  = (dtCSGoldSVCBalances1.elementsForName("LASTNAME")  as NSArray).firstObject.stringValue
-        var balance   = (dtCSGoldSVCBalances1.elementsForName("BALANCE")   as NSArray).firstObject.stringValue
-        var ppoints   = (dtCSGoldSVCBalances2.elementsForName("BALANCE")   as NSArray).firstObject.stringValue
-        
+        var firstName = (dtCSGoldSVCBalances1.elementsForName("FIRSTNAME")   as NSArray).firstObject.stringValue
+        var lastName  = (dtCSGoldSVCBalances1.elementsForName("LASTNAME")    as NSArray).firstObject.stringValue
+        var balance   = (dtCSGoldSVCBalances1.elementsForName("BALANCE")     as NSArray).firstObject.stringValue
+        var ppoints   = (dtCSGoldSVCBalances2.elementsForName("BALANCE")     as NSArray).firstObject.stringValue
+        var meals     = (dtCSGoldSVCBalances2.elementsForName("DESCRIPTION") as NSArray).firstObject.stringValue
         self.firstname = firstName
         self.lastname  = lastName
         self.cardBalance = (balance as NSString).doubleValue/100.0
         self.polarPoints = (ppoints as NSString).doubleValue/100.0
-        self.mealsLeft   = 123 //TBD
+        self.mealsLeft   = (meals   as String).extractNumericsAsInt()
 
         var userInfo = NSDictionary(object: self, forKey: "User")
         NSNotificationCenter.defaultCenter().postNotificationName("UserFinishedLoading",
@@ -77,5 +75,30 @@ class User : NSObject {
     
     func dataLoadingFailed() {
         self.dataLoaded = false
+    }
+}
+
+extension Array {
+    func combine(separator: String) -> String{
+        var str : String = ""
+        for (idx, item) in enumerate(self) {
+            str += "\(item)"
+            if idx < self.count-1 {
+                str += separator
+            }
+        }
+        return str
+    }
+}
+
+extension String {
+    func extractNumerics() -> String {
+        var numerics     = NSCharacterSet(charactersInString: "0123456789").invertedSet
+        return self.componentsSeparatedByCharactersInSet(numerics).combine("")
+    }
+    
+    func extractNumericsAsInt() -> Int {
+        var numerics     = NSCharacterSet(charactersInString: "0123456789").invertedSet
+        return (self.componentsSeparatedByCharactersInSet(numerics).combine("") as NSString).integerValue
     }
 }
