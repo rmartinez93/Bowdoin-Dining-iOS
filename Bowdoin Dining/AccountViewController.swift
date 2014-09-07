@@ -48,7 +48,7 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
     }
     
     @IBAction func userDidLogin(segue : UIStoryboardSegue) {
-        self.navBar.topItem.rightBarButtonItem.enabled = false;
+        self.navBar.topItem!.rightBarButtonItem!.enabled = false;
     }
     
     @IBAction func userCancelledLogin(segue : UIStoryboardSegue) {
@@ -60,8 +60,8 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
         self.meals.text = "N/A"
         self.balance.text = "N/A"
         self.loadingData.startAnimating()
-        self.navBar.topItem.leftBarButtonItem.enabled = false;
-        self.navBar.topItem.rightBarButtonItem.enabled = false;
+        self.navBar.topItem!.leftBarButtonItem!.enabled = false;
+        self.navBar.topItem!.rightBarButtonItem!.enabled = false;
         
         var userDefaults = NSUserDefaults.standardUserDefaults()
         var username     = userDefaults.objectForKey("bowdoin_username") as? NSString
@@ -79,22 +79,22 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
         }
         //else, ask for user credentials
         else {
-            self.navBar.topItem.leftBarButtonItem.enabled = false
-            self.navBar.topItem.rightBarButtonItem.enabled = true
+            self.navBar.topItem!.leftBarButtonItem!.enabled = false
+            self.navBar.topItem!.rightBarButtonItem!.enabled = true
             self.loadingData.stopAnimating()
         }
     }
     
     func userDidLoad(notification : NSNotification) {
         //update our copy of the user with new info
-        var userInfo = notification.userInfo as NSDictionary
-        self.delegate.user = userInfo.objectForKey("User") as? User
+        var userInfo = notification.userInfo as [NSObject : AnyObject!]
+        self.delegate.user = userInfo["User"] as? User
         
         //refresh onscreen info
         dispatch_async(dispatch_get_main_queue()) {
             self.loadingData.stopAnimating()
-            self.navBar.topItem.leftBarButtonItem.enabled = true
-            self.navBar.topItem.rightBarButtonItem.enabled = false
+            self.navBar.topItem!.leftBarButtonItem!.enabled = true
+            self.navBar.topItem!.rightBarButtonItem!.enabled = false
             
             self.view.setNeedsDisplay()
             self.points.text  = NSString(format: "$%.2f", self.delegate.user!.polarPoints!)

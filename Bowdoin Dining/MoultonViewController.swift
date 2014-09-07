@@ -51,7 +51,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
         self.delegate.window!.addGestureRecognizer(self.shareGesture!)
         
         //set the text label to day we're browsing
-        self.navBar.topItem.title = self.getTextForDaysAdded(self.delegate.daysAdded);
+        self.navBar!.topItem!.title = self.getTextForDaysAdded(self.delegate.daysAdded);
         
         //update selected segment in case changed elsewhere
         self.meals.selectedSegmentIndex = self.delegate.selectedSegment;
@@ -80,7 +80,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
         if self.delegate.daysAdded > 0 {
             self.delegate.daysAdded--;
             self.updateVisibleMenu()
-            self.navBar.topItem.title = self.getTextForDaysAdded(self.delegate.daysAdded)
+            self.navBar!.topItem!.title = self.getTextForDaysAdded(self.delegate.daysAdded)
         }
     }
     
@@ -88,7 +88,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
         if self.delegate.daysAdded < 6 {
             self.delegate.daysAdded++;
             self.updateVisibleMenu()
-            self.navBar.topItem.title = self.getTextForDaysAdded(self.delegate.daysAdded)
+            self.navBar!.topItem!.title = self.getTextForDaysAdded(self.delegate.daysAdded)
         }
     }
     
@@ -187,7 +187,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
         let simpleTableIdentifier: NSString = "SimpleTableCell2"
         
-        var cell : UITableViewCell = tableView.dequeueReusableCellWithIdentifier(simpleTableIdentifier) as UITableViewCell
+        var cell = tableView.dequeueReusableCellWithIdentifier(simpleTableIdentifier) as? UITableViewCell
         
         if cell == nil {
             cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: simpleTableIdentifier)
@@ -197,22 +197,22 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
         if indexPath.section < self.courses.count {
             var course = self.courses[indexPath.section]
             if indexPath.row < course.menuItems.count {
-                var item = course.menuItems[indexPath.row]
+                var this : MenuItem? = course.menuItems[indexPath.row]
                 
-                if item != nil {
-                    cell.textLabel.text = item.name
-                    if cell.detailTextLabel != nil {
-                        cell.detailTextLabel!.text = item.descriptors
-                        cell.detailTextLabel!.textColor = UIColor.lightGrayColor()
+                if let item = this {
+                    cell!.textLabel!.text = item.name as NSString
+                    if cell!.detailTextLabel != nil {
+                        cell!.detailTextLabel!.text = item.descriptors
+                        cell!.detailTextLabel!.textColor = UIColor.lightGrayColor()
                     }
                     
                     var favorited = Course.allFavoritedItems()
                     if favorited.containsObject(item.itemId) {
-                        cell.backgroundColor = UIColor(red: 1, green: 0.84, blue: 0, alpha: 1)
+                        cell!.backgroundColor = UIColor(red: 1, green: 0.84, blue: 0, alpha: 1)
                     } else {
-                        cell.backgroundColor = UIColor.whiteColor()
+                        cell!.backgroundColor = UIColor.whiteColor()
                     }
-                    cell.textLabel.sizeToFit()
+                    cell!.textLabel!.sizeToFit()
                 }
             }
         }
@@ -250,7 +250,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
                     //if item is favorited, save it to our centralized list of favorited items
                     Course.addToFavoritedItems(item.itemId)
                     //update styling of cell
-                    var cell = tableView.cellForRowAtIndexPath(indexPath) as UITableViewCell
+                    var cell = tableView.cellForRowAtIndexPath(indexPath) as UITableViewCell!
                     cell.backgroundColor = UIColor(red: 1, green: 0.84, blue:0, alpha:1)
                     tableView.setEditing(false, animated: true)
                 })
@@ -264,7 +264,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
                     //otherwise if this cell is favorited, show un-favoriting action
                     Course.removeFromFavoritedItems(item.itemId)
                     //update styling of cell
-                    var cell = tableView.cellForRowAtIndexPath(indexPath) as UITableViewCell
+                    var cell = tableView.cellForRowAtIndexPath(indexPath) as UITableViewCell!
                     cell.backgroundColor = UIColor.whiteColor()
                     tableView.setEditing(false, animated: true)
                 })
@@ -329,7 +329,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     //shares an invite to the currently browsed meal
     func inviteToMeal() {
         var invite = [AnyObject]()
-        invite.append("Let's get \(self.meals.titleForSegmentAtIndex(self.meals.selectedSegmentIndex).lowercaseString) at Moulton \(self.getTextForDaysAdded(self.delegate.daysAdded).lowercaseString)?")
+        invite.append("Let's get \(self.meals.titleForSegmentAtIndex(self.meals.selectedSegmentIndex)!.lowercaseString) at Moulton \(self.getTextForDaysAdded(self.delegate.daysAdded).lowercaseString)?")
         
         let activityViewController = UIActivityViewController(activityItems: invite, applicationActivities: nil)
         self.presentViewController(activityViewController, animated: true, completion: nil)
