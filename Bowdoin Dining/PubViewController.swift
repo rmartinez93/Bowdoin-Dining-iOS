@@ -18,7 +18,7 @@ class PubViewController: UIViewController, UINavigationBarDelegate {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        var url = NSBundle.mainBundle().URLForResource("pub-menu", withExtension: "pdf")
+        var url = NSBundle.mainBundle().URLForResource("pub-menu", withExtension: "pdf") as NSURL!
         var request = NSURLRequest(URL: url)
 
         //load menu

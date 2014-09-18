@@ -22,10 +22,8 @@ class SettingsViewController: UIViewController {
         super.viewWillAppear(animated)
         
         var userDefaults = NSUserDefaults.standardUserDefaults()
-        
-        if userDefaults.integerForKey("diet-filter") != nil {
-            self.dietFilter.selectedSegmentIndex = NSUserDefaults.standardUserDefaults().integerForKey("diet-filter")
-        }
+        //defaults to 0 (off) if none set
+        self.dietFilter.selectedSegmentIndex = NSUserDefaults.standardUserDefaults().integerForKey("diet-filter")
         
         if self.delegate.user == nil {
             self.logoutButton.enabled = false;

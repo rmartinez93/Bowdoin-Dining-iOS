@@ -19,7 +19,6 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
     
     override func viewDidLoad()  {
         super.viewDidLoad()
-        
         //tell VC to watch for notifications from User obj
         NSNotificationCenter.defaultCenter().addObserver(self,
             selector: "userDidLoad:",
@@ -56,8 +55,8 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
     }
     
     @IBAction func reloadData(sender : AnyObject) {
-        self.points.text = "N/A"
-        self.meals.text = "N/A"
+        self.points.text  = "N/A"
+        self.meals.text   = "N/A"
         self.balance.text = "N/A"
         self.loadingData.startAnimating()
         self.navBar.topItem!.leftBarButtonItem!.enabled = false;
@@ -87,18 +86,19 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
     
     func userDidLoad(notification : NSNotification) {
         //update our copy of the user with new info
-        var userInfo = notification.userInfo as [NSObject : AnyObject!]
-        self.delegate.user = userInfo["User"] as? User
+        var userInfo = notification.userInfo as Dictionary<String, User>
+        self.delegate.user = userInfo["User"]
         
         //refresh onscreen info
         dispatch_async(dispatch_get_main_queue()) {
+            
             self.loadingData.stopAnimating()
             self.navBar.topItem!.leftBarButtonItem!.enabled = true
             self.navBar.topItem!.rightBarButtonItem!.enabled = false
             
             self.view.setNeedsDisplay()
             self.points.text  = NSString(format: "$%.2f", self.delegate.user!.polarPoints!)
-            self.meals.text   = NSString(format: "%i",    self.delegate.user!.mealsLeft!)
+            self.meals.text   = NSString(format: "%i/week",    self.delegate.user!.mealsLeft!)
             self.balance.text = NSString(format: "$%.2f", self.delegate.user!.cardBalance!)
         }
     }

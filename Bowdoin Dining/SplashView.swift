@@ -35,11 +35,10 @@ class SplashView : UIView {
             UIView.animateWithDuration(
                 0.2,
                 animations: {
-                    void in
                     self.alpha = 0
                 },
                 completion:{
-                    bool in
+                    success in
                     self.removeFromSuperview()
                 })
         }

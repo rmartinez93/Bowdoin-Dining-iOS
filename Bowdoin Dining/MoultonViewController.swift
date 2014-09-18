@@ -6,10 +6,12 @@
 //
 //
 
+/* Detect iOS version */
+
 import UIKit
 import QuartzCore
 
-class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarControllerDelegate, UITableViewDataSource, UINavigationBarDelegate {
+class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarControllerDelegate, UITableViewDataSource, UINavigationBarDelegate {    
     var delegate = UIApplication.sharedApplication().delegate as AppDelegate
     var courses : [Course] = []
     var shareGesture : UIScreenEdgePanGestureRecognizer?
@@ -44,7 +46,6 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
         //sharing gesture
         self.shareGesture = UIScreenEdgePanGestureRecognizer(target: self, action: "inviteToMeal")
         self.shareGesture!.edges = UIRectEdge.Left
@@ -175,7 +176,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     }
     
     //UITableView delegate method, returns number of rows/meal items in a given section/course
-    func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section < self.courses.count {
             return self.courses[section].menuItems.count
         } else {
@@ -184,7 +185,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     }
     
     //UITableView delegate method, sets settings for cell/menu item to be displayed at a given section->row
-    func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let simpleTableIdentifier: NSString = "SimpleTableCell2"
         
         var cell = tableView.dequeueReusableCellWithIdentifier(simpleTableIdentifier) as? UITableViewCell
@@ -217,7 +218,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
             }
         }
         
-        return cell;
+        return cell!
     }
     
     //UITableView delegate method, returns name of section/course

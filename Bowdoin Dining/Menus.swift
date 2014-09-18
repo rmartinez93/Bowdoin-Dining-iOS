@@ -26,7 +26,7 @@ class Menus : NSObject {
         
         //set current day to sunday (first day) of this week, and create NSDateComponents for that day
         today.weekday = 1
-        var lastSundayDate = calendar.dateFromComponents(today)
+        var lastSundayDate = calendar.dateFromComponents(today) as NSDate!
         var lastSunday = calendar.components(NSCalendarUnit.DayCalendarUnit | NSCalendarUnit.YearCalendarUnit | NSCalendarUnit.MonthCalendarUnit | NSCalendarUnit.WeekdayCalendarUnit, fromDate: lastSundayDate)
         
         //store info about last sunday's date for use with Bowdoin XML API
@@ -54,7 +54,6 @@ class Menus : NSObject {
 
             //download menu for this day
             var urlString = self.externalURLForDay(day, month: month, year: year, offset: offset)
-            NSLog(urlString)
             var url = NSURL(string: urlString)
             var error : NSError?
             var xmlData = NSMutableData.dataWithContentsOfURL(url, options: nil, error: &error)
@@ -131,7 +130,7 @@ class Menus : NSObject {
                 
                 //create regex for removing diet attributes from item name, find matches in string
                 var error : NSError?
-                var regex   = NSRegularExpression(pattern: "\\b(GF|VE|V|L)\\b", options: nil, error: &error)
+                var regex   = NSRegularExpression(pattern: "\\b(NGI|VE|V|L)\\b", options: nil, error: &error)
                 var details = regex.matchesInString(item_name.stringValue(), options: nil, range: NSMakeRange(0, (item_name.stringValue() as NSString).length)) as NSArray
                 
                 //store returned attributes into string for presentation

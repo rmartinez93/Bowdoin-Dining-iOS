@@ -63,7 +63,7 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
         //begin connection
         var connection = NSURLConnection(request: req, delegate: self, startImmediately: false)
         connection.scheduleInRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
-
+        
         connection.start()
     }
     
@@ -96,7 +96,7 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
             challenge.sender.useCredential(credential, forAuthenticationChallenge: challenge)
         }
     }
-    
+
     func connection(connection: NSURLConnection!, didReceiveResponse response: NSURLResponse!) {
         // Response received, clear out data
         self.transactionData = NSMutableData()

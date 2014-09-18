@@ -13,6 +13,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
     var delegate = UIApplication.sharedApplication().delegate as AppDelegate
     var courses : [Course] = []
     var shareGesture : UIScreenEdgePanGestureRecognizer?
+    
     @IBOutlet var navBar    : UINavigationBar!
     @IBOutlet var menuItems : UITableView!
     @IBOutlet var loading   : UIActivityIndicatorView!
@@ -184,7 +185,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
     }
     
     //UITableView delegate method, returns number of rows/meal items in a given section/course
-    func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section < self.courses.count {
             return self.courses[section].menuItems.count
         } else {

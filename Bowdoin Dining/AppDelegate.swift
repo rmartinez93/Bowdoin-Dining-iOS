@@ -63,7 +63,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
             case 2:
                 self.filters.append("VE")
             case 3:
-                self.filters.append("GF")
+                self.filters.append("NGI")
             case 4:
                 self.filters.append("L")
             default:
@@ -73,7 +73,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
     
     func navigationController(navigationController: UINavigationController!, willShowViewController viewController: UIViewController!, animated: Bool) {
         /* We don't need Edit button in More screen. */
-        navigationController.navigationBar.topItem.rightBarButtonItem = nil;
+        navigationController.navigationBar.topItem!.rightBarButtonItem = nil;
         
         //style
         navigationController.navigationBar.titleTextAttributes
@@ -82,10 +82,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
         navigationController.navigationBar.translucent = false
         navigationController.navigationBar.setBackgroundImage(UIImage(named: "bar.png"), forBarMetrics: UIBarMetrics.Default)
         
-        if (viewController.title as NSString).isEqualToString("Settings") {
+        if viewController.title == "Settings" {
             viewController.navigationItem.title = "Settings"
         }
-        if (viewController.title as NSString).isEqualToString("Hours") {
+        if viewController.title == "Hours" {
             viewController.navigationItem.title = "Hours"
         }
     }
