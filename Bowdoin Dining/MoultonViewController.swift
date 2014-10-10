@@ -286,21 +286,21 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     func tableView(tableView: UITableView!, willDisplayHeaderView view: UIView!, forSection section: Int) {
         var header = view as UITableViewHeaderFooterView
         header.textLabel.textColor = UIColor(red:0, green: 0.4, blue: 0.8, alpha: 1)
+        header.textLabel.font = UIFont.boldSystemFontOfSize(12)
         header.contentView.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1)
-        
-        self.animateIn(header)
     }
     
     //UITableView delegate method, creates animation when displaying cell
     func tableView(tableView: UITableView!, willDisplayCell cell: UITableViewCell!, forRowAtIndexPath indexPath: NSIndexPath!) {
-        self.animateIn(cell)
+        cell.textLabel?.font = UIFont.systemFontOfSize(16)
+        cell.detailTextLabel?.font = UIFont.systemFontOfSize(10)
     }
     
     func divide (left: Double, right: Double) -> Double {
         return Double(left) / Double(right)
     }
     
-    //UITableView delegate method, creates animation when displaying cell
+    //UITableView delegate method, creates animation when displaying cell; removed, not popular
     func animateIn(this : UIView) {
         //        var init_angle : Double = divide(90*M_PI, right: 180)
         //        var rotation = CATransform3DMakeRotation(CGFloat(init_angle), 0.0, 0.7, 0.4) as CATransform3D

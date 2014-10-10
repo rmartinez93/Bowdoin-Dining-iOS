@@ -11,11 +11,14 @@ import UIKit
 class TransactionsViewController : UIViewController, UITableViewDelegate, UITableViewDataSource, UINavigationBarDelegate {
     var delegate = UIApplication.sharedApplication().delegate as AppDelegate
     var transactions : [AnyObject]!
+    @IBOutlet var transactionView : UITableView!
     @IBOutlet var navBar : UINavigationBar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        transactionView.layoutMargins = UIEdgeInsetsZero
         
         //set navbar style
         self.navBar.setBackgroundImage(UIImage(named: "bar.png"), forBarMetrics: UIBarMetrics.Default)
@@ -51,8 +54,9 @@ class TransactionsViewController : UIViewController, UITableViewDelegate, UITabl
         var transaction = self.delegate.user!.transactions![indexPath.row] as Transaction
         cell!.titleLabel.text   = transaction.name
         cell!.dateLabel.text    = transaction.date
-        cell!.amountLabel.text  = "$\(transaction.amount)"
-        cell!.balanceLabel.text = "$\(transaction.balance)"
+        cell!.amountLabel.text  = NSString(format: "-$%.2f", transaction.amount)
+        cell!.balanceLabel.text = NSString(format: "$%.2f", transaction.balance)
+        cell!.layoutMargins = UIEdgeInsetsZero;
         
         cell!.sizeToFit()
         
