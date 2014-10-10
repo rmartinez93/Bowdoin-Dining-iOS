@@ -13,29 +13,39 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
     var username : String
     var password : String
     var user     : User
+    var type     : String
     var transactionData : NSMutableData?
     
     init(username : String, password : String, user : User) {
         self.username = username
         self.password = password
         self.user     = user
+        self.type     = ""
         
         super.init()
     }
     
     //gets user account data (balance, points, meals)
     func getAccountData() {
+        self.type = "account"
         self.createSOAPRequestWithEnvelope(self.returnSoapEnvelopeForService("<tem:GetCSGoldSVCBalances/>"))
+    }
+    
+    func getMealData() {
+        self.type = "meals"
+        self.createSOAPRequestWithEnvelope(self.returnSoapEnvelopeForService("<tem:GetCSGoldMPBalances/>"))
     }
     
     //gets line status
     func getLineData() {
+        self.type = "lines"
         self.createSOAPRequestWithEnvelope(self.returnSoapEnvelopeForService("<tem:GetCSGoldLineCountsHistogram/>"))
     }
     
     //gets recent transactions
     func getTransactionData() {
-        self.createTransactionSOAPRequestWithEnvelope(self.returnSoapEnvelopeForService("<tem:GetCSGoldGLTrans/>"))
+        self.type = "transactions"
+        self.createSOAPRequestWithEnvelope(self.returnSoapEnvelopeForService("<tem:GetCSGoldGLTrans/>"))
     }
     
     func returnSoapEnvelopeForService(serviceRequested : String) -> String {
@@ -59,23 +69,6 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
         req.addValue("bowdoin.edu", forHTTPHeaderField: "Host")
         req.HTTPMethod = "POST"
         req.HTTPBody = soapEnvelope.dataUsingEncoding(NSUTF8StringEncoding)
-        
-        //begin connection
-        var connection = NSURLConnection(request: req, delegate: self, startImmediately: false)
-        connection.scheduleInRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
-        
-        connection.start()
-    }
-    
-    func createTransactionSOAPRequestWithEnvelope(soapEnvelope : String) {
-        //create request
-        var url = NSURL(string: "https://gooseeye.bowdoin.edu/ws-csGoldShim/Service.asmx")
-        var req = NSMutableURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.UseProtocolCachePolicy, timeoutInterval: 5000)
-        
-        req.addValue("text/xml",    forHTTPHeaderField: "Content-Type")
-        req.addValue("bowdoin.edu", forHTTPHeaderField: "Host")
-        req.HTTPMethod = "POST"
-        req.HTTPBody   = soapEnvelope.dataUsingEncoding(NSUTF8StringEncoding)
         
         //begin connection
         var connection = NSURLConnection(request: req, delegate: self, startImmediately: false)
@@ -119,6 +112,6 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
     }
     
     func connectionDidFinishLoading(connection: NSURLConnection!) {
-        self.user.parseData(self.transactionData!)
+        self.user.parseData(self.transactionData!, type: self.type)
     }
 }

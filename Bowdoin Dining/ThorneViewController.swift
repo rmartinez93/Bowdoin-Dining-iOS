@@ -29,7 +29,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
         self.makeCorrectButtonsVisible()
 
         //set selected segment to current meal on launch
-        self.meals.selectedSegmentIndex = self.segmentIndexOfCurrentMeal(NSDate())
+        self.meals.selectedSegmentIndex = self.segmentIndexOfCurrentMeal()
         
         //share selected segment between Moulton/Thorne
         self.delegate.selectedSegment = self.meals.selectedSegmentIndex
@@ -61,10 +61,10 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
         self.delegate.window!.addGestureRecognizer(self.shareGesture!)
         
         //set the text label to day we're browsing
-        self.navBar.topItem!.title = self.getTextForDaysAdded(self.delegate.daysAdded);
+        self.navBar.topItem!.title = self.getTextForDaysAdded()
         
         //update selected segment in case changed elsewhere
-        self.meals.selectedSegmentIndex = self.delegate.selectedSegment;
+        self.meals.selectedSegmentIndex = self.delegate.selectedSegment
         
         //verify correct buttons are showing
         self.makeCorrectButtonsVisible()
@@ -88,18 +88,21 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
     
     @IBAction func backButtonPressed(sender : AnyObject) {
         if self.delegate.daysAdded > 0 {
-            self.delegate.daysAdded--;
+            self.changeDayBy(-1)
             self.updateVisibleMenu()
-            self.navBar!.topItem!.title = self.getTextForDaysAdded(self.delegate.daysAdded)
         }
     }
     
     @IBAction func forwardButtonPressed(sender : AnyObject) {
         if self.delegate.daysAdded < 6 {
-            self.delegate.daysAdded++;
+            self.changeDayBy(1)
             self.updateVisibleMenu()
-            self.navBar!.topItem!.title = self.getTextForDaysAdded(self.delegate.daysAdded)
         }
+    }
+    
+    func changeDayBy(amount: NSInteger) {
+        self.delegate.daysAdded += amount
+        self.navBar!.topItem!.title = self.getTextForDaysAdded()
     }
     
     func isWeekday(dayOfWeek : NSInteger) -> Bool {
@@ -147,37 +150,38 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
         self.meals.enabled = true
     }
     
-    func segmentIndexOfCurrentMeal(now: NSDate) -> NSInteger {
+    func segmentIndexOfCurrentMeal() -> NSInteger {
         var calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
         calendar.locale = NSLocale(localeIdentifier: "en-US");
         
-        var today = calendar.components(NSCalendarUnit.HourCalendarUnit | NSCalendarUnit.WeekdayCalendarUnit, fromDate: now)
+        var today = calendar.components(NSCalendarUnit.HourCalendarUnit | NSCalendarUnit.WeekdayCalendarUnit, fromDate: NSDate())
         var weekday = today.weekday
         var hour    = today.hour
+        
         if self.isWeekday(weekday) {
             if hour < 11 {
-                return 0; //breakfast
+                return 0 //breakfast
             } else if hour < 14 {
-                return 1; //lunch
+                return 1 //lunch
             } else {
-                return 2; //dinner
+                return 2 //dinner
             }
         } else {
             if hour < 14 {
-                return 0; //brunch
+                return 0 //brunch
             } else {
-                return 1; //dinner
+                return 1 //dinner
             }
         }
     }
     
-    func getTextForDaysAdded(daysAdded : NSInteger) -> NSString {
-        if daysAdded == 0 {
+    func getTextForDaysAdded() -> NSString {
+        if self.delegate.daysAdded == 0 {
             return "Today"
-        } else if daysAdded == 1 {
+        } else if self.delegate.daysAdded == 1 {
             return "Tomorrow"
         } else {
-            var newDate = NSDate(timeIntervalSinceNow: NSTimeInterval(60*60*24*daysAdded))
+            var newDate = NSDate(timeIntervalSinceNow: NSTimeInterval(60*60*24*self.delegate.daysAdded))
             var dateFormatter = NSDateFormatter()
             dateFormatter.dateFormat = "EEEE"
             return dateFormatter.stringFromDate(newDate)
@@ -211,10 +215,9 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
                 
                 if let item = this {
                     cell!.textLabel!.text = item.name as NSString
-                    if cell!.detailTextLabel != nil {
-                        cell!.detailTextLabel!.text = item.descriptors
-                        cell!.detailTextLabel!.textColor = UIColor.lightGrayColor()
-                    }
+                    
+                    cell!.detailTextLabel!.text = item.descriptors
+                    cell!.detailTextLabel!.textColor = UIColor.lightGrayColor()
                     
                     var favorited = Course.allFavoritedItems()
                     if favorited.containsObject(item.itemId) {
@@ -222,7 +225,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
                     } else {
                         cell!.backgroundColor = UIColor.whiteColor()
                     }
-                    cell!.textLabel!.sizeToFit()
+                    cell!.sizeToFit()
                 }
             }
         }
@@ -308,27 +311,27 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
     
     //UITableView delegate method, creates animation when displaying cell
     func animateIn(this : UIView) {
-        var init_angle : Double = divide(90*M_PI, right: 180)
-        var rotation = CATransform3DMakeRotation(CGFloat(init_angle), 0.0, 0.7, 0.4) as CATransform3D
-        rotation.m34 = (-1.0/600.0)
-        
-        this.layer.shadowColor = UIColor.blackColor().CGColor
-        this.layer.shadowOffset = CGSizeMake(10, 10)
-        this.layer.opacity = 0
-        
-        this.layer.transform = rotation
-        this.layer.anchorPoint = CGPointMake(0, 0.5)
-        
-        if this.layer.position.x != 0 {
-            this.layer.position = CGPointMake(0, this.layer.position.y);
-        }
-        
-        UIView.beginAnimations("rotation",  context: nil)
-        UIView.setAnimationDuration(0.8)
-        this.layer.transform = CATransform3DIdentity
-        this.layer.opacity = 1
-        this.layer.shadowOffset = CGSizeMake(0, 0)
-        UIView.commitAnimations()
+//        var init_angle : Double = divide(90*M_PI, right: 180)
+//        var rotation = CATransform3DMakeRotation(CGFloat(init_angle), 0.0, 0.7, 0.4) as CATransform3D
+//        rotation.m34 = (-1.0/600.0)
+//        
+//        this.layer.shadowColor = UIColor.blackColor().CGColor
+//        this.layer.shadowOffset = CGSizeMake(10, 10)
+//        this.layer.opacity = 0
+//        
+//        this.layer.transform = rotation
+//        this.layer.anchorPoint = CGPointMake(0, 0.5)
+//        
+//        if this.layer.position.x != 0 {
+//            this.layer.position = CGPointMake(0, this.layer.position.y);
+//        }
+//        
+//        UIView.beginAnimations("rotation",  context: nil)
+//        UIView.setAnimationDuration(0.4)
+//        this.layer.transform = CATransform3DIdentity
+//        this.layer.opacity = 1
+//        this.layer.shadowOffset = CGSizeMake(0, 0)
+//        UIView.commitAnimations()
     }
     
     //UITableView delegate method, returns number of sections/courses in loaded menu
@@ -339,7 +342,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
     //shares an invite to the currently browsed meal
     func inviteToMeal() {
         var invite = [AnyObject]()
-        invite.append("Let's get \(self.meals.titleForSegmentAtIndex(self.meals.selectedSegmentIndex)!.lowercaseString) at Thorne \(self.getTextForDaysAdded(self.delegate.daysAdded).lowercaseString)?")
+        invite.append("Let's get \(self.meals.titleForSegmentAtIndex(self.meals.selectedSegmentIndex)!.lowercaseString) at Thorne \(self.getTextForDaysAdded().lowercaseString)?")
         
         let activityViewController = UIActivityViewController(activityItems: invite, applicationActivities: nil)
         self.presentViewController(activityViewController, animated: true, completion: nil)

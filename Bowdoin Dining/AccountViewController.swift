@@ -15,6 +15,7 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
     @IBOutlet var meals        : UILabel!
     @IBOutlet var balance      : UILabel!
     @IBOutlet var points       : UILabel!
+    @IBOutlet var recent       : UIButton!
     var delegate = UIApplication.sharedApplication().delegate as AppDelegate
     
     override func viewDidLoad()  {
@@ -54,13 +55,18 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
         
     }
     
+    @IBAction func userReturnedFromTransactions(segue : UIStoryboardSegue) {
+        
+    }
+    
     @IBAction func reloadData(sender : AnyObject) {
         self.points.text  = "N/A"
         self.meals.text   = "N/A"
         self.balance.text = "N/A"
         self.loadingData.startAnimating()
-        self.navBar.topItem!.leftBarButtonItem!.enabled = false;
-        self.navBar.topItem!.rightBarButtonItem!.enabled = false;
+        self.navBar.topItem!.rightBarButtonItem!.enabled = false
+        self.navBar.topItem!.leftBarButtonItem!.enabled = false
+        self.recent.enabled = false
         
         var userDefaults = NSUserDefaults.standardUserDefaults()
         var username     = userDefaults.objectForKey("bowdoin_username") as? NSString
@@ -78,8 +84,9 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
         }
         //else, ask for user credentials
         else {
-            self.navBar.topItem!.leftBarButtonItem!.enabled = false
             self.navBar.topItem!.rightBarButtonItem!.enabled = true
+            self.navBar.topItem!.leftBarButtonItem!.enabled = false
+            self.recent.enabled = false
             self.loadingData.stopAnimating()
         }
     }
@@ -93,12 +100,14 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
         dispatch_async(dispatch_get_main_queue()) {
             
             self.loadingData.stopAnimating()
-            self.navBar.topItem!.leftBarButtonItem!.enabled = true
             self.navBar.topItem!.rightBarButtonItem!.enabled = false
+            self.navBar.topItem!.leftBarButtonItem!.enabled = true
+            self.recent.enabled = true
             
             self.view.setNeedsDisplay()
+            
             self.points.text  = NSString(format: "$%.2f", self.delegate.user!.polarPoints!)
-            self.meals.text   = NSString(format: "%i/week",    self.delegate.user!.mealsLeft!)
+            self.meals.text   = NSString(format: "%i",    self.delegate.user!.mealsLeft!)
             self.balance.text = NSString(format: "$%.2f", self.delegate.user!.cardBalance!)
         }
     }

@@ -6,15 +6,14 @@
 //
 //
 
-/* Detect iOS version */
-
 import UIKit
 import QuartzCore
 
-class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarControllerDelegate, UITableViewDataSource, UINavigationBarDelegate {    
+class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarControllerDelegate, UITableViewDataSource, UINavigationBarDelegate {
     var delegate = UIApplication.sharedApplication().delegate as AppDelegate
     var courses : [Course] = []
     var shareGesture : UIScreenEdgePanGestureRecognizer?
+    
     @IBOutlet var navBar    : UINavigationBar!
     @IBOutlet var menuItems : UITableView!
     @IBOutlet var loading   : UIActivityIndicatorView!
@@ -46,16 +45,17 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
         //sharing gesture
         self.shareGesture = UIScreenEdgePanGestureRecognizer(target: self, action: "inviteToMeal")
         self.shareGesture!.edges = UIRectEdge.Left
         self.delegate.window!.addGestureRecognizer(self.shareGesture!)
         
         //set the text label to day we're browsing
-        self.navBar!.topItem!.title = self.getTextForDaysAdded(self.delegate.daysAdded);
+        self.navBar.topItem!.title = self.getTextForDaysAdded()
         
         //update selected segment in case changed elsewhere
-        self.meals.selectedSegmentIndex = self.delegate.selectedSegment;
+        self.meals.selectedSegmentIndex = self.delegate.selectedSegment
         
         //verify correct buttons are showing
         self.makeCorrectButtonsVisible()
@@ -79,18 +79,21 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     
     @IBAction func backButtonPressed(sender : AnyObject) {
         if self.delegate.daysAdded > 0 {
-            self.delegate.daysAdded--;
+            self.changeDayBy(-1)
             self.updateVisibleMenu()
-            self.navBar!.topItem!.title = self.getTextForDaysAdded(self.delegate.daysAdded)
         }
     }
     
     @IBAction func forwardButtonPressed(sender : AnyObject) {
         if self.delegate.daysAdded < 6 {
-            self.delegate.daysAdded++;
+            self.changeDayBy(1)
             self.updateVisibleMenu()
-            self.navBar!.topItem!.title = self.getTextForDaysAdded(self.delegate.daysAdded)
         }
+    }
+    
+    func changeDayBy(amount: NSInteger) {
+        self.delegate.daysAdded += amount
+        self.navBar!.topItem!.title = self.getTextForDaysAdded()
     }
     
     func isWeekday(dayOfWeek : NSInteger) -> Bool {
@@ -138,37 +141,38 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
         self.meals.enabled = true
     }
     
-    func segmentIndexOfCurrentMeal(now: NSDate) -> NSInteger {
+    func segmentIndexOfCurrentMeal() -> NSInteger {
         var calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
         calendar.locale = NSLocale(localeIdentifier: "en-US");
         
-        var today = calendar.components(NSCalendarUnit.HourCalendarUnit | NSCalendarUnit.WeekdayCalendarUnit, fromDate: now)
+        var today = calendar.components(NSCalendarUnit.HourCalendarUnit | NSCalendarUnit.WeekdayCalendarUnit, fromDate: NSDate())
         var weekday = today.weekday
         var hour    = today.hour
+        
         if self.isWeekday(weekday) {
             if hour < 11 {
-                return 0; //breakfast
+                return 0 //breakfast
             } else if hour < 14 {
-                return 1; //lunch
+                return 1 //lunch
             } else {
-                return 2; //dinner
+                return 2 //dinner
             }
         } else {
             if hour < 14 {
-                return 0; //brunch
+                return 0 //brunch
             } else {
-                return 1; //dinner
+                return 1 //dinner
             }
         }
     }
     
-    func getTextForDaysAdded(daysAdded : NSInteger) -> NSString {
-        if daysAdded == 0 {
+    func getTextForDaysAdded() -> NSString {
+        if self.delegate.daysAdded == 0 {
             return "Today"
-        } else if daysAdded == 1 {
+        } else if self.delegate.daysAdded == 1 {
             return "Tomorrow"
         } else {
-            var newDate = NSDate(timeIntervalSinceNow: NSTimeInterval(60*60*24*daysAdded))
+            var newDate = NSDate(timeIntervalSinceNow: NSTimeInterval(60*60*24*self.delegate.daysAdded))
             var dateFormatter = NSDateFormatter()
             dateFormatter.dateFormat = "EEEE"
             return dateFormatter.stringFromDate(newDate)
@@ -186,7 +190,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     
     //UITableView delegate method, sets settings for cell/menu item to be displayed at a given section->row
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let simpleTableIdentifier: NSString = "SimpleTableCell2"
+        let simpleTableIdentifier: NSString = "SimpleTableCell"
         
         var cell = tableView.dequeueReusableCellWithIdentifier(simpleTableIdentifier) as? UITableViewCell
         
@@ -202,10 +206,9 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
                 
                 if let item = this {
                     cell!.textLabel!.text = item.name as NSString
-                    if cell!.detailTextLabel != nil {
-                        cell!.detailTextLabel!.text = item.descriptors
-                        cell!.detailTextLabel!.textColor = UIColor.lightGrayColor()
-                    }
+                    
+                    cell!.detailTextLabel!.text = item.descriptors
+                    cell!.detailTextLabel!.textColor = UIColor.lightGrayColor()
                     
                     var favorited = Course.allFavoritedItems()
                     if favorited.containsObject(item.itemId) {
@@ -213,7 +216,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
                     } else {
                         cell!.backgroundColor = UIColor.whiteColor()
                     }
-                    cell!.textLabel!.sizeToFit()
+                    cell!.sizeToFit()
                 }
             }
         }
@@ -254,7 +257,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
                     var cell = tableView.cellForRowAtIndexPath(indexPath) as UITableViewCell!
                     cell.backgroundColor = UIColor(red: 1, green: 0.84, blue:0, alpha:1)
                     tableView.setEditing(false, animated: true)
-                })
+            })
             faveAction.backgroundColor = UIColor(red:1, green:0.84, blue:0, alpha:1)
             return [faveAction]
         } else {
@@ -268,7 +271,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
                     var cell = tableView.cellForRowAtIndexPath(indexPath) as UITableViewCell!
                     cell.backgroundColor = UIColor.whiteColor()
                     tableView.setEditing(false, animated: true)
-                })
+            })
             unfaveAction.backgroundColor = UIColor.lightGrayColor()
             return [unfaveAction]
         }
@@ -299,27 +302,27 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     
     //UITableView delegate method, creates animation when displaying cell
     func animateIn(this : UIView) {
-        var init_angle : Double = divide(90*M_PI, right: 180)
-        var rotation = CATransform3DMakeRotation(CGFloat(init_angle), 0.0, 0.7, 0.4) as CATransform3D
-        rotation.m34 = (-1.0/600.0)
-        
-        this.layer.shadowColor = UIColor.blackColor().CGColor
-        this.layer.shadowOffset = CGSizeMake(10, 10)
-        this.layer.opacity = 0
-        
-        this.layer.transform = rotation
-        this.layer.anchorPoint = CGPointMake(0, 0.5)
-        
-        if this.layer.position.x != 0 {
-            this.layer.position = CGPointMake(0, this.layer.position.y);
-        }
-        
-        UIView.beginAnimations("rotation",  context: nil)
-        UIView.setAnimationDuration(0.8)
-        this.layer.transform = CATransform3DIdentity
-        this.layer.opacity = 1
-        this.layer.shadowOffset = CGSizeMake(0, 0)
-        UIView.commitAnimations()
+        //        var init_angle : Double = divide(90*M_PI, right: 180)
+        //        var rotation = CATransform3DMakeRotation(CGFloat(init_angle), 0.0, 0.7, 0.4) as CATransform3D
+        //        rotation.m34 = (-1.0/600.0)
+        //
+        //        this.layer.shadowColor = UIColor.blackColor().CGColor
+        //        this.layer.shadowOffset = CGSizeMake(10, 10)
+        //        this.layer.opacity = 0
+        //
+        //        this.layer.transform = rotation
+        //        this.layer.anchorPoint = CGPointMake(0, 0.5)
+        //
+        //        if this.layer.position.x != 0 {
+        //            this.layer.position = CGPointMake(0, this.layer.position.y);
+        //        }
+        //
+        //        UIView.beginAnimations("rotation",  context: nil)
+        //        UIView.setAnimationDuration(0.4)
+        //        this.layer.transform = CATransform3DIdentity
+        //        this.layer.opacity = 1
+        //        this.layer.shadowOffset = CGSizeMake(0, 0)
+        //        UIView.commitAnimations()
     }
     
     //UITableView delegate method, returns number of sections/courses in loaded menu
@@ -330,7 +333,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     //shares an invite to the currently browsed meal
     func inviteToMeal() {
         var invite = [AnyObject]()
-        invite.append("Let's get \(self.meals.titleForSegmentAtIndex(self.meals.selectedSegmentIndex)!.lowercaseString) at Moulton \(self.getTextForDaysAdded(self.delegate.daysAdded).lowercaseString)?")
+        invite.append("Let's get \(self.meals.titleForSegmentAtIndex(self.meals.selectedSegmentIndex)!.lowercaseString) at Moulton \(self.getTextForDaysAdded().lowercaseString)?")
         
         let activityViewController = UIActivityViewController(activityItems: invite, applicationActivities: nil)
         self.presentViewController(activityViewController, animated: true, completion: nil)
@@ -365,15 +368,16 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
                 //if the response was nil, handle
                 if xml == nil {
                     self.loading.stopAnimating()
-                    var alert = UIAlertController(title: "Network Error",
-                        message: "Sorry, we couldn't get the menu at this time. Check your internet connection or try again later.",
-                        preferredStyle: UIAlertControllerStyle.Alert)
-                    alert.addAction(UIAlertAction(title: "OK",
-                        style: UIAlertActionStyle.Default,
-                        handler: nil))
-                    self.presentViewController(alert,
-                        animated: true,
-                        completion: nil)
+                    self.menuItems.endUpdates()
+                    self.menuItems.setContentOffset(CGPointZero, animated: true)
+                    
+                    var alert = UIAlertView(title: "Network Error",
+                        message: "Sorry, we could not load the menu at this time. Check your network connection and try again later.",
+                        delegate: self,
+                        cancelButtonTitle: "OK")
+                    alert.show()
+                    
+                    self.makeCorrectButtonsVisible()
                 }
                     //else we successfully loaded XML!
                 else {
@@ -393,6 +397,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
                     self.loading.stopAnimating()
                     self.menuItems.endUpdates()
                     self.menuItems.setContentOffset(CGPointZero, animated: true)
+                    
                     self.makeCorrectButtonsVisible()
                 }
             }
