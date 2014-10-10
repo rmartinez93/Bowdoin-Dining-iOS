@@ -49,6 +49,7 @@ class SplashView : UIView {
         var splashView  = UIImageView(image: splashImage)
         splashView.contentMode = UIViewContentMode.ScaleAspectFill
         splashView.clipsToBounds = true
+        self.backgroundColor = UIColor.blackColor()
         self.addSubview(splashView)
     }
     

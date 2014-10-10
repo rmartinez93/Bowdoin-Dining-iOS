@@ -17,6 +17,7 @@
 		455578CA19E7552E004A4B21 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455578C919E7552E004A4B21 /* Transaction.swift */; };
 		4563386519E77E040042B372 /* TransactionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4563386419E77E040042B372 /* TransactionCell.xib */; };
 		4563386719E77F320042B372 /* TransactionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4563386619E77F320042B372 /* TransactionCell.swift */; };
+		4563386919E7901A0042B372 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4563386819E7901A0042B372 /* Launch Screen.xib */; };
 		4569C77A1999113400A531E2 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4552811B19763AC0006C2DEA /* CFNetwork.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		4569C77C199911B400A531E2 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4507E70319726E3A000628DE /* UIKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		4569C77D199911BD00A531E2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4507E70219726E3A000628DE /* Foundation.framework */; };
@@ -63,6 +64,7 @@
 		455578C919E7552E004A4B21 /* Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
 		4563386419E77E040042B372 /* TransactionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TransactionCell.xib; sourceTree = "<group>"; };
 		4563386619E77F320042B372 /* TransactionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionCell.swift; sourceTree = "<group>"; };
+		4563386819E7901A0042B372 /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
 		459524AE197B1DB800FABB82 /* SplashView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
 		459D4C811983199B00573069 /* Menus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Menus.swift; sourceTree = "<group>"; };
 		45A64F8B1986B02600EF19DE /* GDataXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDataXMLNode.h; sourceTree = "<group>"; };
@@ -157,6 +159,7 @@
 			children = (
 				4552AD651997D23E00F2BBF5 /* Main.storyboard */,
 				45A9206219781F7A00768D46 /* AppDelegate.swift */,
+				4563386819E7901A0042B372 /* Launch Screen.xib */,
 				45BE7FB619785BDE0024167A /* ThorneViewController.swift */,
 				45C2E7F1197A31E900D41105 /* MoultonViewController.swift */,
 				45A9205E197815AB00768D46 /* PubViewController.swift */,
@@ -297,6 +300,7 @@
 				455280DB1975FD27006C2DEA /* pub-menu.pdf in Resources */,
 				4563386519E77E040042B372 /* TransactionCell.xib in Resources */,
 				45AAB59C1970636E0078A7F9 /* Images.xcassets in Resources */,
+				4563386919E7901A0042B372 /* Launch Screen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -387,7 +391,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				METAL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -422,7 +426,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				METAL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -433,7 +437,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -463,7 +466,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";

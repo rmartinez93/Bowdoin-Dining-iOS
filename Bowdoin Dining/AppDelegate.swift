@@ -27,14 +27,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
         UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.BlackOpaque, animated: false)
         
         //show splash screen
-        if let window = self.window {
-            window.makeKeyAndVisible()
-            
-            var splash = SplashView(frame: CGRectMake(0, 0, window.frame.width, window.frame.height))
-            splash.backgroundColor = UIColor.blackColor()
-            window.addSubview(splash)
-            window.bringSubviewToFront(splash)
-        }
+//        if let window = self.window {
+//            window.makeKeyAndVisible()
+//            
+//            var splash = SplashView(frame: CGRectMake(0, 0, window.frame.width, window.frame.height))
+//            window.addSubview(splash)
+//            window.bringSubviewToFront(splash)
+//        }
         
         //set tabBar style, moreNavigationController delegate
         if self.window != nil {
