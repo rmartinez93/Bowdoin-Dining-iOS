@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
         //dark background, light text status bar
         UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.BlackOpaque, animated: false)
         
-        //show splash screen
+        //formerly used to show splash screen
 //        if let window = self.window {
 //            window.makeKeyAndVisible()
 //            

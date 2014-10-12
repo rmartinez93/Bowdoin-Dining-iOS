@@ -8,6 +8,7 @@
 
 import UIKit
 import QuartzCore
+import AVFoundation
 
 class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarControllerDelegate, UITableViewDataSource, UINavigationBarDelegate {
     var delegate = UIApplication.sharedApplication().delegate as AppDelegate
@@ -24,7 +25,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-            
+        
         //verify correct buttons are showing
         self.makeCorrectButtonsVisible()
 
@@ -309,31 +310,6 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
         return Double(left) / Double(right)
     }
     
-    //UITableView delegate method, creates animation when displaying cell; removed, not popular
-    func animateIn(this : UIView) {
-//        var init_angle : Double = divide(90*M_PI, right: 180)
-//        var rotation = CATransform3DMakeRotation(CGFloat(init_angle), 0.0, 0.7, 0.4) as CATransform3D
-//        rotation.m34 = (-1.0/600.0)
-//        
-//        this.layer.shadowColor = UIColor.blackColor().CGColor
-//        this.layer.shadowOffset = CGSizeMake(10, 10)
-//        this.layer.opacity = 0
-//        
-//        this.layer.transform = rotation
-//        this.layer.anchorPoint = CGPointMake(0, 0.5)
-//        
-//        if this.layer.position.x != 0 {
-//            this.layer.position = CGPointMake(0, this.layer.position.y);
-//        }
-//        
-//        UIView.beginAnimations("rotation",  context: nil)
-//        UIView.setAnimationDuration(0.4)
-//        this.layer.transform = CATransform3DIdentity
-//        this.layer.opacity = 1
-//        this.layer.shadowOffset = CGSizeMake(0, 0)
-//        UIView.commitAnimations()
-    }
-    
     //UITableView delegate method, returns number of sections/courses in loaded menu
     func numberOfSectionsInTableView(tableView: UITableView!) -> Int {
         return self.courses.count
@@ -406,10 +382,55 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
                     self.loading.stopAnimating()
                     self.menuItems.endUpdates()
                     self.menuItems.setContentOffset(CGPointZero, animated: true)
-
+                    
                     self.makeCorrectButtonsVisible()
                 }
             }
         }
+    }
+    
+    //UITableView delegate method, creates animation when displaying cell; removed, not popular
+    func animateIn(this : UIView) {
+        var init_angle : Double = divide(90*M_PI, right: 180)
+        var rotation = CATransform3DMakeRotation(CGFloat(init_angle), 0.0, 0.7, 0.4) as CATransform3D
+        rotation.m34 = (-1.0/600.0)
+        
+        this.layer.shadowColor = UIColor.blackColor().CGColor
+        this.layer.shadowOffset = CGSizeMake(10, 10)
+        this.layer.opacity = 0
+        
+        this.layer.transform = rotation
+        this.layer.anchorPoint = CGPointMake(0, 0.5)
+        
+        if this.layer.position.x != 0 {
+            this.layer.position = CGPointMake(0, this.layer.position.y);
+        }
+        
+        UIView.beginAnimations("rotation",  context: nil)
+        UIView.setAnimationDuration(0.4)
+        this.layer.transform = CATransform3DIdentity
+        this.layer.opacity = 1
+        this.layer.shadowOffset = CGSizeMake(0, 0)
+        UIView.commitAnimations()
+    }
+    
+    
+    //Uses TTS to speak menus aloud; potential future use
+    func speakMenu() {
+        var menu = "For "+self.meals.titleForSegmentAtIndex(self.delegate.selectedSegment)!+" "+self.getTextForDaysAdded()+" at Thorne we have "
+        for course in self.courses {
+            for item in course.menuItems {
+                if item == course.menuItems.last && course == self.courses.last {
+                    menu += "and "+item.name+". "
+                } else {
+                    menu += item.name+", "
+                }
+            }
+        }
+        
+        var speaker = AVSpeechSynthesizer()
+        var phrase = AVSpeechUtterance(string: menu)
+        phrase.rate = 0.15
+        speaker.speakUtterance(phrase)
     }
 }
