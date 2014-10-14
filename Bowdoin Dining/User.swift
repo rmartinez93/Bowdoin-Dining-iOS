@@ -16,8 +16,42 @@ class User : NSObject {
     var polarPoints : Double?
     var cardBalance : Double?
     var mealsLeft   : Int?
+    var loggedIn    : Bool = false
     var dataLoaded  : Bool = false
     var transactions : [Transaction]?
+    
+    init(username : String, password : String) {
+        self.username = username
+        self.password = password
+        self.loggedIn = true
+    }
+    
+    //returns true if user credentials are stored
+    class func credentialsStored() -> Bool {
+        var userDefaults = NSUserDefaults.standardUserDefaults()
+        var username     = userDefaults.objectForKey("bowdoin_username") as? NSString
+        var password     = userDefaults.objectForKey("bowdoin_password") as? NSString
+        
+        if username != nil && password != nil {
+            return true
+        }
+        
+        return false
+    }
+    
+    class func forget() {
+        var userDefaults = NSUserDefaults.standardUserDefaults()
+        userDefaults.removeObjectForKey("bowdoin_username")
+        userDefaults.removeObjectForKey("bowdoin_password")
+        userDefaults.synchronize()
+    }
+    
+    func remember() {
+        var userDefaults = NSUserDefaults.standardUserDefaults()
+        userDefaults.setObject(self.username, forKey: "bowdoin_username")
+        userDefaults.setObject(self.password, forKey: "bowdoin_password")
+        userDefaults.synchronize()
+    }
     
     func logout() {
         self.username = ""
@@ -28,14 +62,13 @@ class User : NSObject {
         self.cardBalance = 0.0
         self.mealsLeft   = 0
         self.dataLoaded  = false
+        self.loggedIn    = false
+        User.forget()
     }
     
-    func loadDataFor(username: NSString, password: NSString) {
-        self.username = username;
-        self.password = password;
-        
-        //first load account
-        BowdoinAPIController(username: username, password: password, user: self).getAccountData()
+    func loadData() {
+        //load account
+        BowdoinAPIController(user: self).getAccountData()
     }
 
     func parseData(data: NSData, type: String) {
@@ -63,22 +96,27 @@ class User : NSObject {
             self.lastname  = lastName
             self.cardBalance = (balance as NSString).doubleValue/100.0
             self.polarPoints = (ppoints as NSString).doubleValue/100.0
-            
+                        
             //now load meals
-            BowdoinAPIController(username: username!, password: password!, user: self).getMealData()
+            BowdoinAPIController(user: self).getMealData()
         } else if type == "meals" {
             var CSGoldMPBalancesResponse = soapBody.elementsForName("GetCSGoldMPBalancesResponse").first as GDataXMLElement
             var CSGoldMPBalancesResult   = CSGoldMPBalancesResponse.elementsForName("GetCSGoldMPBalancesResult").first as GDataXMLElement
             var diffgrDiffgram   = CSGoldMPBalancesResult.elementsForName("diffgr:diffgram").first as GDataXMLElement
-            var DocumentElement  = diffgrDiffgram.elementsForName("DocumentElement").first as GDataXMLElement
-            var CSGoldMPBalances = DocumentElement.elementsForName("csGoldMPBalances").first as GDataXMLElement
-            
-            var smallBucket  = CSGoldMPBalances.elementsForName("SMALLBUCKET").first!.stringValue
-            var mediumBucket = CSGoldMPBalances.elementsForName("MEDIUMBUCKET").first!.stringValue
-            self.mealsLeft   = smallBucket.toInt()! + mediumBucket.toInt()!
-            
+
+            if diffgrDiffgram.elementsForName("DocumentElement") != nil { //if user is on a meal plan
+                var DocumentElement  = diffgrDiffgram.elementsForName("DocumentElement").first as GDataXMLElement
+                var CSGoldMPBalances = DocumentElement.elementsForName("csGoldMPBalances").first as GDataXMLElement
+                
+                var smallBucket  = CSGoldMPBalances.elementsForName("SMALLBUCKET").first!.stringValue
+                var mediumBucket = CSGoldMPBalances.elementsForName("MEDIUMBUCKET").first!.stringValue
+                self.mealsLeft   = smallBucket.toInt()! + mediumBucket.toInt()!
+            } else {
+                self.mealsLeft = 0
+            }
+
             //lastly, load transactions
-            BowdoinAPIController(username: username!, password: password!, user: self).getTransactionData()
+            BowdoinAPIController(user: self).getTransactionData()
         } else if type == "transactions" {
             var CSGoldGLTransResponse  = soapBody.elementsForName("GetCSGoldGLTransResponse").first as GDataXMLElement
             var GetCSGoldGLTransResult = CSGoldGLTransResponse.elementsForName("GetCSGoldGLTransResult").first as GDataXMLElement
@@ -105,6 +143,11 @@ class User : NSObject {
     
     func dataLoadingFailed() {
         self.dataLoaded = false
+        
+        var userInfo = NSDictionary(object: self, forKey: "User")
+        NSNotificationCenter.defaultCenter().postNotificationName("UserFinishedLoading",
+            object: nil,
+            userInfo: userInfo)
     }
 }
 

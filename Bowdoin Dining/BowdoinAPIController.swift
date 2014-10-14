@@ -10,15 +10,12 @@
 import Foundation
 
 class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
-    var username : String
-    var password : String
     var user     : User
     var type     : String
     var transactionData : NSMutableData?
+    var loginAttempts = 0
     
-    init(username : String, password : String, user : User) {
-        self.username = username
-        self.password = password
+    init(user : User) {
         self.user     = user
         self.type     = ""
         
@@ -79,14 +76,20 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
     
     //takes care of HTTP Authentication
     func connection(connection: NSURLConnection!, didReceiveAuthenticationChallenge challenge: NSURLAuthenticationChallenge!) {
-        var authMethod = challenge.protectionSpace.authenticationMethod
-        
-        if authMethod == NSURLAuthenticationMethodNTLM {
-            var credential = NSURLCredential(user: self.username,
-                password: self.password,
-                persistence: NSURLCredentialPersistence.ForSession)
-            
-            challenge.sender.useCredential(credential, forAuthenticationChallenge: challenge)
+        if self.loginAttempts == 0 {
+            var authMethod = challenge.protectionSpace.authenticationMethod
+            if authMethod == NSURLAuthenticationMethodNTLM {
+
+                var credential = NSURLCredential(user: self.user.username!,
+                    password: self.user.password!,
+                    persistence: NSURLCredentialPersistence.None)
+                
+                challenge.sender.useCredential(credential, forAuthenticationChallenge: challenge)
+            }
+            self.loginAttempts++
+        } else {
+            connection.cancel()
+            self.user.dataLoadingFailed()
         }
     }
 
@@ -103,7 +106,7 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
     func connection(connection: NSURLConnection!, didFailWithError error: NSError!) {
         //The request has failed for some reason!
         // Check the error var
-        NSLog("ERR \(error)");
+        NSLog("ERR \(error)")
         self.user.dataLoadingFailed()
     }
     

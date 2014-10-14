@@ -107,7 +107,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
     }
     
     func isWeekday(dayOfWeek : NSInteger) -> Bool {
-        return (dayOfWeek < 7 && dayOfWeek > 1);
+        return (dayOfWeek < 7 && dayOfWeek > 1)
     }
     
     func disableAllButtons() {
@@ -216,6 +216,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
                 
                 if let item = this {
                     cell!.textLabel!.text = item.name as NSString
+                    cell!.textLabel!.numberOfLines = 0
                     
                     cell!.detailTextLabel!.text = item.descriptors
                     cell!.detailTextLabel!.textColor = UIColor.lightGrayColor()

@@ -25,8 +25,11 @@ class SettingsViewController: UIViewController {
         //defaults to 0 (off) if none set
         self.dietFilter.selectedSegmentIndex = NSUserDefaults.standardUserDefaults().integerForKey("diet-filter")
         
-        if self.delegate.user == nil {
-            self.logoutButton.enabled = false;
+        if (self.delegate.user != nil && self.delegate.user!.loggedIn) || User.credentialsStored() {
+            self.logoutButton.enabled = true
+            self.logoutButton.backgroundColor = UIColor.redColor()
+        } else {
+            self.logoutButton.enabled = false
             self.logoutButton.backgroundColor = UIColor.lightGrayColor()
         }
     }
@@ -45,11 +48,12 @@ class SettingsViewController: UIViewController {
     }
     
     @IBAction func logout(sender: AnyObject) {
-        var userDefaults = NSUserDefaults.standardUserDefaults()
-        userDefaults.removeObjectForKey("bowdoin_username")
-        userDefaults.removeObjectForKey("bowdoin_password")
-        userDefaults.synchronize()
-        self.delegate.user!.logout()
+        if self.delegate.user != nil {
+            self.delegate.user!.logout()
+        } else {
+            User.forget()
+        }
+        
         self.logoutButton.enabled = false
         self.logoutButton.backgroundColor = UIColor.lightGrayColor()
     }

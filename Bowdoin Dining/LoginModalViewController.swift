@@ -41,15 +41,13 @@ class LoginModalViewController : UIViewController {
         self.usernameField.enabled = false
         self.passwordField.enabled = false
         
-        //if the user hasn't been created, create them
-        if self.delegate.user == nil {
-            self.delegate.user = User()
-        }
+        //create user with new credentials
+        self.delegate.user = User(username: self.usernameField.text, password: self.passwordField.text)
         
         var downloadQueue = dispatch_queue_create("Download queue", nil)
         dispatch_async(downloadQueue) {
             //in new thread, load user info
-            self.delegate.user!.loadDataFor(self.usernameField.text, password: self.passwordField.text)
+            self.delegate.user!.loadData()
         }
     }
     
@@ -64,10 +62,7 @@ class LoginModalViewController : UIViewController {
                 self.insutructions.text = "Username or password is invalid."
             } else {
                 if self.remember.on {
-                    var userDefaults = NSUserDefaults.standardUserDefaults()
-                    userDefaults.setObject(self.usernameField.text, forKey: "bowdoin_username")
-                    userDefaults.setObject(self.passwordField.text, forKey: "bowdoin_password")
-                    userDefaults.synchronize()
+                    self.delegate.user!.remember()
                 }
                 
                 self.loggingIn.stopAnimating()

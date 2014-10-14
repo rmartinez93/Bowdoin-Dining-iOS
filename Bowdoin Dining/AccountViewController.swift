@@ -16,6 +16,7 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
     @IBOutlet var balance      : UILabel!
     @IBOutlet var points       : UILabel!
     @IBOutlet var recent       : UIButton!
+    @IBOutlet var timeStamp: UILabel!
     var delegate = UIApplication.sharedApplication().delegate as AppDelegate
     
     override func viewDidLoad()  {
@@ -30,25 +31,27 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
         self.navBar.setBackgroundImage(UIImage(named: "bar.png"), forBarMetrics: UIBarMetrics.Default)
     }
     
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        NSNotificationCenter.defaultCenter().removeObserver("UserFinishedLoading")
+    }
+    
     func positionForBar(bar: UIBarPositioning!) -> UIBarPosition  {
         return UIBarPosition.TopAttached
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
         
-        //if user's data has not been loaded, load their data
-        if self.delegate.user == nil {
-            self.delegate.user = User()
+        //load user data
+        if self.delegate.user == nil || self.delegate.user!.loggedIn == false {
+            self.loadUserData(self)
         }
-        if !self.delegate.user!.dataLoaded {
-            self.reloadData(UIButton())
-        }
-        
     }
     
     @IBAction func userDidLogin(segue : UIStoryboardSegue) {
-        self.navBar.topItem!.rightBarButtonItem!.enabled = false;
+
     }
     
     @IBAction func userCancelledLogin(segue : UIStoryboardSegue) {
@@ -59,56 +62,56 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
         
     }
     
-    @IBAction func reloadData(sender : AnyObject) {
-        self.points.text  = "N/A"
+    @IBAction func loadUserData(sender : AnyObject) {
         self.meals.text   = "N/A"
+        self.points.text  = "N/A"
         self.balance.text = "N/A"
-        self.loadingData.startAnimating()
+        self.timeStamp.text = ""
         self.navBar.topItem!.rightBarButtonItem!.enabled = false
-        self.navBar.topItem!.leftBarButtonItem!.enabled = false
+        self.navBar.topItem!.leftBarButtonItem!.enabled  = false
         self.recent.enabled = false
         
         var userDefaults = NSUserDefaults.standardUserDefaults()
-        var username     = userDefaults.objectForKey("bowdoin_username") as? NSString
-        var password     = userDefaults.objectForKey("bowdoin_password") as? NSString
+        var username     = userDefaults.objectForKey("bowdoin_username") as? String
+        var password     = userDefaults.objectForKey("bowdoin_password") as? String
         
         //if we have user info saved, download their data
         if username != nil && password != nil {
+            self.loadingData.startAnimating()
             var downloadQueue = dispatch_queue_create("Download queue", nil);
             dispatch_async(downloadQueue) {
-                //in new thread, load user info
-                if self.delegate.user != nil {
-                    self.delegate.user!.loadDataFor(username!, password: password!)
-                }
+                //in new thread, load user info if not loaded or if force-reloaded
+                self.delegate.user = User(username: username!, password: password!)
+                self.delegate.user!.loadData()
             }
         }
         //else, ask for user credentials
         else {
             self.navBar.topItem!.rightBarButtonItem!.enabled = true
-            self.navBar.topItem!.leftBarButtonItem!.enabled = false
+            self.navBar.topItem!.leftBarButtonItem!.enabled  = false
             self.recent.enabled = false
-            self.loadingData.stopAnimating()
         }
     }
     
     func userDidLoad(notification : NSNotification) {
-        //update our copy of the user with new info
-        var userInfo = notification.userInfo as Dictionary<String, User>
-        self.delegate.user = userInfo["User"]
-        
         //refresh onscreen info
         dispatch_async(dispatch_get_main_queue()) {
-            
-            self.loadingData.stopAnimating()
-            self.navBar.topItem!.rightBarButtonItem!.enabled = false
-            self.navBar.topItem!.leftBarButtonItem!.enabled = true
-            self.recent.enabled = true
-            
-            self.view.setNeedsDisplay()
-            
-            self.points.text  = NSString(format: "$%.2f", self.delegate.user!.polarPoints!)
-            self.meals.text   = NSString(format: "%i",    self.delegate.user!.mealsLeft!)
-            self.balance.text = NSString(format: "$%.2f", self.delegate.user!.cardBalance!)
+            if self.delegate.user!.dataLoaded {
+                self.loadingData.stopAnimating()
+                self.navBar.topItem!.rightBarButtonItem!.enabled = false
+                self.navBar.topItem!.leftBarButtonItem!.enabled  = true
+                self.recent.enabled = true
+                
+                self.view.setNeedsDisplay()
+                
+                self.meals.text   = NSString(format: "%i",    self.delegate.user!.mealsLeft!)
+                self.points.text  = NSString(format: "$%.2f", self.delegate.user!.polarPoints!)
+                self.balance.text = NSString(format: "$%.2f", self.delegate.user!.cardBalance!)
+                
+                var dateFormatter = NSDateFormatter()
+                dateFormatter.dateFormat = "MM/dd 'at' hh:mm a"
+                self.timeStamp.text = "Last Updated: \(dateFormatter.stringFromDate(NSDate()))"
+            }
         }
     }
 }
