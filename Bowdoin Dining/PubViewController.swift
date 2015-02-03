@@ -96,7 +96,7 @@ class PubViewController: UIViewController, UINavigationBarDelegate {
     }
     
     @IBAction func dialPub() {
-        var calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
+        var calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
         calendar.locale = NSLocale(localeIdentifier: "en-US");
         
         var components = calendar.components(NSCalendarUnit.HourCalendarUnit | NSCalendarUnit.MinuteCalendarUnit | NSCalendarUnit.WeekdayCalendarUnit, fromDate: NSDate())
@@ -105,16 +105,16 @@ class PubViewController: UIViewController, UINavigationBarDelegate {
         let min  = components.minute
         let day  = components.weekday
         
-        if pubIsOpen(day, hour: hour, min: min) {
-            var phoneNumberURL = "tel://2077253888"
-            UIApplication.sharedApplication().openURL(NSURL(string: phoneNumberURL))
-        } else {
-            var alert = UIAlertView(title: "Pub Closed",
-                message: "Sorry, the pub seems to be closed at this time. Please try again later!",
-                delegate: self,
-                cancelButtonTitle: "OK")
-            alert.show()
-        }
+        //if pubIsOpen(day, hour: hour, min: min) {
+        var phoneNumberURL = NSURL(string:"tel://2077253888")!
+        UIApplication.sharedApplication().openURL(phoneNumberURL)
+//        } else {
+//            var alert = UIAlertView(title: "Pub Closed",
+//                message: "Sorry, the pub seems to be closed at this time. Please try again later!",
+//                delegate: self,
+//                cancelButtonTitle: "OK")
+//            alert.show()
+//        }
     }
     
     func pubIsOpen(day : Int, hour : Int, min : Int) -> Bool {

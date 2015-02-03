@@ -31,7 +31,7 @@ class SplashView : UIView {
     }
     
     override func animationDidStop(anim: CAAnimation!, finished flag: Bool)  {
-        if anim.valueForKey("id").isEqualToString("grow") && flag {
+        if (anim.valueForKey("id") as String) == "grow" && flag {
             UIView.animateWithDuration(
                 0.2,
                 animations: {

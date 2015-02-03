@@ -59,7 +59,7 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
     
     func createSOAPRequestWithEnvelope(soapEnvelope : String) {
         //create request
-        var url = NSURL(string: "https://gooseeye.bowdoin.edu/ws-csGoldShim/Service.asmx")
+        var url = NSURL(string: "https://gooseeye.bowdoin.edu/ws-csGoldShim/Service.asmx")!
         var req = NSMutableURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.UseProtocolCachePolicy, timeoutInterval: 5000)
         
         req.addValue("text/xml",    forHTTPHeaderField: "Content-Type")
@@ -69,9 +69,14 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
         
         //begin connection
         var connection = NSURLConnection(request: req, delegate: self, startImmediately: false)
-        connection.scheduleInRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
         
-        connection.start()
+        if connection != nil {
+            connection!.scheduleInRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
+            
+            connection!.start()
+        } else {
+            self.user.dataLoadingFailed()
+        }
     }
     
     //takes care of HTTP Authentication

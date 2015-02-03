@@ -77,67 +77,49 @@ class User : NSObject {
         var doc = GDataXMLDocument(data: data, options: 0, error: &error)
         var root = doc.rootElement
 
-        var soapBody = (root().elementsForName("soap:Body") as NSArray).firstObject as GDataXMLElement
-
-        if type == "account" {
-            var CSGoldSVCBalancesResponse = (soapBody.elementsForName("GetCSGoldSVCBalancesResponse") as NSArray).firstObject as GDataXMLElement
-            var CSGoldSVCBalancesResult   = (CSGoldSVCBalancesResponse.elementsForName("GetCSGoldSVCBalancesResult") as NSArray).firstObject as GDataXMLElement
-            var diffgrDiffgram  = CSGoldSVCBalancesResult.elementsForName("diffgr:diffgram").first as GDataXMLElement
-            var DocumentElement = diffgrDiffgram.elementsForName("DocumentElement").first as GDataXMLElement
-            var dtCSGoldSVCBalances1 = DocumentElement.elementsForName("dtCSGoldSVCBalances").first as GDataXMLElement
-            var dtCSGoldSVCBalances2 = DocumentElement.elementsForName("dtCSGoldSVCBalances").last as GDataXMLElement
-            
-            var firstName = dtCSGoldSVCBalances1.elementsForName("FIRSTNAME").first!.stringValue
-            var lastName  = dtCSGoldSVCBalances1.elementsForName("LASTNAME").first!.stringValue
-            var balance   = dtCSGoldSVCBalances1.elementsForName("BALANCE").first!.stringValue
-            var ppoints   = dtCSGoldSVCBalances2.elementsForName("BALANCE").first!.stringValue
-            
-            self.firstname = firstName
-            self.lastname  = lastName
-            self.cardBalance = (balance as NSString).doubleValue/100.0
-            self.polarPoints = (ppoints as NSString).doubleValue/100.0
-                        
-            //now load meals
-            BowdoinAPIController(user: self).getMealData()
-        } else if type == "meals" {
-            var CSGoldMPBalancesResponse = soapBody.elementsForName("GetCSGoldMPBalancesResponse").first as GDataXMLElement
-            var CSGoldMPBalancesResult   = CSGoldMPBalancesResponse.elementsForName("GetCSGoldMPBalancesResult").first as GDataXMLElement
-            var diffgrDiffgram   = CSGoldMPBalancesResult.elementsForName("diffgr:diffgram").first as GDataXMLElement
-
-            if diffgrDiffgram.elementsForName("DocumentElement") != nil { //if user is on a meal plan
-                var DocumentElement  = diffgrDiffgram.elementsForName("DocumentElement").first as GDataXMLElement
-                var CSGoldMPBalances = DocumentElement.elementsForName("csGoldMPBalances").first as GDataXMLElement
-                
-                var smallBucket  = CSGoldMPBalances.elementsForName("SMALLBUCKET").first!.stringValue
-                var mediumBucket = CSGoldMPBalances.elementsForName("MEDIUMBUCKET").first!.stringValue
-                self.mealsLeft   = smallBucket.toInt()! + mediumBucket.toInt()!
-            } else {
-                self.mealsLeft = 0
+        var soapBody = root().elementsForName("soap:Body").first as GDataXMLElement?
+        
+        if soapBody != nil {
+            switch type {
+            case "account":
+                var accountDetails = parseAccountData(soapBody!)
+                if accountDetails != nil {
+                    self.firstname = accountDetails!.firstName
+                    self.lastname  = accountDetails!.lastName
+                    self.polarPoints = accountDetails!.polarPoints
+                    self.cardBalance = accountDetails!.cardBalance
+                    
+                    //now load meals
+                    BowdoinAPIController(user: self).getMealData()
+                } else {
+                    self.dataLoadingFailed()
+                }
+            case "meals":
+                let mealsLeft = parseMealsLeft(soapBody!)
+                if mealsLeft != nil {
+                    self.mealsLeft = mealsLeft
+                    
+                    //lastly, load transactions
+                    BowdoinAPIController(user: self).getTransactionData()
+                } else {
+                    self.dataLoadingFailed()
+                }
+            case "transactions":
+                let transactions = parseTransactions(soapBody!)
+                if transactions != nil {
+                    self.transactions = transactions
+                    
+                    //success! Finished loading.
+                    var userInfo = NSDictionary(object: self, forKey: "User")
+                    NSNotificationCenter.defaultCenter().postNotificationName("UserFinishedLoading",
+                        object: nil,
+                        userInfo: userInfo)
+                } else {
+                    self.dataLoadingFailed()
+                }
+            default:
+                break
             }
-
-            //lastly, load transactions
-            BowdoinAPIController(user: self).getTransactionData()
-        } else if type == "transactions" {
-            var CSGoldGLTransResponse  = soapBody.elementsForName("GetCSGoldGLTransResponse").first as GDataXMLElement
-            var GetCSGoldGLTransResult = CSGoldGLTransResponse.elementsForName("GetCSGoldGLTransResult").first as GDataXMLElement
-            var diffgrDiffgram  = GetCSGoldGLTransResult.elementsForName("diffgr:diffgram").first as GDataXMLElement
-            var DocumentElement = diffgrDiffgram.elementsForName("DocumentElement").first as GDataXMLElement
-            var CSGoldGLTrans   = DocumentElement.elementsForName("dtCSGoldGLTrans")
-            
-            transactions = []
-            
-            for trans in reverse(CSGoldGLTrans) {
-                var date = trans.elementsForName("TRANDATE").first!.stringValue
-                var desc = trans.elementsForName("LONGDES").first!.stringValue
-                var amnt = trans.elementsForName("APPRVALUEOFTRAN").first!.stringValue
-                var blnc = trans.elementsForName("BALVALUEAFTERTRAN").first!.stringValue
-                transactions!.append(Transaction(name: desc, date: date, amount: amnt, balance: blnc))
-            }
-            
-            var userInfo = NSDictionary(object: self, forKey: "User")
-            NSNotificationCenter.defaultCenter().postNotificationName("UserFinishedLoading",
-                object: nil,
-                userInfo: userInfo)
         }
     }
     
@@ -145,10 +127,160 @@ class User : NSObject {
         self.dataLoaded = false
         
         var userInfo = NSDictionary(object: self, forKey: "User")
-        NSNotificationCenter.defaultCenter().postNotificationName("UserFinishedLoading",
+        NSNotificationCenter.defaultCenter().postNotificationName("UserLoadingFailed",
             object: nil,
             userInfo: userInfo)
     }
+    
+    func parseAccountData(soapBody : GDataXMLElement) -> (firstName : String, lastName : String, cardBalance : Double, polarPoints : Double)? {
+        var CSGoldSVCBalancesResponse = (soapBody.elementsForName("GetCSGoldSVCBalancesResponse") != nil)
+            ? soapBody.elementsForName("GetCSGoldSVCBalancesResponse").first as GDataXMLElement?
+            : nil
+        
+        if CSGoldSVCBalancesResponse != nil {
+            var CSGoldSVCBalancesResult = (CSGoldSVCBalancesResponse!.elementsForName("GetCSGoldSVCBalancesResult") != nil)
+                ? CSGoldSVCBalancesResponse!.elementsForName("GetCSGoldSVCBalancesResult").first as GDataXMLElement?
+                : nil
+            
+            var diffgrDiffgram = (CSGoldSVCBalancesResult!.elementsForName("diffgr:diffgram") != nil)
+                ? CSGoldSVCBalancesResult!.elementsForName("diffgr:diffgram").first as GDataXMLElement?
+                : nil
+            
+            if diffgrDiffgram != nil {
+                var DocumentElement = (diffgrDiffgram!.elementsForName("DocumentElement") != nil)
+                    ? diffgrDiffgram!.elementsForName("DocumentElement").first as GDataXMLElement?
+                    : nil
+                
+                if DocumentElement != nil {
+                    var dtCSGoldSVCBalances1 = (DocumentElement!.elementsForName("dtCSGoldSVCBalances") != nil)
+                        ? DocumentElement!.elementsForName("dtCSGoldSVCBalances").first as GDataXMLElement?
+                        : nil
+                    var dtCSGoldSVCBalances2 = (DocumentElement!.elementsForName("dtCSGoldSVCBalances") != nil)
+                        ? DocumentElement!.elementsForName("dtCSGoldSVCBalances").last as GDataXMLElement?
+                        : nil
+                    
+                    if dtCSGoldSVCBalances1 != nil && dtCSGoldSVCBalances2 != nil {
+                        var firstName = (dtCSGoldSVCBalances1!.elementsForName("FIRSTNAME") != nil)
+                            ? dtCSGoldSVCBalances1!.elementsForName("FIRSTNAME").first as GDataXMLElement?
+                            : nil
+                        var lastName  = (dtCSGoldSVCBalances1!.elementsForName("LASTNAME") != nil)
+                            ? dtCSGoldSVCBalances1!.elementsForName("LASTNAME").first as GDataXMLElement?
+                            : nil
+                        var balance   = (dtCSGoldSVCBalances1!.elementsForName("BALANCE") != nil)
+                            ? dtCSGoldSVCBalances1!.elementsForName("BALANCE").first as GDataXMLElement?
+                            : nil
+                        var ppoints   = (dtCSGoldSVCBalances2!.elementsForName("BALANCE") != nil)
+                            ? dtCSGoldSVCBalances2!.elementsForName("BALANCE").first as GDataXMLElement?
+                            : nil
+                        
+                        if firstName != nil && lastName != nil && balance != nil && ppoints != nil {
+                            return
+                                (firstName!.stringValue(),
+                                lastName!.stringValue(),
+                                Double(balance!.stringValue().toInt()!)/100.0,
+                                Double(ppoints!.stringValue().toInt()!)/100.0)
+                        }
+                    }
+                }
+            }
+        }
+
+        return nil
+    }
+    
+    func parseMealsLeft(soapBody : GDataXMLElement) -> Int? {
+        var CSGoldMPBalancesResponse = (soapBody.elementsForName("GetCSGoldMPBalancesResponse") != nil)
+                ? soapBody.elementsForName("GetCSGoldMPBalancesResponse").first as GDataXMLElement?
+                : nil
+        
+        if CSGoldMPBalancesResponse != nil {
+            var CSGoldMPBalancesResult = (CSGoldMPBalancesResponse!.elementsForName("GetCSGoldMPBalancesResult") != nil)
+                    ? CSGoldMPBalancesResponse!.elementsForName("GetCSGoldMPBalancesResult").first as GDataXMLElement?
+                    : nil
+            
+            if CSGoldMPBalancesResult != nil {
+                var diffgrDiffgram   = (CSGoldMPBalancesResult!.elementsForName("diffgr:diffgram") != nil)
+                    ? CSGoldMPBalancesResult!.elementsForName("diffgr:diffgram").first as GDataXMLElement?
+                    : nil
+                
+                if diffgrDiffgram != nil {
+                    var DocumentElement  = (diffgrDiffgram!.elementsForName("DocumentElement") != nil)
+                        ? diffgrDiffgram!.elementsForName("DocumentElement").first as GDataXMLElement?
+                        : nil
+                    
+                    if diffgrDiffgram!.elementsForName("DocumentElement") != nil {//if user is on a meal plan
+                        var CSGoldMPBalances : GDataXMLElement? = nil
+                        
+                        //different element depending on semester
+                        var components = NSCalendar.currentCalendar().components(NSCalendarUnit.MonthCalendarUnit, fromDate: NSDate())
+                        if components.month > 6 {
+                            CSGoldMPBalances = DocumentElement!.elementsForName("csGoldMPBalances").first as GDataXMLElement?
+                        } else {
+                            CSGoldMPBalances = DocumentElement!.elementsForName("csGoldMPBalances").last as GDataXMLElement?
+                        }
+                        
+                        if CSGoldMPBalances != nil {
+                            var smallBucket  = (CSGoldMPBalances!.elementsForName("SMALLBUCKET") != nil)
+                                ? CSGoldMPBalances!.elementsForName("SMALLBUCKET").first as GDataXMLElement?
+                                : nil
+                            var mediumBucket = (CSGoldMPBalances!.elementsForName("MEDIUMBUCKET") != nil)
+                                ? CSGoldMPBalances!.elementsForName("MEDIUMBUCKET").first as GDataXMLElement?
+                                : nil
+                            
+                            if smallBucket != nil && mediumBucket != nil {
+                                return smallBucket!.stringValue().toInt()! + mediumBucket!.stringValue().toInt()!
+                            }
+                        }
+                    } else {
+                        return 0 //not on a meal plan
+                    }
+                }
+            }
+        }
+        
+        return nil
+    }
+    
+    func parseTransactions(soapBody : GDataXMLElement) -> [Transaction]? {
+        var CSGoldGLTransResponse = (soapBody.elementsForName("GetCSGoldGLTransResponse") != nil) ? soapBody.elementsForName("GetCSGoldGLTransResponse").first as GDataXMLElement? : nil
+        
+        if CSGoldGLTransResponse != nil {
+            var GetCSGoldGLTransResult = (CSGoldGLTransResponse!.elementsForName("GetCSGoldGLTransResult") != nil)
+                ? CSGoldGLTransResponse!.elementsForName("GetCSGoldGLTransResult").first as GDataXMLElement?
+                : nil
+            if GetCSGoldGLTransResult != nil {
+                var diffgrDiffgram = (GetCSGoldGLTransResult!.elementsForName("diffgr:diffgram") != nil)
+                    ? GetCSGoldGLTransResult!.elementsForName("diffgr:diffgram").first as GDataXMLElement?
+                    : nil
+                if diffgrDiffgram != nil {
+                    var DocumentElement = (diffgrDiffgram!.elementsForName("DocumentElement") != nil)
+                        ? diffgrDiffgram!.elementsForName("DocumentElement").first as GDataXMLElement?
+                        : nil
+                    if DocumentElement != nil {
+                        var CSGoldGLTrans = DocumentElement!.elementsForName("dtCSGoldGLTrans")
+                        if CSGoldGLTrans != nil {
+                            var transactions : [Transaction] = []
+                            for trans in reverse(CSGoldGLTrans) {
+                                var date = trans.elementsForName("TRANDATE").first!.stringValue
+                                var desc = trans.elementsForName("LONGDES").first!.stringValue
+                                var amnt = trans.elementsForName("APPRVALUEOFTRAN").first!.stringValue
+                                var blnc = trans.elementsForName("BALVALUEAFTERTRAN").first!.stringValue
+                                transactions.append(Transaction(name: desc, date: date, amount: amnt, balance: blnc))
+                            }
+                            return transactions
+                        }
+                    }
+                }
+            }
+        }
+        
+        return nil
+    }
+}
+
+protocol UserDelegate {
+    func userDidLoad(notification : NSNotification)
+    func userLoadingFailed(notification : NSNotification)
 }
 
 extension Array {

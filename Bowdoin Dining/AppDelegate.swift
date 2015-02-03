@@ -26,22 +26,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
         //dark background, light text status bar
         UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.BlackOpaque, animated: false)
         
-        //formerly used to show splash screen
-//        if let window = self.window {
-//            window.makeKeyAndVisible()
-//            
-//            var splash = SplashView(frame: CGRectMake(0, 0, window.frame.width, window.frame.height))
-//            window.addSubview(splash)
-//            window.bringSubviewToFront(splash)
-//        }
-        
         //set tabBar style, moreNavigationController delegate
         if self.window != nil {
             //set tab bar to be light gray
             (self.window!.rootViewController as UITabBarController).tabBar.backgroundImage = UIImage(named: "tab.png")
-            (self.window!.rootViewController as UITabBarController).tabBar.translucent = false
+            (self.window!.rootViewController as UITabBarController).tabBar.tintColor = UIColor.whiteColor()
             //setting delegate for styling
             (self.window!.rootViewController as UITabBarController).moreNavigationController.delegate = self
+            var tableView = ((self.window!.rootViewController as UITabBarController).moreNavigationController.viewControllers[0] as UIViewController).view as UITableView
+            tableView.tintColor = UIColor.blackColor()
+            tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         }
         
         //update filter to last setting
@@ -53,6 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
         return true
     }
 
+    //sets diet fielters from settings
     func updateDietFilter(filterIndex : NSInteger) {
         self.filters.removeAll(keepCapacity: false)
         switch filterIndex {
@@ -76,9 +71,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
         
         //style
         navigationController.navigationBar.titleTextAttributes
-            = [NSFontAttributeName : UIFont(name: "Helvetica Neue", size: 28), NSForegroundColorAttributeName : UIColor.whiteColor()]
+            = [NSFontAttributeName : UIFont(name: "Helvetica Neue", size: 28.0)!, NSForegroundColorAttributeName : UIColor.whiteColor()]
         
         navigationController.navigationBar.translucent = false
+        navigationController.navigationBar.tintColor = UIColor.whiteColor()
         navigationController.navigationBar.setBackgroundImage(UIImage(named: "bar.png"), forBarMetrics: UIBarMetrics.Default)
         
         if viewController.title == "Settings" {

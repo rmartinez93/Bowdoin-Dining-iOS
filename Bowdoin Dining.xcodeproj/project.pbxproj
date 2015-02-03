@@ -37,6 +37,7 @@
 		45BE7FBE19799CC90024167A /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BE7FBD19799CC90024167A /* MenuItem.swift */; };
 		45BE7FC41979B1630024167A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45BE7FC21979B1630024167A /* CoreData.framework */; };
 		45C2E7F2197A31E900D41105 /* MoultonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C2E7F1197A31E900D41105 /* MoultonViewController.swift */; };
+		45F1D23C1A0938A5003443F9 /* CommentCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F1D23B1A0938A5003443F9 /* CommentCardViewController.swift */; };
 		45FDA6CA197F3F0D00C8F6BD /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FDA6C9197F3F0D00C8F6BD /* AccountViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -89,6 +90,7 @@
 		45BE7FC21979B1630024167A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		45C2E7F1197A31E900D41105 /* MoultonViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoultonViewController.swift; sourceTree = "<group>"; };
 		45CC82991973320D008A391C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		45F1D23B1A0938A5003443F9 /* CommentCardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCardViewController.swift; sourceTree = "<group>"; };
 		45FDA6C9197F3F0D00C8F6BD /* AccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -135,6 +137,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		4555B5371A77F97200C14F21 /* Deprecated */ = {
+			isa = PBXGroup;
+			children = (
+				459524AE197B1DB800FABB82 /* SplashView.swift */,
+			);
+			name = Deprecated;
+			sourceTree = "<group>";
+		};
 		45AAB57F1970636E0078A7F9 = {
 			isa = PBXGroup;
 			children = (
@@ -157,12 +167,14 @@
 		45AAB58A1970636E0078A7F9 /* Bowdoin Dining */ = {
 			isa = PBXGroup;
 			children = (
+				4555B5371A77F97200C14F21 /* Deprecated */,
+				4563386819E7901A0042B372 /* Launch Screen.xib */,
 				4552AD651997D23E00F2BBF5 /* Main.storyboard */,
 				45A9206219781F7A00768D46 /* AppDelegate.swift */,
-				4563386819E7901A0042B372 /* Launch Screen.xib */,
 				45BE7FB619785BDE0024167A /* ThorneViewController.swift */,
 				45C2E7F1197A31E900D41105 /* MoultonViewController.swift */,
 				45A9205E197815AB00768D46 /* PubViewController.swift */,
+				45F1D23B1A0938A5003443F9 /* CommentCardViewController.swift */,
 				45FDA6C9197F3F0D00C8F6BD /* AccountViewController.swift */,
 				45BE7FB91978E09F0024167A /* LoginModalViewController.swift */,
 				455578C719E75017004A4B21 /* TransactionsViewController.swift */,
@@ -175,7 +187,6 @@
 				4563386419E77E040042B372 /* TransactionCell.xib */,
 				4563386619E77F320042B372 /* TransactionCell.swift */,
 				45BE7FBD19799CC90024167A /* MenuItem.swift */,
-				459524AE197B1DB800FABB82 /* SplashView.swift */,
 				45A9205D197815AB00768D46 /* Bowdoin Dining-Bridging-Header.h */,
 				45A64F8B1986B02600EF19DE /* GDataXMLNode.h */,
 				45A64F8C1986B02600EF19DE /* GDataXMLNode.m */,
@@ -318,6 +329,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45F1D23C1A0938A5003443F9 /* CommentCardViewController.swift in Sources */,
 				45FDA6CA197F3F0D00C8F6BD /* AccountViewController.swift in Sources */,
 				459524AF197B1DB800FABB82 /* SplashView.swift in Sources */,
 				4563386719E77F320042B372 /* TransactionCell.swift in Sources */,

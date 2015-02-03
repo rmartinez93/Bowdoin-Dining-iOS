@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class AccountViewController : UIViewController, UINavigationBarDelegate {
+class AccountViewController : UIViewController, UINavigationBarDelegate, UserDelegate {
     @IBOutlet var navBar       : UINavigationBar!
     @IBOutlet var loadingData  : UIActivityIndicatorView!
     @IBOutlet var meals        : UILabel!
@@ -21,33 +21,41 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
     
     override func viewDidLoad()  {
         super.viewDidLoad()
-        //tell VC to watch for notifications from User obj
-        NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "userDidLoad:",
-            name: "UserFinishedLoading",
-            object: nil)
         
         //navbar style
         self.navBar.setBackgroundImage(UIImage(named: "bar.png"), forBarMetrics: UIBarMetrics.Default)
     }
     
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        NSNotificationCenter.defaultCenter().removeObserver("UserFinishedLoading")
-    }
-    
-    func positionForBar(bar: UIBarPositioning!) -> UIBarPosition  {
-        return UIBarPosition.TopAttached
-    }
-    
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        
+        //tell VC to watch for success notifications from User obj
+        NSNotificationCenter.defaultCenter().addObserver(self,
+            selector: "userDidLoad:",
+            name: "UserFinishedLoading",
+            object: nil)
+        
+        //tell VC to watch for failure notifications from User obj
+        NSNotificationCenter.defaultCenter().addObserver(self,
+            selector: "userLoadingFailed:",
+            name: "UserLoadingFailed",
+            object: nil)
         
         //load user data
         if self.delegate.user == nil || self.delegate.user!.loggedIn == false {
             self.loadUserData(self)
         }
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        NSNotificationCenter.defaultCenter().removeObserver("UserFinishedLoading")
+        NSNotificationCenter.defaultCenter().removeObserver("UserLoadingFailed")
+        
+        super.viewWillDisappear(animated)
+    }
+    
+    func positionForBar(bar: UIBarPositioning!) -> UIBarPosition  {
+        return UIBarPosition.TopAttached
     }
     
     @IBAction func userDidLogin(segue : UIStoryboardSegue) {
@@ -91,6 +99,18 @@ class AccountViewController : UIViewController, UINavigationBarDelegate {
             self.navBar.topItem!.leftBarButtonItem!.enabled  = false
             self.recent.enabled = false
         }
+    }
+    
+    func userLoadingFailed(notification : NSNotification) {
+        //refresh onscreen info
+        dispatch_async(dispatch_get_main_queue()) {
+            var alert = UIAlertView(title: "Account Error",
+                message: "Sorry, your account data could not be loaded at this time. Please try again later.",
+                delegate: self,
+                cancelButtonTitle: "OK")
+            alert.show()
+        }
+        self.delegate.user = nil
     }
     
     func userDidLoad(notification : NSNotification) {

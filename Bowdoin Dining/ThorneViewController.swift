@@ -13,7 +13,7 @@ import AVFoundation
 class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarControllerDelegate, UITableViewDataSource, UINavigationBarDelegate {
     var delegate = UIApplication.sharedApplication().delegate as AppDelegate
     var courses : [Course] = []
-    var shareGesture : UIScreenEdgePanGestureRecognizer?
+    var speaker : AVSpeechSynthesizer?
     
     @IBOutlet var navBar    : UINavigationBar!
     @IBOutlet var menuItems : UITableView!
@@ -25,6 +25,8 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        Menus.clearOldCache()
         
         //verify correct buttons are showing
         self.makeCorrectButtonsVisible()
@@ -50,16 +52,10 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        self.delegate.window!.removeGestureRecognizer(shareGesture!)
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        //sharing gesture
-        self.shareGesture = UIScreenEdgePanGestureRecognizer(target: self, action: "inviteToMeal")
-        self.shareGesture!.edges = UIRectEdge.Left
-        self.delegate.window!.addGestureRecognizer(self.shareGesture!)
         
         //set the text label to day we're browsing
         self.navBar.topItem!.title = self.getTextForDaysAdded()
@@ -152,7 +148,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
     }
     
     func segmentIndexOfCurrentMeal() -> NSInteger {
-        var calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
+        var calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
         calendar.locale = NSLocale(localeIdentifier: "en-US");
         
         var today = calendar.components(NSCalendarUnit.HourCalendarUnit | NSCalendarUnit.WeekdayCalendarUnit, fromDate: NSDate())
@@ -317,7 +313,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
     }
     
     //shares an invite to the currently browsed meal
-    func inviteToMeal() {
+    @IBAction func inviteToMeal() {
         var invite = [AnyObject]()
         invite.append("Let's get \(self.meals.titleForSegmentAtIndex(self.meals.selectedSegmentIndex)!.lowercaseString) at Thorne \(self.getTextForDaysAdded().lowercaseString)?")
         
@@ -367,6 +363,9 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
                 }
                 //else we successfully loaded XML!
                 else {
+                    //update the buttons
+                    self.makeCorrectButtonsVisible()
+                    
                     //create a menu from this data and save it to delegate
                     self.courses = Menus.createMenuFromXML(xml!,
                         forMeal:     self.meals.selectedSegmentIndex,
@@ -384,7 +383,6 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
                     self.menuItems.endUpdates()
                     self.menuItems.setContentOffset(CGPointZero, animated: true)
                     
-                    self.makeCorrectButtonsVisible()
                 }
             }
         }
@@ -415,9 +413,16 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
         UIView.commitAnimations()
     }
     
-    
     //Uses TTS to speak menus aloud; potential future use
-    func speakMenu() {
+    @IBAction func speakMenu() {
+        if speaker != nil {
+            if speaker!.speaking {
+                speaker!.stopSpeakingAtBoundary(AVSpeechBoundary.Immediate)
+            }
+        } else {
+            speaker = AVSpeechSynthesizer()
+        }
+        
         var menu = "For "+self.meals.titleForSegmentAtIndex(self.delegate.selectedSegment)!+" "+self.getTextForDaysAdded()+" at Thorne we have "
         for course in self.courses {
             for item in course.menuItems {
@@ -429,9 +434,8 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
             }
         }
         
-        var speaker = AVSpeechSynthesizer()
         var phrase = AVSpeechUtterance(string: menu)
-        phrase.rate = 0.15
-        speaker.speakUtterance(phrase)
+        phrase.rate = 0.18
+        speaker!.speakUtterance(phrase)
     }
 }

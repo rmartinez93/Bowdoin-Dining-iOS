@@ -10,10 +10,9 @@ import UIKit
 import QuartzCore
 import AVFoundation
 
-class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarControllerDelegate, UITableViewDataSource, UINavigationBarDelegate {
+class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UINavigationBarDelegate {
     var delegate = UIApplication.sharedApplication().delegate as AppDelegate
     var courses : [Course] = []
-    var shareGesture : UIScreenEdgePanGestureRecognizer?
     
     @IBOutlet var navBar    : UINavigationBar!
     @IBOutlet var menuItems : UITableView!
@@ -25,6 +24,8 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        Menus.clearOldCache()
         
         //set navbar style
         self.navBar.setBackgroundImage(UIImage(named: "bar.png"), forBarMetrics: UIBarMetrics.Default)
@@ -41,16 +42,10 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        self.delegate.window!.removeGestureRecognizer(shareGesture!)
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        //sharing gesture
-        self.shareGesture = UIScreenEdgePanGestureRecognizer(target: self, action: "inviteToMeal")
-        self.shareGesture!.edges = UIRectEdge.Left
-        self.delegate.window!.addGestureRecognizer(self.shareGesture!)
         
         //set the text label to day we're browsing
         self.navBar.topItem!.title = self.getTextForDaysAdded()
@@ -143,7 +138,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     }
     
     func segmentIndexOfCurrentMeal() -> NSInteger {
-        var calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
+        var calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
         calendar.locale = NSLocale(localeIdentifier: "en-US");
         
         var today = calendar.components(NSCalendarUnit.HourCalendarUnit | NSCalendarUnit.WeekdayCalendarUnit, fromDate: NSDate())
@@ -211,6 +206,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
                     
                     cell!.detailTextLabel!.text = item.descriptors
                     cell!.detailTextLabel!.textColor = UIColor.lightGrayColor()
+                    cell!.detailTextLabel!.numberOfLines = 0
                     
                     var favorited = Course.allFavoritedItems()
                     if favorited.containsObject(item.itemId) {
@@ -308,7 +304,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
     }
     
     //shares an invite to the currently browsed meal
-    func inviteToMeal() {
+    @IBAction func inviteToMeal() {
         var invite = [AnyObject]()
         invite.append("Let's get \(self.meals.titleForSegmentAtIndex(self.meals.selectedSegmentIndex)!.lowercaseString) at Moulton \(self.getTextForDaysAdded().lowercaseString)?")
         
@@ -358,6 +354,9 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
                 }
                     //else we successfully loaded XML!
                 else {
+                    //update the buttons
+                    self.makeCorrectButtonsVisible()
+                    
                     //create a menu from this data and save it to delegate
                     self.courses = Menus.createMenuFromXML(xml!,
                         forMeal:     self.meals.selectedSegmentIndex,
@@ -374,8 +373,6 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
                     self.loading.stopAnimating()
                     self.menuItems.endUpdates()
                     self.menuItems.setContentOffset(CGPointZero, animated: true)
-                    
-                    self.makeCorrectButtonsVisible()
                 }
             }
         }
@@ -406,9 +403,8 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
         UIView.commitAnimations()
     }
     
-    
     //Uses TTS to speak menus aloud; potential future use
-    func speakMenu() {
+    @IBAction func speakMenu() {
         var menu = "For "+self.meals.titleForSegmentAtIndex(self.delegate.selectedSegment)!+" "+self.getTextForDaysAdded()+" at Moulton we have "
         for course in self.courses {
             for item in course.menuItems {
@@ -422,7 +418,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITabBarCont
         
         var speaker = AVSpeechSynthesizer()
         var phrase = AVSpeechUtterance(string: menu)
-        phrase.rate = 0.15
+        phrase.rate = 0.18
         speaker.speakUtterance(phrase)
     }
 }
