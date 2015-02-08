@@ -10,9 +10,10 @@ import UIKit
 import QuartzCore
 import AVFoundation
 
-class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UINavigationBarDelegate {
+class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UINavigationBarDelegate, AVSpeechSynthesizerDelegate {
     var delegate = UIApplication.sharedApplication().delegate as AppDelegate
     var courses : [Course] = []
+    var speaker : AVSpeechSynthesizer?
     
     @IBOutlet var navBar    : UINavigationBar!
     @IBOutlet var menuItems : UITableView!
@@ -20,6 +21,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBOutlet var meals     : UISegmentedControl!
     @IBOutlet var backButton    : UIBarButtonItem!
     @IBOutlet var forwardButton : UIBarButtonItem!
+    @IBOutlet var speakButton   : UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,6 +43,13 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     override func viewWillDisappear(animated: Bool) {
+        if speaker != nil {
+            speaker!.stopSpeakingAtBoundary(AVSpeechBoundary.Immediate)
+            dispatch_async(dispatch_get_main_queue()) {
+                self.speakButton.setImage(UIImage(named: "speaker"), forState: UIControlState.Normal)
+            }
+        }
+        
         super.viewWillDisappear(animated)
     }
     
@@ -405,6 +414,23 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     //Uses TTS to speak menus aloud; potential future use
     @IBAction func speakMenu() {
+        if speaker != nil {
+            if speaker!.speaking {
+                speaker!.stopSpeakingAtBoundary(AVSpeechBoundary.Immediate)
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.speakButton.setImage(UIImage(named: "speaker"), forState: UIControlState.Normal)
+                }
+                return
+            }
+        } else {
+            speaker = AVSpeechSynthesizer()
+            speaker!.delegate = self
+        }
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            self.speakButton.setImage(UIImage(named: "speaker_active"), forState: UIControlState.Normal)
+        }
+        
         var menu = "For "+self.meals.titleForSegmentAtIndex(self.delegate.selectedSegment)!+" "+self.getTextForDaysAdded()+" at Moulton we have "
         for course in self.courses {
             for item in course.menuItems {
@@ -416,9 +442,14 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
         
-        var speaker = AVSpeechSynthesizer()
         var phrase = AVSpeechUtterance(string: menu)
         phrase.rate = 0.18
-        speaker.speakUtterance(phrase)
+        speaker!.speakUtterance(phrase)
+    }
+    
+    func speechSynthesizer(synthesizer: AVSpeechSynthesizer!, didFinishSpeechUtterance utterance: AVSpeechUtterance!) {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.speakButton.setImage(UIImage(named: "speaker"), forState: UIControlState.Normal)
+        }
     }
 }

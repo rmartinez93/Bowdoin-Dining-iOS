@@ -10,7 +10,7 @@ import UIKit
 import QuartzCore
 import AVFoundation
 
-class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarControllerDelegate, UITableViewDataSource, UINavigationBarDelegate {
+class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarControllerDelegate, UITableViewDataSource, UINavigationBarDelegate, AVSpeechSynthesizerDelegate {
     var delegate = UIApplication.sharedApplication().delegate as AppDelegate
     var courses : [Course] = []
     var speaker : AVSpeechSynthesizer?
@@ -21,6 +21,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
     @IBOutlet var meals     : UISegmentedControl!
     @IBOutlet var backButton    : UIBarButtonItem!
     @IBOutlet var forwardButton : UIBarButtonItem!
+    @IBOutlet var speakButton   : UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,6 +52,13 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
     }
     
     override func viewWillDisappear(animated: Bool) {
+        if speaker != nil {
+            speaker!.stopSpeakingAtBoundary(AVSpeechBoundary.Immediate)
+            dispatch_async(dispatch_get_main_queue()) {
+                self.speakButton.setImage(UIImage(named: "speaker"), forState: UIControlState.Normal)
+            }
+        }
+        
         super.viewWillDisappear(animated)
     }
     
@@ -315,7 +323,7 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
     //shares an invite to the currently browsed meal
     @IBAction func inviteToMeal() {
         var invite = [AnyObject]()
-        invite.append("Let's get \(self.meals.titleForSegmentAtIndex(self.meals.selectedSegmentIndex)!.lowercaseString) at Thorne \(self.getTextForDaysAdded().lowercaseString)?")
+        invite.append("Let's get \(self.meals.titleForSegmentAtIndex(self.meals.selectedSegmentIndex)!.lowercaseString) at Thorne \(self.getTextForDaysAdded())?")
         
         let activityViewController = UIActivityViewController(activityItems: invite, applicationActivities: nil)
         self.presentViewController(activityViewController, animated: true, completion: nil)
@@ -418,9 +426,18 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
         if speaker != nil {
             if speaker!.speaking {
                 speaker!.stopSpeakingAtBoundary(AVSpeechBoundary.Immediate)
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.speakButton.setImage(UIImage(named: "speaker"), forState: UIControlState.Normal)
+                }
+                return
             }
         } else {
             speaker = AVSpeechSynthesizer()
+            speaker!.delegate = self
+        }
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            self.speakButton.setImage(UIImage(named: "speaker_active"), forState: UIControlState.Normal)
         }
         
         var menu = "For "+self.meals.titleForSegmentAtIndex(self.delegate.selectedSegment)!+" "+self.getTextForDaysAdded()+" at Thorne we have "
@@ -437,5 +454,11 @@ class ThorneViewController: UIViewController, UITableViewDelegate, UITabBarContr
         var phrase = AVSpeechUtterance(string: menu)
         phrase.rate = 0.18
         speaker!.speakUtterance(phrase)
+    }
+    
+    func speechSynthesizer(synthesizer: AVSpeechSynthesizer!, didFinishSpeechUtterance utterance: AVSpeechUtterance!) {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.speakButton.setImage(UIImage(named: "speaker"), forState: UIControlState.Normal)
+        }
     }
 }

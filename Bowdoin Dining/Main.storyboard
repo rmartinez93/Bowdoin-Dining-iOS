@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C106a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="49e-Tb-3d3">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -81,7 +81,7 @@
                                 </connections>
                             </tableView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="kam-m7-qVT">
-                                <rect key="frame" x="54" y="72" width="492" height="29"/>
+                                <rect key="frame" x="53" y="72" width="494" height="29"/>
                                 <segments>
                                     <segment title="Breakfast"/>
                                     <segment title="Lunch"/>
@@ -92,8 +92,15 @@
                                     <action selector="indexDidChangeForSegmentedControl:" destination="9pv-A4-QxB" eventType="valueChanged" id="egu-ZD-FxI"/>
                                 </connections>
                             </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VQJ-kp-T7r">
+                                <rect key="frame" x="16" y="72" width="29" height="29"/>
+                                <state key="normal" image="share"/>
+                                <connections>
+                                    <action selector="inviteToMeal" destination="9pv-A4-QxB" eventType="touchUpInside" id="jgS-wv-3Gt"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vgv-MO-d9v">
-                                <rect key="frame" x="554" y="72" width="30" height="29"/>
+                                <rect key="frame" x="555" y="72" width="29" height="29"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="29" id="Zpy-Vq-96c"/>
                                 </constraints>
@@ -104,25 +111,18 @@
                                     <action selector="speakMenu" destination="9pv-A4-QxB" eventType="touchUpInside" id="xHI-s4-IYJ"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VQJ-kp-T7r">
-                                <rect key="frame" x="16" y="72" width="30" height="29"/>
-                                <state key="normal" image="share"/>
-                                <connections>
-                                    <action selector="inviteToMeal" destination="9pv-A4-QxB" eventType="touchUpInside" id="jgS-wv-3Gt"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="R0v-ru-bhj" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="1OM-bu-y02"/>
-                            <constraint firstItem="kam-m7-qVT" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" constant="54" id="1QX-Bl-8GY"/>
+                            <constraint firstItem="kam-m7-qVT" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" constant="53" id="1QX-Bl-8GY"/>
                             <constraint firstAttribute="centerX" secondItem="Tve-Pg-tbt" secondAttribute="centerX" id="4EN-db-OKJ"/>
                             <constraint firstItem="Vgv-MO-d9v" firstAttribute="trailing" secondItem="tsR-hK-woN" secondAttribute="trailingMargin" id="4bk-q3-dis"/>
                             <constraint firstItem="VQJ-kp-T7r" firstAttribute="top" secondItem="Vgv-MO-d9v" secondAttribute="top" id="9NG-gg-9FK"/>
                             <constraint firstItem="Tve-Pg-tbt" firstAttribute="top" secondItem="kam-m7-qVT" secondAttribute="bottom" constant="10" id="BcY-wB-F8K"/>
                             <constraint firstAttribute="centerX" secondItem="R0v-ru-bhj" secondAttribute="centerX" id="C8s-GA-dqh"/>
-                            <constraint firstAttribute="trailing" secondItem="kam-m7-qVT" secondAttribute="trailing" constant="54" id="F3M-Ai-m1N"/>
+                            <constraint firstAttribute="trailing" secondItem="kam-m7-qVT" secondAttribute="trailing" constant="53" id="F3M-Ai-m1N"/>
                             <constraint firstItem="Vgv-MO-d9v" firstAttribute="leading" secondItem="kam-m7-qVT" secondAttribute="trailing" constant="8" symbolic="YES" id="Flq-MG-jGd"/>
                             <constraint firstItem="Tve-Pg-tbt" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="MgF-bj-tvw"/>
                             <constraint firstItem="kam-m7-qVT" firstAttribute="leading" secondItem="VQJ-kp-T7r" secondAttribute="trailing" constant="8" symbolic="YES" id="NjP-l4-XJE"/>
@@ -150,6 +150,7 @@
                         <outlet property="meals" destination="kam-m7-qVT" id="Clu-lQ-IZ9"/>
                         <outlet property="menuItems" destination="Tve-Pg-tbt" id="rSQ-wg-fpF"/>
                         <outlet property="navBar" destination="R0v-ru-bhj" id="s2m-yG-DEf"/>
+                        <outlet property="speakButton" destination="Vgv-MO-d9v" id="oAf-Zc-QMu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
@@ -229,7 +230,7 @@
                                 </connections>
                             </navigationBar>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q1k-0d-ZVf">
-                                <rect key="frame" x="555" y="73" width="29" height="29"/>
+                                <rect key="frame" x="555" y="72" width="29" height="29"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="29" id="ehm-UK-n3m"/>
                                 </constraints>
@@ -241,7 +242,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rwx-kE-NIl">
-                                <rect key="frame" x="16" y="73" width="29" height="29"/>
+                                <rect key="frame" x="16" y="72" width="29" height="29"/>
                                 <state key="normal" title="Button" image="share">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -250,7 +251,7 @@
                                 </connections>
                             </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="vJv-ba-vIU">
-                                <rect key="frame" x="53" y="73" width="494" height="29"/>
+                                <rect key="frame" x="53" y="72" width="494" height="29"/>
                                 <segments>
                                     <segment title="Breakfast"/>
                                     <segment title="Lunch"/>
@@ -267,17 +268,17 @@
                             <constraint firstItem="dEd-Ib-KVL" firstAttribute="centerY" secondItem="QS5-Rx-YEW" secondAttribute="centerY" id="0By-34-4q3"/>
                             <constraint firstItem="q1k-0d-ZVf" firstAttribute="top" secondItem="vJv-ba-vIU" secondAttribute="top" id="3Xg-7p-J1v"/>
                             <constraint firstAttribute="centerX" secondItem="imo-gB-kTG" secondAttribute="centerX" id="3eu-N9-r7g"/>
-                            <constraint firstItem="imo-gB-kTG" firstAttribute="top" secondItem="vJv-ba-vIU" secondAttribute="bottom" constant="9" id="DMj-bF-VDI"/>
+                            <constraint firstItem="imo-gB-kTG" firstAttribute="top" secondItem="vJv-ba-vIU" secondAttribute="bottom" constant="10" id="DMj-bF-VDI"/>
                             <constraint firstAttribute="centerX" secondItem="WRe-Ys-WNm" secondAttribute="centerX" id="Hbx-76-nmi"/>
                             <constraint firstItem="q1k-0d-ZVf" firstAttribute="leading" secondItem="vJv-ba-vIU" secondAttribute="trailing" constant="8" symbolic="YES" id="IQc-cE-mjL"/>
-                            <constraint firstItem="vJv-ba-vIU" firstAttribute="top" secondItem="QS5-Rx-YEW" secondAttribute="top" constant="73" id="Kd9-YH-X5F"/>
+                            <constraint firstItem="vJv-ba-vIU" firstAttribute="top" secondItem="QS5-Rx-YEW" secondAttribute="top" constant="72" id="Kd9-YH-X5F"/>
                             <constraint firstItem="Djb-ko-YwX" firstAttribute="top" secondItem="imo-gB-kTG" secondAttribute="bottom" constant="-49" id="L8Y-FD-eSA"/>
                             <constraint firstItem="vJv-ba-vIU" firstAttribute="leading" secondItem="rwx-kE-NIl" secondAttribute="trailing" constant="8" symbolic="YES" id="NhF-gH-Hko"/>
                             <constraint firstAttribute="trailing" secondItem="imo-gB-kTG" secondAttribute="trailing" id="Oyn-LF-5Lt"/>
                             <constraint firstItem="q1k-0d-ZVf" firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailingMargin" id="P7p-1u-pg0"/>
                             <constraint firstAttribute="trailing" secondItem="WRe-Ys-WNm" secondAttribute="trailing" id="dtg-ly-cMa"/>
                             <constraint firstAttribute="trailing" secondItem="vJv-ba-vIU" secondAttribute="trailing" constant="53" id="efo-qN-OKP"/>
-                            <constraint firstItem="vJv-ba-vIU" firstAttribute="top" secondItem="WRe-Ys-WNm" secondAttribute="bottom" constant="9" id="ggz-Wa-6PI"/>
+                            <constraint firstItem="vJv-ba-vIU" firstAttribute="top" secondItem="WRe-Ys-WNm" secondAttribute="bottom" constant="8" id="ggz-Wa-6PI"/>
                             <constraint firstItem="vJv-ba-vIU" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leading" constant="53" id="gjv-dn-rA0"/>
                             <constraint firstItem="WRe-Ys-WNm" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leading" id="gwZ-F8-9fJ"/>
                             <constraint firstItem="rwx-kE-NIl" firstAttribute="top" secondItem="vJv-ba-vIU" secondAttribute="top" id="htd-Lb-Ucr"/>
@@ -296,6 +297,7 @@
                         <outlet property="meals" destination="vJv-ba-vIU" id="ScM-HA-HH1"/>
                         <outlet property="menuItems" destination="imo-gB-kTG" id="Loc-Lq-Hf2"/>
                         <outlet property="navBar" destination="WRe-Ys-WNm" id="1Wj-Vy-T5R"/>
+                        <outlet property="speakButton" destination="q1k-0d-ZVf" id="K9u-vv-idz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
