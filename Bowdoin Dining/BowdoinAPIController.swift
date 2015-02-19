@@ -12,7 +12,7 @@ import Foundation
 class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
     var user     : User
     var type     : String
-    var transactionData : NSMutableData?
+    var data     : NSMutableData?
     var loginAttempts = 0
     
     init(user : User) {
@@ -22,12 +22,13 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
         super.init()
     }
     
-    //gets user account data (balance, points, meals)
+    //gets user account data (balance, points)
     func getAccountData() {
         self.type = "account"
         self.createSOAPRequestWithEnvelope(self.returnSoapEnvelopeForService("<tem:GetCSGoldSVCBalances/>"))
     }
     
+    //gets meal data (number of meals remaining)
     func getMealData() {
         self.type = "meals"
         self.createSOAPRequestWithEnvelope(self.returnSoapEnvelopeForService("<tem:GetCSGoldMPBalances/>"))
@@ -45,6 +46,7 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
         self.createSOAPRequestWithEnvelope(self.returnSoapEnvelopeForService("<tem:GetCSGoldGLTrans/>"))
     }
     
+    //SOAP envelope for request
     func returnSoapEnvelopeForService(serviceRequested : String) -> String {
         var soapEnvelope = "<?xml version=\"1.0\"?>"
         soapEnvelope += "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tem=\"http://tempuri.org/\">"
@@ -57,6 +59,7 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
         return soapEnvelope
     }
     
+    //makes SOAP request
     func createSOAPRequestWithEnvelope(soapEnvelope : String) {
         //create request
         var url = NSURL(string: "https://gooseeye.bowdoin.edu/ws-csGoldShim/Service.asmx")!
@@ -100,12 +103,12 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
 
     func connection(connection: NSURLConnection!, didReceiveResponse response: NSURLResponse!) {
         // Response received, clear out data
-        self.transactionData = NSMutableData()
+        self.data = NSMutableData()
     }
     
     func connection(connection: NSURLConnection!, didReceiveData data: NSData!) {
         // Store received data
-        self.transactionData?.appendData(data)
+        self.data?.appendData(data)
     }
     
     func connection(connection: NSURLConnection!, didFailWithError error: NSError!) {
@@ -120,6 +123,6 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
     }
     
     func connectionDidFinishLoading(connection: NSURLConnection!) {
-        self.user.parseData(self.transactionData!, type: self.type)
+        self.user.parseData(self.data!, type: self.type)
     }
 }

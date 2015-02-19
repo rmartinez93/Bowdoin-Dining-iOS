@@ -25,6 +25,7 @@
 		459D4C821983199B00573069 /* Menus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459D4C811983199B00573069 /* Menus.swift */; };
 		45A64F8D1986B02600EF19DE /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A64F8C1986B02600EF19DE /* GDataXMLNode.m */; };
 		45A64F8F198712E600EF19DE /* BowdoinAPIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A64F8E198712E600EF19DE /* BowdoinAPIController.swift */; };
+		45A693231A966A4600B61E82 /* BowdoinAPIParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A693221A966A4600B61E82 /* BowdoinAPIParser.swift */; };
 		45A9205F197815AB00768D46 /* PubViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A9205E197815AB00768D46 /* PubViewController.swift */; };
 		45A9206119781AF400768D46 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A9206019781AF400768D46 /* SettingsViewController.swift */; };
 		45A9206319781F7A00768D46 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A9206219781F7A00768D46 /* AppDelegate.swift */; };
@@ -71,6 +72,7 @@
 		45A64F8B1986B02600EF19DE /* GDataXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDataXMLNode.h; sourceTree = "<group>"; };
 		45A64F8C1986B02600EF19DE /* GDataXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDataXMLNode.m; sourceTree = "<group>"; };
 		45A64F8E198712E600EF19DE /* BowdoinAPIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BowdoinAPIController.swift; sourceTree = "<group>"; };
+		45A693221A966A4600B61E82 /* BowdoinAPIParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BowdoinAPIParser.swift; sourceTree = "<group>"; };
 		45A9205D197815AB00768D46 /* Bowdoin Dining-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bowdoin Dining-Bridging-Header.h"; sourceTree = "<group>"; };
 		45A9205E197815AB00768D46 /* PubViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PubViewController.swift; sourceTree = "<group>"; };
 		45A9206019781AF400768D46 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -180,6 +182,7 @@
 				455578C719E75017004A4B21 /* TransactionsViewController.swift */,
 				45A9206019781AF400768D46 /* SettingsViewController.swift */,
 				45BE7FB41978567A0024167A /* User.swift */,
+				45A693221A966A4600B61E82 /* BowdoinAPIParser.swift */,
 				45A64F8E198712E600EF19DE /* BowdoinAPIController.swift */,
 				459D4C811983199B00573069 /* Menus.swift */,
 				45BE7FBB197995C80024167A /* Course.swift */,
@@ -333,6 +336,7 @@
 				45FDA6CA197F3F0D00C8F6BD /* AccountViewController.swift in Sources */,
 				459524AF197B1DB800FABB82 /* SplashView.swift in Sources */,
 				4563386719E77F320042B372 /* TransactionCell.swift in Sources */,
+				45A693231A966A4600B61E82 /* BowdoinAPIParser.swift in Sources */,
 				455578CA19E7552E004A4B21 /* Transaction.swift in Sources */,
 				45A64F8D1986B02600EF19DE /* GDataXMLNode.m in Sources */,
 				45BE7FB719785BDE0024167A /* ThorneViewController.swift in Sources */,

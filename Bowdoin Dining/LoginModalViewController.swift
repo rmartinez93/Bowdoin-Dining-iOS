@@ -47,7 +47,7 @@ class LoginModalViewController : UIViewController {
         var downloadQueue = dispatch_queue_create("Download queue", nil)
         dispatch_async(downloadQueue) {
             //in new thread, load user info
-            self.delegate.user!.loadData()
+            self.delegate.user!.loadAccountData()
         }
     }
     

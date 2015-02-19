@@ -18,7 +18,7 @@ class TransactionsViewController : UIViewController, UITableViewDelegate, UITabl
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        transactionView.layoutMargins = UIEdgeInsetsZero
+//        transactionView.layoutMargins = UIEdgeInsetsZero
         
         //set navbar style
         self.navBar.setBackgroundImage(UIImage(named: "bar.png"), forBarMetrics: UIBarMetrics.Default)

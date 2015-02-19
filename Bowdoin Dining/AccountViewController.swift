@@ -31,8 +31,14 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
         
         //tell VC to watch for success notifications from User obj
         NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "userDidLoad:",
-            name: "UserFinishedLoading",
+            selector: "accountDidLoad:",
+            name: "AccountFinishedLoading",
+            object: nil)
+        
+        //tell VC to watch for success notifications from User obj
+        NSNotificationCenter.defaultCenter().addObserver(self,
+            selector: "transactionsDidLoad:",
+            name: "TransactionsFinishedLoading",
             object: nil)
         
         //tell VC to watch for failure notifications from User obj
@@ -90,7 +96,7 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
             dispatch_async(downloadQueue) {
                 //in new thread, load user info if not loaded or if force-reloaded
                 self.delegate.user = User(username: username!, password: password!)
-                self.delegate.user!.loadData()
+                self.delegate.user!.loadAccountData()
             }
         }
         //else, ask for user credentials
@@ -101,7 +107,11 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
         }
     }
     
-    func userLoadingFailed(notification : NSNotification) {
+    @IBAction func loadTransactionData() {
+        self.delegate.user!.loadTransactionData()
+    }
+    
+    func dataLoadingFailed(notification : NSNotification) {
         //refresh onscreen info
         dispatch_async(dispatch_get_main_queue()) {
             var alert = UIAlertView(title: "Account Error",
@@ -113,7 +123,18 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
         self.delegate.user = nil
     }
     
-    func userDidLoad(notification : NSNotification) {
+    //Transaction data loaded
+    func transactionsDidLoad(notification: NSNotification) {
+        println("Transactiond Did Load")
+        dispatch_async(dispatch_get_main_queue()) {
+            if self.delegate.user!.dataLoaded {
+                self.presentViewController(TransactionsViewController(), animated: true, completion: nil)
+            }
+        }
+    }
+    
+    //Balance/Polar Points/Meals loaded
+    func accountDidLoad(notification : NSNotification) {
         //refresh onscreen info
         dispatch_async(dispatch_get_main_queue()) {
             if self.delegate.user!.dataLoaded {
