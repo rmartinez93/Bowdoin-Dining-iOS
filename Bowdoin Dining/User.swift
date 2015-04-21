@@ -19,7 +19,9 @@ class User : NSObject {
     var loggedIn    : Bool = false
     var dataLoaded  : Bool = false
     var transactions : [Transaction]?
-    var lines : [AnyObject]?
+    var thorneScore : Double?
+    var moultonScore : Double?
+    var expressScore : Double?
     
     init(username : String, password : String) {
         self.username = username
@@ -63,6 +65,8 @@ class User : NSObject {
         self.cardBalance = 0.0
         self.mealsLeft   = 0
         self.dataLoaded  = false
+        self.moultonScore = nil
+        self.thorneScore  = nil
         self.loggedIn    = false
         User.forget()
     }
@@ -88,7 +92,7 @@ class User : NSObject {
         var doc = GDataXMLDocument(data: data, options: 0, error: &error)
         var root = doc.rootElement
 
-        var soapBody = root().elementsForName("soap:Body").first as GDataXMLElement?
+        var soapBody = root().elementsForName("soap:Body").first as! GDataXMLElement?
         
         if soapBody != nil {
             switch type {
@@ -120,7 +124,6 @@ class User : NSObject {
             case "transactions":
                 let transactions = BowdoinAPIParser.parseTransactions(soapBody!)
                 if transactions != nil {
-                    println("transactions loaded")
                     self.transactions = transactions
                     
                     //success! Finished loading Transactions.
@@ -133,14 +136,13 @@ class User : NSObject {
             case "lines":
                 let lines = BowdoinAPIParser.parseLines(soapBody!)
                 if lines != nil {
-                    var thorneScore = score(lines!.thorneLine, lineName: "thorne")
+                    self.thorneScore  = BowdoinAPIParser.isDiningHallOpen("thorne")  ? score(lines!.thorneLine, lineName: "thorne")  : nil
+                    self.moultonScore = BowdoinAPIParser.isDiningHallOpen("moulton") ? score(lines!.thorneLine, lineName: "moulton") : nil
                     
                     //success! Finished loading.
-                    NSNotificationCenter.defaultCenter().postNotificationName("LinesFinishedLoading",
+                    NSNotificationCenter.defaultCenter().postNotificationName("LineDataLoaded",
                         object: nil,
                         userInfo: nil)
-                } else {
-                    self.dataLoadingFailed()
                 }
             default:
                 break
@@ -148,45 +150,55 @@ class User : NSObject {
         }
     }
     
-    func score(line: [Int], lineName: String) -> Float {
-        return 0
+    func score(line: [Int], lineName: String) -> Double {
+        let length = line.count
+        
+        //if no entries or no line, return
+        if length == 0 || line.sum() == 0 {
+            return 0
+        }
+        
+        // Crowdedness Threshold based on Location
+        // Allowable Points assumes crowdedness threshold reached every minute
+        var crowdednessThreshold : Double
+        let maximumPossibleScore = 4.5
+        if lineName == "thorne" {
+            crowdednessThreshold = 20
+        } else if lineName == "moulton" {
+            crowdednessThreshold = 15
+        } else {
+            crowdednessThreshold = 5
+        }
+        
+        var totalScore = 0.0
+        for var i = 0; i < length; i++ {
+            if i >= length-10 {
+                let currentLineCount = line[i]
+                let minuteCrowdedness = Double(currentLineCount) / crowdednessThreshold
+                let index = i - (length-11)
+                let scaleMultiplier = log10(Double(index))
+                let score = minuteCrowdedness*scaleMultiplier
+                
+                totalScore += score
+            } else {
+                
+            }
+        }
+        
+        let finalScore = totalScore / maximumPossibleScore
+        println("SCORE: \(finalScore) at \(lineName)")
+        return finalScore
     }
     
     func dataLoadingFailed() {
         self.dataLoaded = false
         
-        var userInfo = NSDictionary(object: self, forKey: "User")
         NSNotificationCenter.defaultCenter().postNotificationName("UserLoadingFailed",
             object: nil,
-            userInfo: userInfo)
+            userInfo: nil)
     }
 }
 
 protocol UserDelegate {
     func dataLoadingFailed(notification : NSNotification)
-}
-
-extension Array {
-    func combine(separator: String) -> String{
-        var str : String = ""
-        for (idx, item) in enumerate(self) {
-            str += "\(item)"
-            if idx < self.count-1 {
-                str += separator
-            }
-        }
-        return str
-    }
-}
-
-extension String {
-    func extractNumerics() -> String {
-        var numerics     = NSCharacterSet(charactersInString: "0123456789").invertedSet
-        return self.componentsSeparatedByCharactersInSet(numerics).combine("")
-    }
-    
-    func extractNumericsAsInt() -> Int {
-        var numerics     = NSCharacterSet(charactersInString: "0123456789").invertedSet
-        return (self.componentsSeparatedByCharactersInSet(numerics).combine("") as NSString).integerValue
-    }
 }

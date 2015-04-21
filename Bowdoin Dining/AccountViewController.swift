@@ -17,14 +17,7 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
     @IBOutlet var points       : UILabel!
     @IBOutlet var recent       : UIButton!
     @IBOutlet var timeStamp: UILabel!
-    var delegate = UIApplication.sharedApplication().delegate as AppDelegate
-    
-    override func viewDidLoad()  {
-        super.viewDidLoad()
-        
-        //navbar style
-        self.navBar.setBackgroundImage(UIImage(named: "bar.png"), forBarMetrics: UIBarMetrics.Default)
-    }
+    var delegate = UIApplication.sharedApplication().delegate as! AppDelegate
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -48,19 +41,16 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
             object: nil)
         
         //load user data
-        if self.delegate.user == nil || self.delegate.user!.loggedIn == false {
-            self.loadUserData(self)
-        }
+        self.loadUserData(self)
     }
     
     override func viewWillDisappear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().removeObserver("UserFinishedLoading")
-        NSNotificationCenter.defaultCenter().removeObserver("UserLoadingFailed")
+        NSNotificationCenter.defaultCenter().removeObserver(self)
         
         super.viewWillDisappear(animated)
     }
     
-    func positionForBar(bar: UIBarPositioning!) -> UIBarPosition  {
+    func positionForBar(bar: UIBarPositioning) -> UIBarPosition  {
         return UIBarPosition.TopAttached
     }
     
@@ -85,25 +75,29 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
         self.navBar.topItem!.leftBarButtonItem!.enabled  = false
         self.recent.enabled = false
         
-        var userDefaults = NSUserDefaults.standardUserDefaults()
-        var username     = userDefaults.objectForKey("bowdoin_username") as? String
-        var password     = userDefaults.objectForKey("bowdoin_password") as? String
-        
-        //if we have user info saved, download their data
-        if username != nil && password != nil {
-            self.loadingData.startAnimating()
-            var downloadQueue = dispatch_queue_create("Download queue", nil);
-            dispatch_async(downloadQueue) {
-                //in new thread, load user info if not loaded or if force-reloaded
-                self.delegate.user = User(username: username!, password: password!)
-                self.delegate.user!.loadAccountData()
+        if self.delegate.user == nil || self.delegate.user!.loggedIn == false {
+            let userDefaults = NSUserDefaults.standardUserDefaults()
+            let username     = userDefaults.objectForKey("bowdoin_username") as? String
+            let password     = userDefaults.objectForKey("bowdoin_password") as? String
+            
+            //if we have user info saved, download their data
+            if username != nil && password != nil {
+                self.loadingData.startAnimating()
+                var downloadQueue = dispatch_queue_create("Download queue", nil);
+                dispatch_async(downloadQueue) {
+                    //in new thread, load user info if not loaded or if force-reloaded
+                    self.delegate.user = User(username: username!, password: password!)
+                    self.delegate.user?.loadAccountData()
+                }
             }
-        }
-        //else, ask for user credentials
-        else {
-            self.navBar.topItem!.rightBarButtonItem!.enabled = true
-            self.navBar.topItem!.leftBarButtonItem!.enabled  = false
-            self.recent.enabled = false
+            //else, ask for user credentials
+            else {
+                self.navBar.topItem!.rightBarButtonItem!.enabled = true
+                self.navBar.topItem!.leftBarButtonItem!.enabled  = false
+                self.recent.enabled = false
+            }
+        } else {
+            self.delegate.user!.loadAccountData()
         }
     }
     
@@ -125,10 +119,10 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
     
     //Transaction data loaded
     func transactionsDidLoad(notification: NSNotification) {
-        println("Transactiond Did Load")
         dispatch_async(dispatch_get_main_queue()) {
             if self.delegate.user!.dataLoaded {
-                self.presentViewController(TransactionsViewController(), animated: true, completion: nil)
+                var transactionsVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("TransactionsViewController") as! TransactionsViewController
+                self.presentViewController(transactionsVC, animated: true, completion: nil)
             }
         }
     }
@@ -145,10 +139,9 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
                 
                 self.view.setNeedsDisplay()
                 
-                self.meals.text   = NSString(format: "%i",    self.delegate.user!.mealsLeft!)
-                self.points.text  = NSString(format: "$%.2f", self.delegate.user!.polarPoints!)
-                self.balance.text = NSString(format: "$%.2f", self.delegate.user!.cardBalance!)
-                
+                self.meals.text   = NSString(format: "%i",    self.delegate.user!.mealsLeft!) as String
+                self.points.text  = NSString(format: "$%.2f", self.delegate.user!.polarPoints!) as String
+                self.balance.text = NSString(format: "$%.2f", self.delegate.user!.cardBalance!) as String                
                 var dateFormatter = NSDateFormatter()
                 dateFormatter.dateFormat = "MM/dd 'at' hh:mm a"
                 self.timeStamp.text = "Last Updated: \(dateFormatter.stringFromDate(NSDate()))"

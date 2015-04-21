@@ -13,26 +13,26 @@ class BowdoinAPIParser {
     //Parses Balance and Polar Point XML
     //returns a tuple with user data, or nil if failed
     class func parseAccountData(soapBody : GDataXMLElement) -> (firstName : String, lastName : String, cardBalance : Double, polarPoints : Double)? {
-        var CSGoldSVCBalancesResponse = soapBody.elementsForName("GetCSGoldSVCBalancesResponse")?.first as GDataXMLElement?
+        var CSGoldSVCBalancesResponse = soapBody.elementsForName("GetCSGoldSVCBalancesResponse")?.first as! GDataXMLElement?
         
         if CSGoldSVCBalancesResponse != nil {
-            var CSGoldSVCBalancesResult = CSGoldSVCBalancesResponse!.elementsForName("GetCSGoldSVCBalancesResult")?.first as GDataXMLElement?
+            var CSGoldSVCBalancesResult = CSGoldSVCBalancesResponse!.elementsForName("GetCSGoldSVCBalancesResult")?.first as! GDataXMLElement?
             
-            var diffgrDiffgram = CSGoldSVCBalancesResult!.elementsForName("diffgr:diffgram")?.first as GDataXMLElement?
+            var diffgrDiffgram = CSGoldSVCBalancesResult!.elementsForName("diffgr:diffgram")?.first as! GDataXMLElement?
             
             if diffgrDiffgram != nil {
-                var DocumentElement = diffgrDiffgram!.elementsForName("DocumentElement")?.first as GDataXMLElement?
+                var DocumentElement = diffgrDiffgram!.elementsForName("DocumentElement")?.first as! GDataXMLElement?
                 
                 if DocumentElement != nil {
-                    var dtCSGoldSVCBalances1 = DocumentElement!.elementsForName("dtCSGoldSVCBalances")?.first as GDataXMLElement?
+                    var dtCSGoldSVCBalances1 = DocumentElement!.elementsForName("dtCSGoldSVCBalances")?.first as! GDataXMLElement?
                     
-                    var dtCSGoldSVCBalances2 = DocumentElement!.elementsForName("dtCSGoldSVCBalances")?.last as GDataXMLElement?
+                    var dtCSGoldSVCBalances2 = DocumentElement!.elementsForName("dtCSGoldSVCBalances")?.last as! GDataXMLElement?
                     
                     if dtCSGoldSVCBalances1 != nil && dtCSGoldSVCBalances2 != nil {
-                        var firstName = dtCSGoldSVCBalances1!.elementsForName("FIRSTNAME")?.first as GDataXMLElement?
-                        var lastName  = dtCSGoldSVCBalances1!.elementsForName("LASTNAME")?.first as GDataXMLElement?
-                        var balance   = dtCSGoldSVCBalances1!.elementsForName("BALANCE")?.first as GDataXMLElement?
-                        var ppoints   = dtCSGoldSVCBalances2!.elementsForName("BALANCE")?.first as GDataXMLElement?
+                        var firstName = dtCSGoldSVCBalances1!.elementsForName("FIRSTNAME")?.first as! GDataXMLElement?
+                        var lastName  = dtCSGoldSVCBalances1!.elementsForName("LASTNAME")?.first as! GDataXMLElement?
+                        var balance   = dtCSGoldSVCBalances1!.elementsForName("BALANCE")?.first as! GDataXMLElement?
+                        var ppoints   = dtCSGoldSVCBalances2!.elementsForName("BALANCE")?.first as! GDataXMLElement?
                         
                         if firstName != nil && lastName != nil && balance != nil && ppoints != nil {
                             return
@@ -52,32 +52,32 @@ class BowdoinAPIParser {
     //Parses Meals Remaining XML
     //returns number of meals left, or nil if failed
     class func parseMealsLeft(soapBody : GDataXMLElement) -> Int? {
-        var CSGoldMPBalancesResponse = soapBody.elementsForName("GetCSGoldMPBalancesResponse")?.first as GDataXMLElement?
+        var CSGoldMPBalancesResponse = soapBody.elementsForName("GetCSGoldMPBalancesResponse")?.first as! GDataXMLElement?
         
         if CSGoldMPBalancesResponse != nil {
-            var CSGoldMPBalancesResult = CSGoldMPBalancesResponse!.elementsForName("GetCSGoldMPBalancesResult")?.first as GDataXMLElement?
+            var CSGoldMPBalancesResult = CSGoldMPBalancesResponse!.elementsForName("GetCSGoldMPBalancesResult")?.first as! GDataXMLElement?
             
             if CSGoldMPBalancesResult != nil {
-                var diffgrDiffgram = CSGoldMPBalancesResult!.elementsForName("diffgr:diffgram")?.first as GDataXMLElement?
+                var diffgrDiffgram = CSGoldMPBalancesResult!.elementsForName("diffgr:diffgram")?.first as! GDataXMLElement?
                 
                 if diffgrDiffgram != nil {
-                    var DocumentElement  = diffgrDiffgram!.elementsForName("DocumentElement")?.first as GDataXMLElement?
+                    var DocumentElement  = diffgrDiffgram!.elementsForName("DocumentElement")?.first as! GDataXMLElement?
                     
                     if diffgrDiffgram!.elementsForName("DocumentElement") != nil {//if user is on a meal plan
                         var CSGoldMPBalances : GDataXMLElement? = nil
                         
                         //different element depending on semester
-                        var components = NSCalendar.currentCalendar().components(NSCalendarUnit.MonthCalendarUnit, fromDate: NSDate())
+                        var components = NSCalendar.currentCalendar().components(NSCalendarUnit.CalendarUnitMonth, fromDate: NSDate())
                         if components.month > 6 {
-                            CSGoldMPBalances = DocumentElement!.elementsForName("csGoldMPBalances")?.first as GDataXMLElement?
+                            CSGoldMPBalances = DocumentElement!.elementsForName("csGoldMPBalances")?.first as! GDataXMLElement?
                         } else {
-                            CSGoldMPBalances = DocumentElement!.elementsForName("csGoldMPBalances")?.last as GDataXMLElement?
+                            CSGoldMPBalances = DocumentElement!.elementsForName("csGoldMPBalances")?.last as! GDataXMLElement?
                         }
                         
                         if CSGoldMPBalances != nil {
-                            var smallBucket  = CSGoldMPBalances!.elementsForName("SMALLBUCKET")?.first as GDataXMLElement?
+                            var smallBucket  = CSGoldMPBalances!.elementsForName("SMALLBUCKET")?.first as! GDataXMLElement?
                             
-                            var mediumBucket = CSGoldMPBalances!.elementsForName("MEDIUMBUCKET")?.first as GDataXMLElement?
+                            var mediumBucket = CSGoldMPBalances!.elementsForName("MEDIUMBUCKET")?.first as! GDataXMLElement?
                             
                             if smallBucket != nil && mediumBucket != nil {
                                 return smallBucket!.stringValue().toInt()! + mediumBucket!.stringValue().toInt()!
@@ -96,16 +96,16 @@ class BowdoinAPIParser {
     //parses Transaction Data XML
     //returns array of Transaction objects with transaction data, or nil if failed
     class func parseTransactions(soapBody : GDataXMLElement) -> [Transaction]? {
-        var CSGoldGLTransResponse = soapBody.elementsForName("GetCSGoldGLTransResponse")?.first as GDataXMLElement?
+        var CSGoldGLTransResponse = soapBody.elementsForName("GetCSGoldGLTransResponse")?.first as! GDataXMLElement?
         
         if CSGoldGLTransResponse != nil {
-            var GetCSGoldGLTransResult = CSGoldGLTransResponse!.elementsForName("GetCSGoldGLTransResult")?.first as GDataXMLElement?
+            var GetCSGoldGLTransResult = CSGoldGLTransResponse!.elementsForName("GetCSGoldGLTransResult")?.first as! GDataXMLElement?
             
             if GetCSGoldGLTransResult != nil {
-                var diffgrDiffgram = GetCSGoldGLTransResult!.elementsForName("diffgr:diffgram")?.first as GDataXMLElement?
+                var diffgrDiffgram = GetCSGoldGLTransResult!.elementsForName("diffgr:diffgram")?.first as! GDataXMLElement?
                 
                 if diffgrDiffgram != nil {
-                    var DocumentElement = diffgrDiffgram!.elementsForName("DocumentElement")?.first as GDataXMLElement?
+                    var DocumentElement = diffgrDiffgram!.elementsForName("DocumentElement")?.first as! GDataXMLElement?
                     
                     if DocumentElement != nil {
                         var CSGoldGLTrans = DocumentElement!.elementsForName("dtCSGoldGLTrans")
@@ -136,24 +136,24 @@ class BowdoinAPIParser {
         var moultonLine : [Int] = []
         var expressLine : [Int] = []
         
-        var CSGoldLineResponse = soapBody.elementsForName("GetCSGoldLineCountsHistogramResponse")?.first as GDataXMLElement?
+        var CSGoldLineResponse = soapBody.elementsForName("GetCSGoldLineCountsHistogramResponse")?.first as! GDataXMLElement?
         
         if CSGoldLineResponse != nil {
-            var GetCSGoldLineResult = CSGoldLineResponse!.elementsForName("GetCSGoldLineCountsHistogramResult")?.first as GDataXMLElement?
+            var GetCSGoldLineResult = CSGoldLineResponse!.elementsForName("GetCSGoldLineCountsHistogramResult")?.first as! GDataXMLElement?
             
             if GetCSGoldLineResult != nil {
-                var diffgrDiffgram = GetCSGoldLineResult!.elementsForName("diffgr:diffgram")?.first as GDataXMLElement?
+                var diffgrDiffgram = GetCSGoldLineResult!.elementsForName("diffgr:diffgram")?.first as! GDataXMLElement?
                 
                 if diffgrDiffgram != nil {
-                    var DocumentElement = diffgrDiffgram!.elementsForName("DocumentElement")?.first as GDataXMLElement?
+                    var DocumentElement = diffgrDiffgram!.elementsForName("DocumentElement")?.first as! GDataXMLElement?
                     
                     if DocumentElement != nil {
                         var dtCSGoldLineHistogram = DocumentElement!.elementsForName("dtCSGoldLineHistogram")
                         
                         if dtCSGoldLineHistogram != nil {
                             for dataPoint in dtCSGoldLineHistogram {
-                                var location = (dataPoint as GDataXMLElement).elementsForName("LOCATION")?.first?.stringValue
-                                var count    = (dataPoint as GDataXMLElement).elementsForName("LINECOUNT")?.first?.stringValue.toInt()
+                                var location = (dataPoint as! GDataXMLElement).elementsForName("LOCATION")?.first?.stringValue
+                                var count    = (dataPoint as! GDataXMLElement).elementsForName("LINECOUNT")?.first?.stringValue.toInt()
                                 
                                 if location == "Thorne Aero 1" {
                                     thorneLine.append(count!)
@@ -172,5 +172,54 @@ class BowdoinAPIParser {
         }
         
         return nil
+    }
+    
+    class func isDiningHallOpen(hall : String) -> Bool {
+        var calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
+        calendar.locale = NSLocale(localeIdentifier: "en-US");
+        
+        let today = calendar.components(NSCalendarUnit.CalendarUnitHour | NSCalendarUnit.CalendarUnitMinute | NSCalendarUnit.CalendarUnitWeekday, fromDate: NSDate())
+        let weekday = today.weekday
+        let minute  = today.minute
+        let hour    = today.hour
+        
+        if hall == "Thorne" {
+            if isWeekday(weekday) {
+                if ((hour > 7 && hour <= 10) || (hour == 7 && minute >= 30)) ||
+                    ((hour >= 11 && hour < 13) || (hour == 13 && minute <= 30)) ||
+                    ((hour >= 17 && hour < 19) || (hour == 19 && minute <= 30)) {
+                        return true //Thorne Open
+                } else {
+                    return false //Thorne Closed
+                }
+            } else {
+                if ((hour >= 11 && hour < 13) || (hour == 13 && minute <= 30)) ||
+                    ((hour >= 17 && hour < 19) || (hour == 19 && minute <= 30)) {
+                        return true //Thorne Open
+                } else {
+                    return false //Thorne Closed
+                }
+            }
+        } else if hall == "Moulton" {
+            if isWeekday(weekday) {
+                if ((hour >= 7 && hour < 10) || (hour == 10 && minute <= 30)) ||
+                    (hour >= 11 && hour < 14) ||
+                    (hour >= 17 && hour < 19) {
+                        return true //Moulton Open
+                } else {
+                    return false //Moulton Closed
+                }
+            } else {
+                if (hour >= 9 && hour < 11) ||
+                    ((hour >= 11 && hour < 12) || (hour == 12 && minute <= 30)) ||
+                    ((hour >= 17 && hour < 19) || (hour == 19 && minute <= 30)) {
+                        return true //Moulton Open
+                } else {
+                    return false //Moulton Closed
+                }
+            }
+        } else {
+            return false
+        }
     }
 }

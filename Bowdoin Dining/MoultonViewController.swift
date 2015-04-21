@@ -11,7 +11,7 @@ import QuartzCore
 import AVFoundation
 
 class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UINavigationBarDelegate, AVSpeechSynthesizerDelegate {
-    var delegate = UIApplication.sharedApplication().delegate as AppDelegate
+    var delegate = UIApplication.sharedApplication().delegate as! AppDelegate
     var courses : [Course] = []
     var speaker : AVSpeechSynthesizer?
     
@@ -28,12 +28,9 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
         // Do any additional setup after loading the view, typically from a nib.
         
         Menus.clearOldCache()
-        
-        //set navbar style
-        self.navBar.setBackgroundImage(UIImage(named: "bar.png"), forBarMetrics: UIBarMetrics.Default)
     }
     
-    func positionForBar(bar: UIBarPositioning!) -> UIBarPosition  {
+    func positionForBar(bar: UIBarPositioning) -> UIBarPosition  {
         return UIBarPosition.TopAttached
     }
     
@@ -43,6 +40,9 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     override func viewWillDisappear(animated: Bool) {
+        (self.delegate.window!.rootViewController as! UITabBarController).tabBar.tintColor = UIColor.whiteColor()
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+
         if speaker != nil {
             speaker!.stopSpeakingAtBoundary(AVSpeechBoundary.Immediate)
             dispatch_async(dispatch_get_main_queue()) {
@@ -57,7 +57,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
         super.viewWillAppear(animated)
         
         //set the text label to day we're browsing
-        self.navBar.topItem!.title = self.getTextForDaysAdded()
+        self.navBar.topItem!.title = self.getTextForDaysAdded() as String
         
         //update selected segment in case changed elsewhere
         self.meals.selectedSegmentIndex = self.delegate.selectedSegment
@@ -67,6 +67,17 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         //fixes issue with last item not showing, but keeps translucency
         self.menuItems.contentInset.bottom = 50
+        
+        //checks if lines loaded, updates UI
+        if self.delegate.lineDataLoaded {
+            self.linesDidLoad()
+        }
+        
+        //tell VC to watch for success notifications from User obj, in case lines not loaded
+        NSNotificationCenter.defaultCenter().addObserver(self,
+            selector: "linesDidLoad",
+            name: "LinesFinishedLoading",
+            object: nil)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -98,11 +109,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func changeDayBy(amount: NSInteger) {
         self.delegate.daysAdded += amount
-        self.navBar!.topItem!.title = self.getTextForDaysAdded()
-    }
-    
-    func isWeekday(dayOfWeek : NSInteger) -> Bool {
-        return (dayOfWeek < 7 && dayOfWeek > 1);
+        self.navBar!.topItem!.title = self.getTextForDaysAdded() as String
     }
     
     func disableAllButtons() {
@@ -125,10 +132,10 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
         //disable/enable segmented buttons
         var date = NSDate(timeIntervalSinceNow: NSTimeInterval(60*60*24*self.delegate.daysAdded))
         var formattedDate = Menus.formatDate(date)
-        var offset = (formattedDate.lastObject as NSNumber).integerValue
+        var offset = (formattedDate.lastObject as! NSNumber).integerValue
         
         //insert/remove meals depending on day of the week
-        if self.isWeekday(offset) {
+        if isWeekday(offset) {
             if self.meals.titleForSegmentAtIndex(0) != "Breakfast" {
                 self.meals.removeSegmentAtIndex(0, animated: false)
                 self.meals.insertSegmentWithTitle("Breakfast", atIndex: 0, animated: false)
@@ -150,11 +157,11 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
         var calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
         calendar.locale = NSLocale(localeIdentifier: "en-US");
         
-        var today = calendar.components(NSCalendarUnit.HourCalendarUnit | NSCalendarUnit.WeekdayCalendarUnit, fromDate: NSDate())
+        var today = calendar.components(NSCalendarUnit.CalendarUnitHour | NSCalendarUnit.CalendarUnitWeekday, fromDate: NSDate())
         var weekday = today.weekday
         var hour    = today.hour
         
-        if self.isWeekday(weekday) {
+        if isWeekday(weekday) {
             if hour < 11 {
                 return 0 //breakfast
             } else if hour < 14 {
@@ -195,7 +202,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     //UITableView delegate method, sets settings for cell/menu item to be displayed at a given section->row
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let simpleTableIdentifier: NSString = "SimpleTableCell"
+        let simpleTableIdentifier = "SimpleTableCell"
         
         var cell = tableView.dequeueReusableCellWithIdentifier(simpleTableIdentifier) as? UITableViewCell
         
@@ -210,7 +217,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
                 var this : MenuItem? = course.menuItems[indexPath.row]
                 
                 if let item = this {
-                    cell!.textLabel!.text = item.name as NSString
+                    cell!.textLabel!.text = item.name as NSString as String
                     cell!.textLabel!.numberOfLines = 0
                     
                     cell!.detailTextLabel!.text = item.descriptors
@@ -232,7 +239,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     //UITableView delegate method, returns name of section/course
-    func tableView(tableView: UITableView!, titleForHeaderInSection section: Int) -> String! {
+    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section < self.courses.count {
             var course = self.courses[section]
             return course.courseName
@@ -242,7 +249,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     //UITableView delegate method, what to do after side-swiping cell
-    func tableView(tableView: UITableView!, editActionsForRowAtIndexPath indexPath: NSIndexPath!) -> [AnyObject]! {
+    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
         //first, load in menu course this cell belongs to
         var course = self.courses[indexPath.section]
         //get item from course
@@ -290,25 +297,21 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     //UITableView delegate method, sets section header styles
-    func tableView(tableView: UITableView!, willDisplayHeaderView view: UIView!, forSection section: Int) {
-        var header = view as UITableViewHeaderFooterView
+    func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        var header = view as! UITableViewHeaderFooterView
         header.textLabel.textColor = UIColor(red:0, green: 0.4, blue: 0.8, alpha: 1)
         header.textLabel.font = UIFont.boldSystemFontOfSize(12)
         header.contentView.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1)
     }
     
     //UITableView delegate method, creates animation when displaying cell
-    func tableView(tableView: UITableView!, willDisplayCell cell: UITableViewCell!, forRowAtIndexPath indexPath: NSIndexPath!) {
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         cell.textLabel?.font = UIFont.systemFontOfSize(16)
         cell.detailTextLabel?.font = UIFont.systemFontOfSize(10)
     }
     
-    func divide (left: Double, right: Double) -> Double {
-        return Double(left) / Double(right)
-    }
-    
     //UITableView delegate method, returns number of sections/courses in loaded menu
-    func numberOfSectionsInTableView(tableView: UITableView!) -> Int {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return self.courses.count
     }
     
@@ -326,10 +329,10 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
         //creates date based on days added to current day, saves to delegate
         var date = NSDate(timeIntervalSinceNow: NSTimeInterval(60*60*24*self.delegate.daysAdded))
         var formattedDate = Menus.formatDate(date)
-        self.delegate.day    = formattedDate[0] as NSInteger
-        self.delegate.month  = formattedDate[1] as NSInteger
-        self.delegate.year   = formattedDate[2] as NSInteger
-        self.delegate.offset = formattedDate[3] as NSInteger
+        self.delegate.day    = formattedDate[0] as! NSInteger
+        self.delegate.month  = formattedDate[1] as! NSInteger
+        self.delegate.year   = formattedDate[2] as! NSInteger
+        self.delegate.offset = formattedDate[3] as! NSInteger
         
         //firstly, remove everything from the UITableView
         self.courses.removeAll(keepCapacity: false)
@@ -369,7 +372,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
                     //create a menu from this data and save it to delegate
                     self.courses = Menus.createMenuFromXML(xml!,
                         forMeal:     self.meals.selectedSegmentIndex,
-                        onWeekday:   self.isWeekday(self.delegate.offset),
+                        onWeekday:   isWeekday(self.delegate.offset),
                         atLocation:  self.delegate.moultonId,
                         withFilters: self.delegate.filters)
                     
@@ -389,7 +392,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     //UITableView delegate method, creates animation when displaying cell; removed, not popular
     func animateIn(this : UIView) {
-        var init_angle : Double = divide(90*M_PI, right: 180)
+        var init_angle : Double = divide(90*M_PI, 180)
         var rotation = CATransform3DMakeRotation(CGFloat(init_angle), 0.0, 0.7, 0.4) as CATransform3D
         rotation.m34 = (-1.0/600.0)
         
@@ -412,7 +415,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
         UIView.commitAnimations()
     }
     
-    //Uses TTS to speak menus aloud; potential future use
+    //Uses TTS to speak menus aloud
     @IBAction func speakMenu() {
         if speaker != nil {
             if speaker!.speaking {
@@ -431,7 +434,7 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.speakButton.setImage(UIImage(named: "speaker_active"), forState: UIControlState.Normal)
         }
         
-        var menu = "For "+self.meals.titleForSegmentAtIndex(self.delegate.selectedSegment)!+" "+self.getTextForDaysAdded()+" at Moulton we have "
+        var menu = "For "+self.meals.titleForSegmentAtIndex(self.delegate.selectedSegment)!+" "+(self.getTextForDaysAdded() as String)+" at Moulton we have "
         for course in self.courses {
             for item in course.menuItems {
                 if item == course.menuItems.last && course == self.courses.last {
@@ -447,9 +450,19 @@ class MoultonViewController: UIViewController, UITableViewDelegate, UITableViewD
         speaker!.speakUtterance(phrase)
     }
     
+    //resets speech button color when finished
     func speechSynthesizer(synthesizer: AVSpeechSynthesizer!, didFinishSpeechUtterance utterance: AVSpeechUtterance!) {
         dispatch_async(dispatch_get_main_queue()) {
             self.speakButton.setImage(UIImage(named: "speaker"), forState: UIControlState.Normal)
+        }
+    }
+    
+    //displays line data if loaded
+    func linesDidLoad() {
+        dispatch_async(dispatch_get_main_queue()) {
+            UIView.animateWithDuration(0.5, animations: { () -> Void in
+                (self.delegate.window!.rootViewController as! UITabBarController).tabBar.tintColor = self.delegate.moultonColor!
+            })
         }
     }
 }

@@ -83,7 +83,7 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
     }
     
     //takes care of HTTP Authentication
-    func connection(connection: NSURLConnection!, didReceiveAuthenticationChallenge challenge: NSURLAuthenticationChallenge!) {
+    func connection(connection: NSURLConnection, didReceiveAuthenticationChallenge challenge: NSURLAuthenticationChallenge) {
         if self.loginAttempts == 0 {
             var authMethod = challenge.protectionSpace.authenticationMethod
             if authMethod == NSURLAuthenticationMethodNTLM {
@@ -111,7 +111,7 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
         self.data?.appendData(data)
     }
     
-    func connection(connection: NSURLConnection!, didFailWithError error: NSError!) {
+    func connection(connection: NSURLConnection, didFailWithError error: NSError) {
         //The request has failed for some reason!
         // Check the error var
         NSLog("ERR \(error)")

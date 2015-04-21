@@ -9,7 +9,7 @@
 import UIKit
 
 class PubViewController: UIViewController, UINavigationBarDelegate {
-    var delegate = UIApplication.sharedApplication().delegate as AppDelegate
+    var delegate = UIApplication.sharedApplication().delegate as! AppDelegate
     var shareGesture : UIScreenEdgePanGestureRecognizer?
     @IBOutlet var MageesMenu : UIWebView!
     @IBOutlet var navBar     : UINavigationBar!
@@ -63,12 +63,9 @@ class PubViewController: UIViewController, UINavigationBarDelegate {
         
         //fixes issue with bottom not showing, but keeps translucency
         self.MageesMenu.scrollView.contentInset.bottom = 50
-        
-        //sets navbar style
-        self.navBar.setBackgroundImage(UIImage(named: "bar.png"), forBarMetrics: UIBarMetrics.Default)
     }
     
-    func positionForBar(bar: UIBarPositioning!) -> UIBarPosition  {
+    func positionForBar(bar: UIBarPositioning) -> UIBarPosition  {
         return UIBarPosition.TopAttached
     }
     
@@ -95,11 +92,16 @@ class PubViewController: UIViewController, UINavigationBarDelegate {
         self.delegate.window!.addGestureRecognizer(self.shareGesture!)
     }
     
+    @IBAction func showSpecials() {
+        let url = NSURL(string: "http://www.bowdoin.edu/atreus/diningspecials/specials.jsp")
+        UIApplication.sharedApplication().openURL(url!)
+    }
+    
     @IBAction func dialPub() {
         var calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
         calendar.locale = NSLocale(localeIdentifier: "en-US");
         
-        var components = calendar.components(NSCalendarUnit.HourCalendarUnit | NSCalendarUnit.MinuteCalendarUnit | NSCalendarUnit.WeekdayCalendarUnit, fromDate: NSDate())
+        var components = calendar.components(NSCalendarUnit.CalendarUnitHour | NSCalendarUnit.CalendarUnitMinute | NSCalendarUnit.CalendarUnitWeekday, fromDate: NSDate())
         
         let hour = components.hour
         let min  = components.minute

@@ -15,14 +15,14 @@ class LoginModalViewController : UIViewController {
     @IBOutlet var loggingIn     : UIActivityIndicatorView!
     @IBOutlet var insutructions : UILabel!
     @IBOutlet var loginButton   : UIButton!
-    var delegate = UIApplication.sharedApplication().delegate as AppDelegate
+    var delegate = UIApplication.sharedApplication().delegate as! AppDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "userDidLoad:",
-            name: "UserFinishedLoading",
+            selector: "accountDidLoad:",
+            name: "AccountFinishedLoading",
             object: nil)
     }
     
@@ -51,7 +51,7 @@ class LoginModalViewController : UIViewController {
         }
     }
     
-    func userDidLoad(notification : NSNotification) {
+    func accountDidLoad(notification : NSNotification) {
         //go to main thread
         dispatch_async(dispatch_get_main_queue()) {
             if !self.delegate.user!.dataLoaded {

@@ -9,7 +9,7 @@
 import UIKit
 
 class SettingsViewController: UIViewController {
-    var delegate = UIApplication.sharedApplication().delegate as AppDelegate
+    var delegate = UIApplication.sharedApplication().delegate as! AppDelegate
     @IBOutlet var dietFilter : UISegmentedControl!
     @IBOutlet var logoutButton : UIButton!
     

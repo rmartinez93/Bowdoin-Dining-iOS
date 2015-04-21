@@ -19,7 +19,7 @@ class Menus : NSObject {
         calendar.locale = NSLocale(localeIdentifier: "en-US")
         
         //create DateComponents from the NSDate and NSCalendar
-        var today = calendar.components(NSCalendarUnit.YearCalendarUnit | NSCalendarUnit.WeekOfYearCalendarUnit | NSCalendarUnit.WeekdayCalendarUnit, fromDate: todayDate)
+        var today = calendar.components(NSCalendarUnit.CalendarUnitYear | NSCalendarUnit.CalendarUnitWeekOfYear | NSCalendarUnit.CalendarUnitWeekday, fromDate: todayDate)
         
         //calculate offset from sunday (day menu begins)
         var offset  = today.weekday
@@ -27,7 +27,7 @@ class Menus : NSObject {
         //set current day to sunday (first day) of this week, and create NSDateComponents for that day
         today.weekday = 1
         var lastSundayDate = calendar.dateFromComponents(today) as NSDate!
-        var lastSunday = calendar.components(NSCalendarUnit.DayCalendarUnit | NSCalendarUnit.YearCalendarUnit | NSCalendarUnit.MonthCalendarUnit | NSCalendarUnit.WeekdayCalendarUnit, fromDate: lastSundayDate)
+        var lastSunday = calendar.components(NSCalendarUnit.CalendarUnitDay | NSCalendarUnit.CalendarUnitYear | NSCalendarUnit.CalendarUnitMonth | NSCalendarUnit.CalendarUnitWeekday, fromDate: lastSundayDate)
         
         //store info about last sunday's date for use with Bowdoin XML API
         var day   = lastSunday.day
@@ -38,15 +38,15 @@ class Menus : NSObject {
     }
     
     class func clearOldCache() {
-        var cachePath = (NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.CachesDirectory, NSSearchPathDomainMask.UserDomainMask, true) as NSArray).firstObject as NSString
+        var cachePath = (NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.CachesDirectory, NSSearchPathDomainMask.UserDomainMask, true) as NSArray).firstObject as! String
         var allCache = NSFileManager.defaultManager().contentsOfDirectoryAtPath(cachePath, error: nil)
         if allCache != nil {
             for item in allCache! {
-                var attributes = NSFileManager.defaultManager().attributesOfItemAtPath(item as String, error: nil)
+                var attributes = NSFileManager.defaultManager().attributesOfItemAtPath(item as! String, error: nil)
                 if attributes != nil {
-                    var creationDate = attributes![NSFileCreationDate] as NSDate
+                    var creationDate = attributes![NSFileCreationDate] as! NSDate
                     if creationDate.compare(NSDate()) == NSComparisonResult.OrderedAscending {
-                        NSFileManager.defaultManager().removeItemAtPath(item as String, error: nil)
+                        NSFileManager.defaultManager().removeItemAtPath(item as! String, error: nil)
                     }
                 }
             }
@@ -56,7 +56,7 @@ class Menus : NSObject {
     //load menu for a given day
     class func loadMenuForDay(day : NSInteger, month : NSInteger, year : NSInteger, offset : NSInteger) -> NSData? {
         //first, search local path in case cached
-        var path = self.localURLForDay(day, month: month, year: year, offset: offset)
+        var path = self.localURLForDay(day, month: month, year: year, offset: offset) as String
         var fileExists = NSFileManager.defaultManager().fileExistsAtPath(path) as Bool
         if fileExists { //if cached, return cached file
             var error : NSError?
@@ -68,8 +68,7 @@ class Menus : NSObject {
             UIApplication.sharedApplication().networkActivityIndicatorVisible = true
 
             //download menu for this day
-            var urlString = self.externalURLForDay(day, month: month, year: year, offset: offset)
-            NSLog(urlString)
+            var urlString = self.externalURLForDay(day, month: month, year: year, offset: offset) as String
             var url = NSURL(string: urlString)!
             var error : NSError?
             var xmlData = NSMutableData(contentsOfURL: url, options: nil, error: &error)
@@ -112,12 +111,12 @@ class Menus : NSObject {
             default: break
         }
         
-        var meal  = meals.objectAtIndex(mealId) as GDataXMLElement
+        var meal  = meals.objectAtIndex(mealId) as! GDataXMLElement
         
         //each meal has two units (locations), create an XML Element for this locationId's menu
         var units = meal.elementsForName("unit") as NSArray
-        var unit  = units.objectAtIndex(locationId) as GDataXMLElement
-        var menu  = (unit.elementsForName("menu") as NSArray).firstObject as GDataXMLElement
+        var unit  = units.objectAtIndex(locationId) as! GDataXMLElement
+        var menu  = (unit.elementsForName("menu") as NSArray).firstObject as! GDataXMLElement
         
         //create array for records (menu items), initialize array of courses (a menu item attribute)
         var menuArray = menu.elementsForName("record") as NSArray?
@@ -127,10 +126,10 @@ class Menus : NSObject {
         if let menuItems = menuArray {
             for item in menuItems {
                 //grab information about this menu item: name & id
-                var item_name = ((item as GDataXMLElement).elementsForName("webLongName") as NSArray).firstObject as GDataXMLElement
+                var item_name = ((item as! GDataXMLElement).elementsForName("webLongName") as NSArray).firstObject as! GDataXMLElement
                 
                 if !contains(ignoreList, item_name.stringValue()) {
-                    var item_id   = ((item as GDataXMLElement).elementsForName("itemID") as NSArray).firstObject as GDataXMLElement
+                    var item_id   = ((item as! GDataXMLElement).elementsForName("itemID") as NSArray).firstObject as! GDataXMLElement
                     
                     //create regex for removing diet attributes from item name, find matches in string
                     var error : NSError?
@@ -142,7 +141,7 @@ class Menus : NSObject {
                     
                     if attributeMatches.count != 0 { //if there were matches, loop through them and add them to string
                         for var i = 0; i < attributeMatches.count; i++ {
-                            var special = attributeMatches.objectAtIndex(i) as NSTextCheckingResult
+                            var special = attributeMatches.objectAtIndex(i) as! NSTextCheckingResult
                             attributes += [(item_name.stringValue() as NSString).substringWithRange(special.range) as String]
                         }
                     }
@@ -151,13 +150,13 @@ class Menus : NSObject {
                     var cleaned = regex.stringByReplacingMatchesInString(item_name.stringValue(), options: nil, range: NSMakeRange(0, (item_name.stringValue() as NSString).length), withTemplate: "").stringByReplacingOccurrencesOfString("(", withString: "").stringByReplacingOccurrencesOfString(")", withString: "")
                     
                     //check if any diet attributes match our filter
-                    var overlap = NSMutableSet(array: filters)
-                    overlap.intersectSet(NSSet(array: attributes))
+                    var overlap = NSMutableSet(array: filters as [AnyObject])
+                    overlap.intersectSet(NSSet(array: attributes) as Set<NSObject>)
                     
                     //if there is no active diet filter, or this item passes our filter
                     if filters.count == 0 || overlap.allObjects.count != 0 {
                         //determine course for this item and check if it already exists in our courses array
-                        var courseObject = ((item as GDataXMLElement).elementsForName("course") as NSArray).firstObject as GDataXMLElement
+                        var courseObject = ((item as! GDataXMLElement).elementsForName("course") as NSArray).firstObject as! GDataXMLElement
                         
                         //check if item course exists
                         var coursePosition = -1;
@@ -177,9 +176,9 @@ class Menus : NSObject {
                             thiscourse = courses[coursePosition] as Course
                             
                             var item  = MenuItem()
-                            item.name = cleaned
+                            item.name = cleaned.trim()
                             item.itemId = item_id.stringValue()
-                            item.descriptors = attributes.combine(" ")
+                            item.descriptors = attributes.combine(" ").trim()
                             
                             thiscourse.menuItems.append(item)
                         } else { //new course, create it and add item to it
@@ -187,9 +186,9 @@ class Menus : NSObject {
                             thiscourse.courseName = courseObject.stringValue()
                             
                             var item = MenuItem()
-                            item.name = cleaned
+                            item.name = cleaned.trim()
                             item.itemId = item_id.stringValue()
-                            item.descriptors = attributes.combine(" ")
+                            item.descriptors = attributes.combine(" ").trim()
                             
                             thiscourse.menuItems.append(item)
                             courses.append(thiscourse)
@@ -219,7 +218,13 @@ class Menus : NSObject {
     
     class func localURLForDay(day : NSInteger, month : NSInteger, year : NSInteger, offset : NSInteger) -> NSString {
         var path = "local-\(year)-\(month)-\(day)-\(offset).xml"
-        var cache = (NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.CachesDirectory, NSSearchPathDomainMask.UserDomainMask, true) as NSArray).firstObject as NSString
+        var cache = (NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.CachesDirectory, NSSearchPathDomainMask.UserDomainMask, true) as NSArray).firstObject as! NSString
         return "\(cache)\(path)"
+    }
+}
+
+extension String {
+    func trim() -> String {
+        return self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
     }
 }
