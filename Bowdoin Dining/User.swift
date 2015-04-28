@@ -83,7 +83,9 @@ class User : NSObject {
     
     func loadLineData() {
         //load account
-        BowdoinAPIController(user: self).getLineData()
+        if BowdoinAPIParser.isDiningHallOpen("thorne") || BowdoinAPIParser.isDiningHallOpen("moulton") {
+            BowdoinAPIController(user: self).getLineData()
+        }
     }
 
     func parseData(data: NSData, type: String) {
@@ -135,15 +137,19 @@ class User : NSObject {
                 }
             case "lines":
                 let lines = BowdoinAPIParser.parseLines(soapBody!)
+
                 if lines != nil {
                     self.thorneScore  = BowdoinAPIParser.isDiningHallOpen("thorne")  ? score(lines!.thorneLine, lineName: "thorne")  : nil
                     self.moultonScore = BowdoinAPIParser.isDiningHallOpen("moulton") ? score(lines!.thorneLine, lineName: "moulton") : nil
-                    
-                    //success! Finished loading.
-                    NSNotificationCenter.defaultCenter().postNotificationName("LineDataLoaded",
-                        object: nil,
-                        userInfo: nil)
+                } else {
+                    self.thorneScore = nil
+                    self.moultonScore = nil
                 }
+                
+                //success! Finished loading.
+                NSNotificationCenter.defaultCenter().postNotificationName("LineDataLoaded",
+                    object: nil,
+                    userInfo: nil)
             default:
                 break
             }
@@ -180,13 +186,11 @@ class User : NSObject {
                 let score = minuteCrowdedness*scaleMultiplier
                 
                 totalScore += score
-            } else {
-                
             }
         }
         
         let finalScore = totalScore / maximumPossibleScore
-        println("SCORE: \(finalScore) at \(lineName)")
+
         return finalScore
     }
     

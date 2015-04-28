@@ -108,7 +108,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
 
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-//        self.daysAdded = 0
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
@@ -150,14 +149,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
         //attempt to load again every 60 seconds
         delay(60) {
             self.getLineData()
-        }
-    }
-    
-    func resetLineIndicators() {
-        if (self.window!.rootViewController as! UITabBarController).tabBar.tintColor != UIColor.whiteColor() {
-            UIView.animateWithDuration(0.5, animations: { () -> Void in
-                (self.window!.rootViewController as! UITabBarController).tabBar.tintColor = UIColor.whiteColor()
-            })
         }
     }
     

@@ -22,6 +22,7 @@
 		4569C77A1999113400A531E2 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4552811B19763AC0006C2DEA /* CFNetwork.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		4569C77C199911B400A531E2 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4507E70319726E3A000628DE /* UIKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		4569C77D199911BD00A531E2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4507E70219726E3A000628DE /* Foundation.framework */; };
+		457B28D01AE8113A002DCA8A /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457B28CF1AE8113A002DCA8A /* MenuViewController.swift */; };
 		459D4C821983199B00573069 /* Menus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459D4C811983199B00573069 /* Menus.swift */; };
 		45A64F8D1986B02600EF19DE /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A64F8C1986B02600EF19DE /* GDataXMLNode.m */; };
 		45A64F8F198712E600EF19DE /* BowdoinAPIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A64F8E198712E600EF19DE /* BowdoinAPIController.swift */; };
@@ -32,12 +33,10 @@
 		45AAB59C1970636E0078A7F9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45AAB59B1970636E0078A7F9 /* Images.xcassets */; };
 		45AAB5A81970636F0078A7F9 /* Bowdoin_DiningTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 45AAB5A71970636F0078A7F9 /* Bowdoin_DiningTests.m */; };
 		45BE7FB51978567A0024167A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BE7FB41978567A0024167A /* User.swift */; };
-		45BE7FB719785BDE0024167A /* ThorneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BE7FB619785BDE0024167A /* ThorneViewController.swift */; };
 		45BE7FBA1978E09F0024167A /* LoginModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BE7FB91978E09F0024167A /* LoginModalViewController.swift */; };
 		45BE7FBC197995C80024167A /* Course.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BE7FBB197995C80024167A /* Course.swift */; };
 		45BE7FBE19799CC90024167A /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BE7FBD19799CC90024167A /* MenuItem.swift */; };
 		45BE7FC41979B1630024167A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45BE7FC21979B1630024167A /* CoreData.framework */; };
-		45C2E7F2197A31E900D41105 /* MoultonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C2E7F1197A31E900D41105 /* MoultonViewController.swift */; };
 		45FDA6CA197F3F0D00C8F6BD /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FDA6C9197F3F0D00C8F6BD /* AccountViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -67,6 +66,7 @@
 		4563386419E77E040042B372 /* TransactionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TransactionCell.xib; sourceTree = "<group>"; };
 		4563386619E77F320042B372 /* TransactionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionCell.swift; sourceTree = "<group>"; };
 		4563386819E7901A0042B372 /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
+		457B28CF1AE8113A002DCA8A /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		459D4C811983199B00573069 /* Menus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Menus.swift; sourceTree = "<group>"; };
 		45A64F8B1986B02600EF19DE /* GDataXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDataXMLNode.h; sourceTree = "<group>"; };
 		45A64F8C1986B02600EF19DE /* GDataXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDataXMLNode.m; sourceTree = "<group>"; };
@@ -83,13 +83,11 @@
 		45AAB5A61970636F0078A7F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		45AAB5A71970636F0078A7F9 /* Bowdoin_DiningTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Bowdoin_DiningTests.m; sourceTree = "<group>"; };
 		45BE7FB41978567A0024167A /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		45BE7FB619785BDE0024167A /* ThorneViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThorneViewController.swift; sourceTree = "<group>"; };
 		45BE7FB91978E09F0024167A /* LoginModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginModalViewController.swift; sourceTree = "<group>"; };
 		45BE7FBB197995C80024167A /* Course.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Course.swift; sourceTree = "<group>"; };
 		45BE7FBD19799CC90024167A /* MenuItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuItem.swift; sourceTree = "<group>"; };
 		45BE7FC11979B1630024167A /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		45BE7FC21979B1630024167A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		45C2E7F1197A31E900D41105 /* MoultonViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoultonViewController.swift; sourceTree = "<group>"; };
 		45CC82991973320D008A391C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		45FDA6C9197F3F0D00C8F6BD /* AccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -162,8 +160,7 @@
 				4563386819E7901A0042B372 /* Launch Screen.xib */,
 				4552AD651997D23E00F2BBF5 /* Main.storyboard */,
 				45A9206219781F7A00768D46 /* AppDelegate.swift */,
-				45BE7FB619785BDE0024167A /* ThorneViewController.swift */,
-				45C2E7F1197A31E900D41105 /* MoultonViewController.swift */,
+				457B28CF1AE8113A002DCA8A /* MenuViewController.swift */,
 				45A9205E197815AB00768D46 /* PubViewController.swift */,
 				45FDA6C9197F3F0D00C8F6BD /* AccountViewController.swift */,
 				45BE7FB91978E09F0024167A /* LoginModalViewController.swift */,
@@ -326,7 +323,6 @@
 				45A693231A966A4600B61E82 /* BowdoinAPIParser.swift in Sources */,
 				455578CA19E7552E004A4B21 /* Transaction.swift in Sources */,
 				45A64F8D1986B02600EF19DE /* GDataXMLNode.m in Sources */,
-				45BE7FB719785BDE0024167A /* ThorneViewController.swift in Sources */,
 				45BE7FBA1978E09F0024167A /* LoginModalViewController.swift in Sources */,
 				45A9205F197815AB00768D46 /* PubViewController.swift in Sources */,
 				459D4C821983199B00573069 /* Menus.swift in Sources */,
@@ -334,7 +330,7 @@
 				45A9206119781AF400768D46 /* SettingsViewController.swift in Sources */,
 				45BE7FBE19799CC90024167A /* MenuItem.swift in Sources */,
 				45BE7FBC197995C80024167A /* Course.swift in Sources */,
-				45C2E7F2197A31E900D41105 /* MoultonViewController.swift in Sources */,
+				457B28D01AE8113A002DCA8A /* MenuViewController.swift in Sources */,
 				45A9206319781F7A00768D46 /* AppDelegate.swift in Sources */,
 				45BE7FB51978567A0024167A /* User.swift in Sources */,
 				4508C6011A9EB548007411D6 /* Utilities.swift in Sources */,

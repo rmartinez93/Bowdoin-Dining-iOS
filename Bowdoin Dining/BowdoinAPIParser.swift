@@ -13,20 +13,20 @@ class BowdoinAPIParser {
     //Parses Balance and Polar Point XML
     //returns a tuple with user data, or nil if failed
     class func parseAccountData(soapBody : GDataXMLElement) -> (firstName : String, lastName : String, cardBalance : Double, polarPoints : Double)? {
-        var CSGoldSVCBalancesResponse = soapBody.elementsForName("GetCSGoldSVCBalancesResponse")?.first as! GDataXMLElement?
+        let CSGoldSVCBalancesResponse = soapBody.elementsForName("GetCSGoldSVCBalancesResponse")?.first as! GDataXMLElement?
         
         if CSGoldSVCBalancesResponse != nil {
-            var CSGoldSVCBalancesResult = CSGoldSVCBalancesResponse!.elementsForName("GetCSGoldSVCBalancesResult")?.first as! GDataXMLElement?
+            let CSGoldSVCBalancesResult = CSGoldSVCBalancesResponse!.elementsForName("GetCSGoldSVCBalancesResult")?.first as! GDataXMLElement?
             
-            var diffgrDiffgram = CSGoldSVCBalancesResult!.elementsForName("diffgr:diffgram")?.first as! GDataXMLElement?
+            let diffgrDiffgram = CSGoldSVCBalancesResult!.elementsForName("diffgr:diffgram")?.first as! GDataXMLElement?
             
             if diffgrDiffgram != nil {
-                var DocumentElement = diffgrDiffgram!.elementsForName("DocumentElement")?.first as! GDataXMLElement?
+                let DocumentElement = diffgrDiffgram!.elementsForName("DocumentElement")?.first as! GDataXMLElement?
                 
                 if DocumentElement != nil {
-                    var dtCSGoldSVCBalances1 = DocumentElement!.elementsForName("dtCSGoldSVCBalances")?.first as! GDataXMLElement?
+                    let dtCSGoldSVCBalances1 = DocumentElement!.elementsForName("dtCSGoldSVCBalances")?.first as! GDataXMLElement?
                     
-                    var dtCSGoldSVCBalances2 = DocumentElement!.elementsForName("dtCSGoldSVCBalances")?.last as! GDataXMLElement?
+                    let dtCSGoldSVCBalances2 = DocumentElement!.elementsForName("dtCSGoldSVCBalances")?.last as! GDataXMLElement?
                     
                     if dtCSGoldSVCBalances1 != nil && dtCSGoldSVCBalances2 != nil {
                         var firstName = dtCSGoldSVCBalances1!.elementsForName("FIRSTNAME")?.first as! GDataXMLElement?
@@ -52,16 +52,16 @@ class BowdoinAPIParser {
     //Parses Meals Remaining XML
     //returns number of meals left, or nil if failed
     class func parseMealsLeft(soapBody : GDataXMLElement) -> Int? {
-        var CSGoldMPBalancesResponse = soapBody.elementsForName("GetCSGoldMPBalancesResponse")?.first as! GDataXMLElement?
+        let CSGoldMPBalancesResponse = soapBody.elementsForName("GetCSGoldMPBalancesResponse")?.first as! GDataXMLElement?
         
         if CSGoldMPBalancesResponse != nil {
-            var CSGoldMPBalancesResult = CSGoldMPBalancesResponse!.elementsForName("GetCSGoldMPBalancesResult")?.first as! GDataXMLElement?
+            let CSGoldMPBalancesResult = CSGoldMPBalancesResponse!.elementsForName("GetCSGoldMPBalancesResult")?.first as! GDataXMLElement?
             
             if CSGoldMPBalancesResult != nil {
-                var diffgrDiffgram = CSGoldMPBalancesResult!.elementsForName("diffgr:diffgram")?.first as! GDataXMLElement?
+                let diffgrDiffgram = CSGoldMPBalancesResult!.elementsForName("diffgr:diffgram")?.first as! GDataXMLElement?
                 
                 if diffgrDiffgram != nil {
-                    var DocumentElement  = diffgrDiffgram!.elementsForName("DocumentElement")?.first as! GDataXMLElement?
+                    let DocumentElement  = diffgrDiffgram!.elementsForName("DocumentElement")?.first as! GDataXMLElement?
                     
                     if diffgrDiffgram!.elementsForName("DocumentElement") != nil {//if user is on a meal plan
                         var CSGoldMPBalances : GDataXMLElement? = nil
@@ -96,19 +96,19 @@ class BowdoinAPIParser {
     //parses Transaction Data XML
     //returns array of Transaction objects with transaction data, or nil if failed
     class func parseTransactions(soapBody : GDataXMLElement) -> [Transaction]? {
-        var CSGoldGLTransResponse = soapBody.elementsForName("GetCSGoldGLTransResponse")?.first as! GDataXMLElement?
+        let CSGoldGLTransResponse = soapBody.elementsForName("GetCSGoldGLTransResponse")?.first as! GDataXMLElement?
         
         if CSGoldGLTransResponse != nil {
-            var GetCSGoldGLTransResult = CSGoldGLTransResponse!.elementsForName("GetCSGoldGLTransResult")?.first as! GDataXMLElement?
+            let GetCSGoldGLTransResult = CSGoldGLTransResponse!.elementsForName("GetCSGoldGLTransResult")?.first as! GDataXMLElement?
             
             if GetCSGoldGLTransResult != nil {
-                var diffgrDiffgram = GetCSGoldGLTransResult!.elementsForName("diffgr:diffgram")?.first as! GDataXMLElement?
+                let diffgrDiffgram = GetCSGoldGLTransResult!.elementsForName("diffgr:diffgram")?.first as! GDataXMLElement?
                 
                 if diffgrDiffgram != nil {
-                    var DocumentElement = diffgrDiffgram!.elementsForName("DocumentElement")?.first as! GDataXMLElement?
+                    let DocumentElement = diffgrDiffgram!.elementsForName("DocumentElement")?.first as! GDataXMLElement?
                     
                     if DocumentElement != nil {
-                        var CSGoldGLTrans = DocumentElement!.elementsForName("dtCSGoldGLTrans")
+                        let CSGoldGLTrans = DocumentElement!.elementsForName("dtCSGoldGLTrans")
                         if CSGoldGLTrans != nil {
                             var transactions : [Transaction] = []
                             for trans in reverse(CSGoldGLTrans) {
@@ -136,24 +136,24 @@ class BowdoinAPIParser {
         var moultonLine : [Int] = []
         var expressLine : [Int] = []
         
-        var CSGoldLineResponse = soapBody.elementsForName("GetCSGoldLineCountsHistogramResponse")?.first as! GDataXMLElement?
+        let CSGoldLineResponse = soapBody.elementsForName("GetCSGoldLineCountsHistogramResponse")?.first as! GDataXMLElement?
         
         if CSGoldLineResponse != nil {
-            var GetCSGoldLineResult = CSGoldLineResponse!.elementsForName("GetCSGoldLineCountsHistogramResult")?.first as! GDataXMLElement?
+            let GetCSGoldLineResult = CSGoldLineResponse!.elementsForName("GetCSGoldLineCountsHistogramResult")?.first as! GDataXMLElement?
             
             if GetCSGoldLineResult != nil {
-                var diffgrDiffgram = GetCSGoldLineResult!.elementsForName("diffgr:diffgram")?.first as! GDataXMLElement?
+                let diffgrDiffgram = GetCSGoldLineResult!.elementsForName("diffgr:diffgram")?.first as! GDataXMLElement?
                 
                 if diffgrDiffgram != nil {
-                    var DocumentElement = diffgrDiffgram!.elementsForName("DocumentElement")?.first as! GDataXMLElement?
+                    let DocumentElement = diffgrDiffgram!.elementsForName("DocumentElement")?.first as! GDataXMLElement?
                     
                     if DocumentElement != nil {
-                        var dtCSGoldLineHistogram = DocumentElement!.elementsForName("dtCSGoldLineHistogram")
+                        let dtCSGoldLineHistogram = DocumentElement!.elementsForName("dtCSGoldLineHistogram")
                         
                         if dtCSGoldLineHistogram != nil {
                             for dataPoint in dtCSGoldLineHistogram {
-                                var location = (dataPoint as! GDataXMLElement).elementsForName("LOCATION")?.first?.stringValue
-                                var count    = (dataPoint as! GDataXMLElement).elementsForName("LINECOUNT")?.first?.stringValue.toInt()
+                                let location = (dataPoint as! GDataXMLElement).elementsForName("LOCATION")?.first?.stringValue
+                                let count    = (dataPoint as! GDataXMLElement).elementsForName("LINECOUNT")?.first?.stringValue.toInt()
                                 
                                 if location == "Thorne Aero 1" {
                                     thorneLine.append(count!)
@@ -183,9 +183,9 @@ class BowdoinAPIParser {
         let minute  = today.minute
         let hour    = today.hour
         
-        if hall == "Thorne" {
+        if hall == "thorne" {
             if isWeekday(weekday) {
-                if ((hour > 7 && hour <= 10) || (hour == 7 && minute >= 30)) ||
+                if ((hour > 7 && hour < 9) || (hour == 7 && minute >= 30) || (hour == 9 && minute <= 30)) ||
                     ((hour >= 11 && hour < 13) || (hour == 13 && minute <= 30)) ||
                     ((hour >= 17 && hour < 19) || (hour == 19 && minute <= 30)) {
                         return true //Thorne Open
@@ -200,7 +200,7 @@ class BowdoinAPIParser {
                     return false //Thorne Closed
                 }
             }
-        } else if hall == "Moulton" {
+        } else if hall == "moulton" {
             if isWeekday(weekday) {
                 if ((hour >= 7 && hour < 10) || (hour == 10 && minute <= 30)) ||
                     (hour >= 11 && hour < 14) ||
@@ -221,5 +221,9 @@ class BowdoinAPIParser {
         } else {
             return false
         }
+    }
+    
+    class func nameOfDiningHallWithId(id : Int) -> String {
+        return id == 0 ? "Moulton" : "Thorne"
     }
 }
