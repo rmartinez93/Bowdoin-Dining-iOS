@@ -9,6 +9,16 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>Dining WatchKit App.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>Glance - Dining WatchKit App.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
@@ -18,6 +28,11 @@
 			<true/>
 		</dict>
 		<key>45AAB5A01970636F0078A7F9</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>45B8744D1AF01AF9007BA1E9</key>
 		<dict>
 			<key>primary</key>
 			<true/>

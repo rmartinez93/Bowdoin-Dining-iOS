@@ -509,10 +509,10 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         dispatch_async(dispatch_get_main_queue()) {
             UIView.animateWithDuration(0.5, animations: { () -> Void in
                 if self.view.tag == self.delegate.thorneId {
-                    self.meals.tintColor = self.delegate.thorneColor
+//                    self.meals.tintColor = self.delegate.thorneColor
                     (self.delegate.window!.rootViewController as! UITabBarController).tabBar.tintColor = self.delegate.thorneColor!
                 } else if self.view.tag == self.delegate.moultonId {
-                    self.meals.tintColor = self.delegate.moultonColor
+//                    self.meals.tintColor = self.delegate.moultonColor
                     (self.delegate.window!.rootViewController as! UITabBarController).tabBar.tintColor = self.delegate.moultonColor!
                 }
             })
