@@ -1057,6 +1057,7 @@
 				457E8F801B0548A300BA720A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		457E8F841B0548A300BA720A /* Build configuration list for PBXNativeTarget "Bowdoin Dining for MacTests" */ = {
 			isa = XCConfigurationList;
@@ -1065,6 +1066,7 @@
 				457E8F821B0548A300BA720A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		45AAB5831970636E0078A7F9 /* Build configuration list for PBXProject "Bowdoin Dining" */ = {
 			isa = XCConfigurationList;

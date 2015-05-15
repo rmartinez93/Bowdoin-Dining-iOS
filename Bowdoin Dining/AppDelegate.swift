@@ -130,7 +130,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
     func application(application: UIApplication,
         handleWatchKitExtensionRequest userInfo: [NSObject : AnyObject]?,
         reply: (([NSObject : AnyObject]!) -> Void)!) {
-            println("NOW ON IPHONE!")
+//            println("NOW ON IPHONE!")
             NSNotificationCenter.defaultCenter().addObserver(self,
                 selector: "linesDidFinishLoading",
                 name: "LineDataLoaded",
@@ -142,7 +142,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
 
     //loads line data & user as necessary
     func getLineData() {
-        println("GETTING LINE DATA")
+//        println("GETTING LINE DATA")
         if self.user == nil { //if we don't have a user, create one and load line data
             let userDefaults = NSUserDefaults.standardUserDefaults()
             let username     = userDefaults.objectForKey("bowdoin_username") as? String
@@ -170,13 +170,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
     
     //parses line data to color once loaded
     func linesDidFinishLoading() {
-        println("RETURNED LINE DATA")
+//        println("RETURNED LINE DATA")
         let thorneScore = self.user?.thorneScore
         let moultonScore = self.user?.moultonScore
         let dict = ["thorneScore" : thorneScore ?? -1, "moultonScore" : moultonScore ?? -1]
         
         if handleReply != nil {
-            println("SENDING REPLY")
+//            println("SENDING REPLY")
             handleReply!(dict)
         }
         

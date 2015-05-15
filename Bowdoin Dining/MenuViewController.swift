@@ -398,19 +398,26 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
             dispatch_async(dispatch_get_main_queue()) {
                 //if the response was nil, handle
                 if xml == nil {
+                    //update the buttons
+                    self.makeCorrectButtonsVisible()
+                    
+                    let error = Course()
+                    error.courseName = "No Menu Available"
+                    
+                    self.courses = [error]
+                    
+                    //insert new menu items to UITableView
+                    var newSet   = NSMutableIndexSet()
+                    newSet.addIndexesInRange(NSMakeRange(0, self.courses.count))
+                    self.menuItems.insertSections(newSet, withRowAnimation:UITableViewRowAnimation.Right)
+                    
+                    //stop loading indicator, end updates to UITableView, scroll to top and reenable user interaction
                     self.loading.stopAnimating()
                     self.menuItems.endUpdates()
                     self.menuItems.setContentOffset(CGPointZero, animated: true)
                     
-                    var alert = UIAlertView(title: "Network Error",
-                        message: "Sorry, we could not load the menu at this time. Check your network connection and try again later.",
-                        delegate: self,
-                        cancelButtonTitle: "OK")
-                    alert.show()
-                    
-                    self.makeCorrectButtonsVisible()
                 }
-                    //else we successfully loaded XML!
+                //else we successfully loaded XML!
                 else {
                     //update the buttons
                     self.makeCorrectButtonsVisible()

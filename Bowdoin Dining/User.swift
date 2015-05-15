@@ -83,10 +83,9 @@ class User : NSObject {
     
     func loadLineData() {
         //load account
-        println("NOW LOADING LINE DATA")
-//        if BowdoinAPIParser.isDiningHallOpen("thorne") || BowdoinAPIParser.isDiningHallOpen("moulton") {
+        if BowdoinAPIParser.isDiningHallOpen("thorne") || BowdoinAPIParser.isDiningHallOpen("moulton") {
             BowdoinAPIController(user: self).getLineData()
-//        }
+        }
     }
 
     func parseData(data: NSData, type: String) {
