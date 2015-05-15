@@ -1,24 +1,66 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="6221" systemVersion="14A389" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="AgC-eL-Hgc">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="7702" systemVersion="14E7f" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="AgC-eL-Hgc">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6213"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="3734"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="3737"/>
     </dependencies>
     <scenes>
         <!--Interface Controller-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModuleProvider="target"/>
+                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="Dining_WatchKit_App" customModuleProvider="target">
+                    <items>
+                        <label alignment="center" text="Bowdoin Dining" textAlignment="center" id="hLN-Ys-SQK"/>
+                        <group alignment="center" layout="vertical" id="RMb-Sh-Bd8">
+                            <items>
+                                <table alignment="center" id="cx6-zO-MEe">
+                                    <items>
+                                        <tableRow identifier="DiningHall" id="e3F-V3-jtR" customClass="DiningHall" customModule="Dining_WatchKit_Extension">
+                                            <group key="rootItem" width="1" alignment="left" id="OD4-M0-bhC">
+                                                <items>
+                                                    <label width="1" height="1" alignment="center" verticalAlignment="center" text="Moulton" textAlignment="center" id="Qcg-8q-e0o"/>
+                                                </items>
+                                            </group>
+                                            <connections>
+                                                <outlet property="group" destination="OD4-M0-bhC" id="UNG-0O-9Ae"/>
+                                                <outlet property="name" destination="Qcg-8q-e0o" id="8dA-aN-pyb"/>
+                                            </connections>
+                                        </tableRow>
+                                    </items>
+                                </table>
+                            </items>
+                        </group>
+                    </items>
+                    <connections>
+                        <outlet property="diningHalls" destination="cx6-zO-MEe" id="Qk0-6p-u2O"/>
+                    </connections>
+                </controller>
             </objects>
             <point key="canvasLocation" x="164" y="217"/>
         </scene>
         <!--Glance Interface Controller-->
         <scene sceneID="rjY-Ar-IMT">
             <objects>
-                <glanceController spacing="0.0" id="Sv0-Ai-Zie" customClass="GlanceController" customModuleProvider="target">
+                <glanceController spacing="0.0" topTemplateType="groupBody1" id="Sv0-Ai-Zie" customClass="GlanceController" customModule="Dining_WatchKit_App" customModuleProvider="target">
                     <items>
-                        <group alignment="left" id="gv7-I2-MZq"/>
-                        <group alignment="left" id="eew-Gs-W6Y"/>
+                        <group alignment="left" layout="vertical" id="dsS-bv-AnU"/>
+                        <label alignment="left" text="Bowdoin Dining" id="Qas-Id-Oe3"/>
+                        <group alignment="left" layout="vertical" id="eew-Gs-W6Y">
+                            <items>
+                                <table alignment="left" id="DzR-xV-pxD">
+                                    <items>
+                                        <tableRow identifier="DiningHall" id="N61-DO-aPR">
+                                            <group key="rootItem" width="1" alignment="left" id="eDS-TU-NjL">
+                                                <items>
+                                                    <label width="1" height="1" alignment="center" verticalAlignment="center" text="Moulton" textAlignment="center" id="8jK-2f-c0N"/>
+                                                </items>
+                                                <color key="backgroundColor" red="0.41853191410000001" green="0.73814315029999999" blue="0.32076348049999998" alpha="1" colorSpace="calibratedRGB"/>
+                                            </group>
+                                        </tableRow>
+                                    </items>
+                                </table>
+                            </items>
+                        </group>
                     </items>
                     <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="14"/>
                 </glanceController>

@@ -20,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
     var year      : NSInteger       = 0
     var offset    : NSInteger       = 0
     var selectedSegment : NSInteger = 0
+    var handleReply : (([NSObject : AnyObject]!) -> Void)?
     
     var lineDataLoaded = false
     var thorneColor : UIColor?
@@ -125,9 +126,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
+    
+    func application(application: UIApplication,
+        handleWatchKitExtensionRequest userInfo: [NSObject : AnyObject]?,
+        reply: (([NSObject : AnyObject]!) -> Void)!) {
+            println("NOW ON IPHONE!")
+            NSNotificationCenter.defaultCenter().addObserver(self,
+                selector: "linesDidFinishLoading",
+                name: "LineDataLoaded",
+                object: nil)
+            
+            handleReply = reply
+            self.getLineData()
+    }
 
     //loads line data & user as necessary
     func getLineData() {
+        println("GETTING LINE DATA")
         if self.user == nil { //if we don't have a user, create one and load line data
             let userDefaults = NSUserDefaults.standardUserDefaults()
             let username     = userDefaults.objectForKey("bowdoin_username") as? String
@@ -139,6 +154,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
                 dispatch_async(downloadQueue) {
                     //in new thread, load user info if not loaded or if force-reloaded
                     self.user = User(username: username!, password: password!)
+                    
                     self.user?.loadLineData()
                 }
             }
@@ -154,11 +170,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
     
     //parses line data to color once loaded
     func linesDidFinishLoading() {
+        println("RETURNED LINE DATA")
+        let thorneScore = self.user?.thorneScore
+        let moultonScore = self.user?.moultonScore
+        let dict = ["thorneScore" : thorneScore ?? -1, "moultonScore" : moultonScore ?? -1]
+        
+        if handleReply != nil {
+            println("SENDING REPLY")
+            handleReply!(dict)
+        }
+        
         //first, translate thorne score to color
-        if let score = self.user?.thorneScore { //if open, parse
-            if score > 0.66 { //busy line
+        if thorneScore != nil { //if open, parse
+            if thorneScore > 0.66 { //busy line
                 self.thorneColor = UIColor.redColor()
-            } else if score > 0.33 { //wait
+            } else if thorneScore > 0.33 { //wait
                 self.thorneColor = UIColor(red: 241/255, green: 196/255, blue: 15/255, alpha: 1)
             } else { //no line
                 self.thorneColor = UIColor(red: 46/255, green: 204/255, blue: 113/255, alpha: 1)
@@ -168,10 +194,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
         }
         
         //now translate moulton score
-        if let score = self.user?.moultonScore { //if open, parse
-            if score > 0.66 { //busy line
+        if moultonScore != nil { //if open, parse
+            if moultonScore > 0.66 { //busy line
                 self.moultonColor = UIColor.redColor()
-            } else if score > 0.33 { //wait
+            } else if moultonScore > 0.33 { //wait
                 self.moultonColor = UIColor(red: 241/255, green: 196/255, blue: 15/255, alpha: 1)
             } else { //no line
                 self.moultonColor = UIColor(red: 46/255, green: 204/255, blue: 113/255, alpha: 1)
