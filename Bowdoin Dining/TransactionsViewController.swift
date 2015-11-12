@@ -48,7 +48,7 @@ class TransactionsViewController : UIViewController, UITableViewDelegate, UITabl
         }
         
         //if this is a valid section->row, grab right menu item from course and set cell properties
-        var transaction = self.delegate.user!.transactions![indexPath.row] as Transaction
+        let transaction = self.delegate.user!.transactions![indexPath.row] as Transaction
         cell!.titleLabel.text   = transaction.name
         cell!.dateLabel.text    = transaction.date
         cell!.amountLabel.text  = NSString(format: "-$%.2f", transaction.amount) as String

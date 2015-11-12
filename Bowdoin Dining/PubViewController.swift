@@ -55,8 +55,8 @@ class PubViewController: UIViewController, UINavigationBarDelegate {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        var url = NSBundle.mainBundle().URLForResource("pub-menu", withExtension: "pdf") as NSURL!
-        var request = NSURLRequest(URL: url)
+        let url = NSBundle.mainBundle().URLForResource("pub-menu", withExtension: "pdf") as NSURL!
+        let request = NSURLRequest(URL: url)
 
         //load menu
         self.MageesMenu.loadRequest(request)
@@ -93,22 +93,22 @@ class PubViewController: UIViewController, UINavigationBarDelegate {
     }
     
     @IBAction func showSpecials() {
-        let url = NSURL(string: "http://www.bowdoin.edu/atreus/diningspecials/specials.jsp")
+        let url = NSURL(string: "https://www.bowdoin.edu/atreus/diningspecials/specials.jsp")
         UIApplication.sharedApplication().openURL(url!)
     }
     
     @IBAction func dialPub() {
-        var calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
+        let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
         calendar.locale = NSLocale(localeIdentifier: "en-US");
         
-        var components = calendar.components(NSCalendarUnit.CalendarUnitHour | NSCalendarUnit.CalendarUnitMinute | NSCalendarUnit.CalendarUnitWeekday, fromDate: NSDate())
-        
-        let hour = components.hour
-        let min  = components.minute
-        let day  = components.weekday
-        
+//        let components = calendar.components([NSCalendarUnit.Hour, NSCalendarUnit.Minute, NSCalendarUnit.Weekday], fromDate: NSDate())
+//        
+//        let hour = components.hour
+//        let min  = components.minute
+//        let day  = components.weekday
+//        
         //if pubIsOpen(day, hour: hour, min: min) {
-        var phoneNumberURL = NSURL(string:"tel://2077253888")!
+        let phoneNumberURL = NSURL(string:"tel://2077253888")!
         UIApplication.sharedApplication().openURL(phoneNumberURL)
 //        } else {
 //            var alert = UIAlertView(title: "Pub Closed",

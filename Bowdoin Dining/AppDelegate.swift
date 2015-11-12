@@ -41,13 +41,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
             
             //setting delegate for styling
             (self.window!.rootViewController as! UITabBarController).moreNavigationController.delegate = self
-            var tableView = ((self.window!.rootViewController as! UITabBarController).moreNavigationController.viewControllers[0] as! UIViewController).view as! UITableView
+            let tableView = ((self.window!.rootViewController as! UITabBarController).moreNavigationController.viewControllers[0]).view as! UITableView
             tableView.tintColor = UIColor.blackColor()
             tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         }
         
         //update filter to last setting
-        var currentFilter = NSUserDefaults.standardUserDefaults().objectForKey("diet-filter") as! NSInteger?
+        let currentFilter = NSUserDefaults.standardUserDefaults().objectForKey("diet-filter") as! NSInteger?
         if currentFilter != nil {
             self.updateDietFilter(currentFilter!)
         }
@@ -126,23 +126,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-    
-    func application(application: UIApplication,
-        handleWatchKitExtensionRequest userInfo: [NSObject : AnyObject]?,
-        reply: (([NSObject : AnyObject]!) -> Void)!) {
-//            println("NOW ON IPHONE!")
-            NSNotificationCenter.defaultCenter().addObserver(self,
-                selector: "linesDidFinishLoading",
-                name: "LineDataLoaded",
-                object: nil)
-            
-            handleReply = reply
-            self.getLineData()
-    }
 
     //loads line data & user as necessary
     func getLineData() {
-//        println("GETTING LINE DATA")
         if self.user == nil { //if we don't have a user, create one and load line data
             let userDefaults = NSUserDefaults.standardUserDefaults()
             let username     = userDefaults.objectForKey("bowdoin_username") as? String
@@ -150,7 +136,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
             
             //if we have user info saved, download their data
             if username != nil && password != nil {
-                var downloadQueue = dispatch_queue_create("Download queue", nil);
+                let downloadQueue = dispatch_queue_create("Download queue", nil);
                 dispatch_async(downloadQueue) {
                     //in new thread, load user info if not loaded or if force-reloaded
                     self.user = User(username: username!, password: password!)
@@ -170,13 +156,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
     
     //parses line data to color once loaded
     func linesDidFinishLoading() {
-//        println("RETURNED LINE DATA")
         let thorneScore = self.user?.thorneScore
         let moultonScore = self.user?.moultonScore
         let dict = ["thorneScore" : thorneScore ?? -1, "moultonScore" : moultonScore ?? -1]
         
         if handleReply != nil {
-//            println("SENDING REPLY")
             handleReply!(dict)
         }
         

@@ -31,9 +31,9 @@ class User : NSObject {
     
     //returns true if user credentials are stored
     class func credentialsStored() -> Bool {
-        var userDefaults = NSUserDefaults.standardUserDefaults()
-        var username     = userDefaults.objectForKey("bowdoin_username") as? NSString
-        var password     = userDefaults.objectForKey("bowdoin_password") as? NSString
+        let userDefaults = NSUserDefaults.standardUserDefaults()
+        let username     = userDefaults.objectForKey("bowdoin_username") as? NSString
+        let password     = userDefaults.objectForKey("bowdoin_password") as? NSString
         
         if username != nil && password != nil {
             return true
@@ -43,14 +43,14 @@ class User : NSObject {
     }
     
     class func forget() {
-        var userDefaults = NSUserDefaults.standardUserDefaults()
+        let userDefaults = NSUserDefaults.standardUserDefaults()
         userDefaults.removeObjectForKey("bowdoin_username")
         userDefaults.removeObjectForKey("bowdoin_password")
         userDefaults.synchronize()
     }
     
     func remember() {
-        var userDefaults = NSUserDefaults.standardUserDefaults()
+        let userDefaults = NSUserDefaults.standardUserDefaults()
         userDefaults.setObject(self.username, forKey: "bowdoin_username")
         userDefaults.setObject(self.password, forKey: "bowdoin_password")
         userDefaults.synchronize()
@@ -90,69 +90,73 @@ class User : NSObject {
 
     func parseData(data: NSData, type: String) {
         self.dataLoaded = true
-        var error : NSError?
-        var doc = GDataXMLDocument(data: data, options: 0, error: &error)
-        var root = doc.rootElement
 
-        var soapBody = root().elementsForName("soap:Body").first as! GDataXMLElement?
-        
-        if soapBody != nil {
-            switch type {
-            case "account":
-                var accountDetails = BowdoinAPIParser.parseAccountData(soapBody!)
-                if accountDetails != nil {
-                    self.firstname = accountDetails!.firstName
-                    self.lastname  = accountDetails!.lastName
-                    self.polarPoints = accountDetails!.polarPoints
-                    self.cardBalance = accountDetails!.cardBalance
+        do {
+            let doc = try GDataXMLDocument(data: data, options: 0)
+            let root = doc.rootElement
+            
+            let soapBody = root().elementsForName("soap:Body").first as! GDataXMLElement?
+            
+            if soapBody != nil {
+                switch type {
+                case "account":
+                    let accountDetails = BowdoinAPIParser.parseAccountData(soapBody!)
+                    if accountDetails != nil {
+                        self.firstname = accountDetails!.firstName
+                        self.lastname  = accountDetails!.lastName
+                        self.polarPoints = accountDetails!.polarPoints
+                        self.cardBalance = accountDetails!.cardBalance
+                        
+                        //now load meals
+                        BowdoinAPIController(user: self).getMealData()
+                    } else {
+                        self.dataLoadingFailed()
+                    }
+                case "meals":
+                    let mealsLeft = BowdoinAPIParser.parseMealsLeft(soapBody!)
+                    if mealsLeft != nil {
+                        self.mealsLeft = mealsLeft
+                        
+                        //success! Finished loading Account.
+                        NSNotificationCenter.defaultCenter().postNotificationName("AccountFinishedLoading",
+                            object: nil,
+                            userInfo: nil)
+                    } else {
+                        self.dataLoadingFailed()
+                    }
+                case "transactions":
+                    let transactions = BowdoinAPIParser.parseTransactions(soapBody!)
+                    if transactions != nil {
+                        self.transactions = transactions
+                        
+                        //success! Finished loading Transactions.
+                        NSNotificationCenter.defaultCenter().postNotificationName("TransactionsFinishedLoading",
+                            object: nil,
+                            userInfo: nil)
+                    } else {
+                        self.dataLoadingFailed()
+                    }
+                case "lines":
+                    let lines = BowdoinAPIParser.parseLines(soapBody!)
                     
-                    //now load meals
-                    BowdoinAPIController(user: self).getMealData()
-                } else {
-                    self.dataLoadingFailed()
-                }
-            case "meals":
-                let mealsLeft = BowdoinAPIParser.parseMealsLeft(soapBody!)
-                if mealsLeft != nil {
-                    self.mealsLeft = mealsLeft                    
+                    if lines != nil {
+                        self.thorneScore  = BowdoinAPIParser.isDiningHallOpen("thorne")  ? score(lines!.thorneLine, lineName: "thorne")  : nil
+                        self.moultonScore = BowdoinAPIParser.isDiningHallOpen("moulton") ? score(lines!.thorneLine, lineName: "moulton") : nil
+                    } else {
+                        self.thorneScore = nil
+                        self.moultonScore = nil
+                    }
                     
-                    //success! Finished loading Account.
-                    NSNotificationCenter.defaultCenter().postNotificationName("AccountFinishedLoading",
+                    //success! Finished loading.
+                    NSNotificationCenter.defaultCenter().postNotificationName("LineDataLoaded",
                         object: nil,
                         userInfo: nil)
-                } else {
-                    self.dataLoadingFailed()
+                default:
+                    break
                 }
-            case "transactions":
-                let transactions = BowdoinAPIParser.parseTransactions(soapBody!)
-                if transactions != nil {
-                    self.transactions = transactions
-                    
-                    //success! Finished loading Transactions.
-                    NSNotificationCenter.defaultCenter().postNotificationName("TransactionsFinishedLoading",
-                        object: nil,
-                        userInfo: nil)
-                } else {
-                    self.dataLoadingFailed()
-                }
-            case "lines":
-                let lines = BowdoinAPIParser.parseLines(soapBody!)
-
-                if lines != nil {
-                    self.thorneScore  = BowdoinAPIParser.isDiningHallOpen("thorne")  ? score(lines!.thorneLine, lineName: "thorne")  : nil
-                    self.moultonScore = BowdoinAPIParser.isDiningHallOpen("moulton") ? score(lines!.thorneLine, lineName: "moulton") : nil
-                } else {
-                    self.thorneScore = nil
-                    self.moultonScore = nil
-                }
-                
-                //success! Finished loading.
-                NSNotificationCenter.defaultCenter().postNotificationName("LineDataLoaded",
-                    object: nil,
-                    userInfo: nil)
-            default:
-                break
             }
+        } catch {
+            print("Error Parsing Menu")
         }
     }
     

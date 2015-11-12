@@ -11,9 +11,9 @@ import Foundation
 extension Array {
     func combine(separator: String) -> String {
         var str : String = ""
-        for (idx, item) in enumerate(self) {
-            str += "\(item)"
-            if idx < self.count-1 {
+        for var i = 0; i < self.count; i++ {
+            str += "\(self[i])"
+            if i < self.count-1 {
                 str += separator
             }
         }
@@ -27,19 +27,19 @@ extension Array {
 
 extension String {
     func extractNumerics() -> String {
-        var numerics     = NSCharacterSet(charactersInString: "0123456789").invertedSet
+        let numerics     = NSCharacterSet(charactersInString: "0123456789").invertedSet
         return self.componentsSeparatedByCharactersInSet(numerics).combine("")
     }
     
     func extractNumericsAsInt() -> Int {
-        var numerics     = NSCharacterSet(charactersInString: "0123456789").invertedSet
+        let numerics     = NSCharacterSet(charactersInString: "0123456789").invertedSet
         return (self.componentsSeparatedByCharactersInSet(numerics).combine("") as NSString).integerValue
     }
 }
 
 class console {
-    class func log(string : String) {
-        println(string)
+    class func log(arg : AnyObject) {
+        print(arg)
     }
 }
 

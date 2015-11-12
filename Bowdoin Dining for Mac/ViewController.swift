@@ -14,7 +14,7 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        webView.mainFrameURL = "http://bowdoindining.meteor.com/"
+        webView.mainFrameURL = "https://bowdoindining.meteor.com/"
         // Do any additional setup after loading the view.
     }
 

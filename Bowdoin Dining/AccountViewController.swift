@@ -83,7 +83,7 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
             //if we have user info saved, download their data
             if username != nil && password != nil {
                 self.loadingData.startAnimating()
-                var downloadQueue = dispatch_queue_create("Download queue", nil);
+                let downloadQueue = dispatch_queue_create("Download queue", nil);
                 dispatch_async(downloadQueue) {
                     //in new thread, load user info if not loaded or if force-reloaded
                     self.delegate.user = User(username: username!, password: password!)
@@ -108,7 +108,7 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
     func dataLoadingFailed(notification : NSNotification) {
         //refresh onscreen info
         dispatch_async(dispatch_get_main_queue()) {
-            var alert = UIAlertView(title: "Account Error",
+            let alert = UIAlertView(title: "Account Error",
                 message: "Sorry, your account data could not be loaded at this time. Please try again later.",
                 delegate: self,
                 cancelButtonTitle: "OK")
@@ -121,7 +121,7 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
     func transactionsDidLoad(notification: NSNotification) {
         dispatch_async(dispatch_get_main_queue()) {
             if self.delegate.user!.dataLoaded {
-                var transactionsVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("TransactionsViewController") as! TransactionsViewController
+                let transactionsVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("TransactionsViewController") as! TransactionsViewController
                 self.presentViewController(transactionsVC, animated: true, completion: nil)
             }
         }
@@ -142,7 +142,7 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
                 self.meals.text   = NSString(format: "%i",    self.delegate.user!.mealsLeft!) as String
                 self.points.text  = NSString(format: "$%.2f", self.delegate.user!.polarPoints!) as String
                 self.balance.text = NSString(format: "$%.2f", self.delegate.user!.cardBalance!) as String                
-                var dateFormatter = NSDateFormatter()
+                let dateFormatter = NSDateFormatter()
                 dateFormatter.dateFormat = "MM/dd 'at' hh:mm a"
                 self.timeStamp.text = "Last Updated: \(dateFormatter.stringFromDate(NSDate()))"
             }

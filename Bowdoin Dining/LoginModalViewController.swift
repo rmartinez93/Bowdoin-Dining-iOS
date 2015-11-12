@@ -42,9 +42,9 @@ class LoginModalViewController : UIViewController {
         self.passwordField.enabled = false
         
         //create user with new credentials
-        self.delegate.user = User(username: self.usernameField.text, password: self.passwordField.text)
+        self.delegate.user = User(username: self.usernameField.text!, password: self.passwordField.text!)
         
-        var downloadQueue = dispatch_queue_create("Download queue", nil)
+        let downloadQueue = dispatch_queue_create("Download queue", nil)
         dispatch_async(downloadQueue) {
             //in new thread, load user info
             self.delegate.user!.loadAccountData()
@@ -72,9 +72,9 @@ class LoginModalViewController : UIViewController {
     }
     
     @IBAction func nextItem(textfield : UITextField) {
-        var nextTag = textfield.tag + 1
+        let nextTag = textfield.tag + 1
         // Try to find next responder
-        var nextResponder = textfield.superview?.viewWithTag(nextTag)
+        let nextResponder = textfield.superview?.viewWithTag(nextTag)
         
         if nextResponder != nil {
             // Found next responder, so set it.

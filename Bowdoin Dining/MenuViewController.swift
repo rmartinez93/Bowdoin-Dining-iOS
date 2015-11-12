@@ -95,7 +95,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         //load menu based on delegate settings
         self.updateVisibleMenu()
         
-        var defaults = NSUserDefaults.standardUserDefaults()
+        let defaults = NSUserDefaults.standardUserDefaults()
         if !defaults.boolForKey("ShownLineDataTutorial") {
             let alert = UIAlertController(title: "New Feature", message: "The Bowdoin Dining & OneCard app will now let you know if there's a line at either dining hall! Simply tap into the 'Thorne' or 'Moulton' tabs at the bottom—They will turn green if there's a short line, yellow if the dining hall is busy, or red if it's very busy. You must be signed in under the 'Accounts' tab to use this feature!", preferredStyle: UIAlertControllerStyle.Alert)
             
@@ -136,8 +136,8 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         } else if self.delegate.daysAdded == 1 {
             return "Tomorrow"
         } else {
-            var newDate = NSDate(timeIntervalSinceNow: NSTimeInterval(60*60*24*self.delegate.daysAdded))
-            var dateFormatter = NSDateFormatter()
+            let newDate = NSDate(timeIntervalSinceNow: NSTimeInterval(60*60*24*self.delegate.daysAdded))
+            let dateFormatter = NSDateFormatter()
             dateFormatter.dateFormat = "EEEE"
             return dateFormatter.stringFromDate(newDate)
         }
@@ -166,9 +166,9 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         }
         
         //disable/enable segmented buttons
-        var date = NSDate(timeIntervalSinceNow: NSTimeInterval(60*60*24*self.delegate.daysAdded))
-        var formattedDate = Menus.formatDate(date)
-        var offset = (formattedDate.lastObject as! NSNumber).integerValue
+        let date = NSDate(timeIntervalSinceNow: NSTimeInterval(60*60*24*self.delegate.daysAdded))
+        let formattedDate = Menus.formatDate(date)
+        let offset = (formattedDate.lastObject as! NSNumber).integerValue
         
         //insert/remove meals depending on day of the week
         if isWeekday(offset) {
@@ -190,12 +190,12 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     }
     
     func segmentIndexOfCurrentMeal() -> NSInteger {
-        var calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
+        let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
         calendar.locale = NSLocale(localeIdentifier: "en-US");
         
-        var today = calendar.components(NSCalendarUnit.CalendarUnitHour | NSCalendarUnit.CalendarUnitWeekday, fromDate: NSDate())
-        var weekday = today.weekday
-        var hour    = today.hour
+        let today = calendar.components([NSCalendarUnit.Hour, NSCalendarUnit.Weekday], fromDate: NSDate())
+        let weekday = today.weekday
+        let hour    = today.hour
         
         if isWeekday(weekday) {
             if hour < 11 {
@@ -227,7 +227,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let simpleTableIdentifier = "SimpleTableCell"
         
-        var cell = tableView.dequeueReusableCellWithIdentifier(simpleTableIdentifier) as? UITableViewCell
+        var cell = tableView.dequeueReusableCellWithIdentifier(simpleTableIdentifier) as UITableViewCell!
         
         if cell == nil {
             cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: simpleTableIdentifier)
@@ -287,7 +287,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     //UITableView delegate method, returns name of section/course
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section < self.courses.count {
-            var course = self.courses[section]
+            let course = self.courses[section]
             return course.courseName
         } else {
             return "Other"
@@ -295,40 +295,40 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     }
     
     //UITableView delegate method, what to do after side-swiping cell
-    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
+    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         //first, load in menu course this cell belongs to
-        var course = self.courses[indexPath.section]
+        let course = self.courses[indexPath.section]
         //get item from course
-        var item   = course.menuItems[indexPath.row]
+        let item   = course.menuItems[indexPath.row]
         
         //load favorited items
-        var favorited = Course.allFavoritedItems()
+        let favorited = Course.allFavoritedItems()
         
         //if this cell is NOT favorited, show favoriting action
         if !favorited.containsObject(item.itemId) {
             //create favoriting action
-            var faveAction = UITableViewRowAction(style: UITableViewRowActionStyle.Default,
+            let faveAction = UITableViewRowAction(style: UITableViewRowActionStyle.Default,
                 title: "Favorite",
                 handler: {
                     void in
                     //if item is favorited, save it to our centralized list of favorited items
                     Course.addToFavoritedItems(item.itemId)
                     //update styling of cell
-                    var cell = tableView.cellForRowAtIndexPath(indexPath) as UITableViewCell!
+                    let cell = tableView.cellForRowAtIndexPath(indexPath) as UITableViewCell!
                     cell.backgroundColor = UIColor(red: 1, green: 0.84, blue:0, alpha:1)
                     tableView.setEditing(false, animated: true)
             })
             faveAction.backgroundColor = UIColor(red:1, green:0.84, blue:0, alpha:1)
             return [faveAction]
         } else {
-            var unfaveAction = UITableViewRowAction(style: UITableViewRowActionStyle.Default,
+            let unfaveAction = UITableViewRowAction(style: UITableViewRowActionStyle.Default,
                 title: "Remove",
                 handler: {
                     void in
                     //otherwise if this cell is favorited, show un-favoriting action
                     Course.removeFromFavoritedItems(item.itemId)
                     //update styling of cell
-                    var cell = tableView.cellForRowAtIndexPath(indexPath) as UITableViewCell!
+                    let cell = tableView.cellForRowAtIndexPath(indexPath) as UITableViewCell!
                     cell.backgroundColor = UIColor.whiteColor()
                     tableView.setEditing(false, animated: true)
             })
@@ -344,9 +344,9 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     
     //UITableView delegate method, sets section header styles
     func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        var header = view as! UITableViewHeaderFooterView
-        header.textLabel.textColor = UIColor(red:0, green: 0.4, blue: 0.8, alpha: 1)
-        header.textLabel.font = UIFont.boldSystemFontOfSize(12)
+        let header = view as! UITableViewHeaderFooterView
+        header.textLabel!.textColor = UIColor(red:0, green: 0.4, blue: 0.8, alpha: 1)
+        header.textLabel!.font = UIFont.boldSystemFontOfSize(12)
         header.contentView.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1)
     }
     
@@ -373,8 +373,8 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     //handles all logic related to updating the tableView with new menu items
     func updateVisibleMenu() {
         //creates date based on days added to current day, saves to delegate
-        var date = NSDate(timeIntervalSinceNow: NSTimeInterval(60*60*24*self.delegate.daysAdded))
-        var formattedDate = Menus.formatDate(date)
+        let date = NSDate(timeIntervalSinceNow: NSTimeInterval(60*60*24*self.delegate.daysAdded))
+        let formattedDate = Menus.formatDate(date)
         self.delegate.day    = formattedDate[0] as! NSInteger
         self.delegate.month  = formattedDate[1] as! NSInteger
         self.delegate.year   = formattedDate[2] as! NSInteger
@@ -390,10 +390,10 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         self.menuItems.beginUpdates()
         
         //create a new thread...
-        var downloadQueue = dispatch_queue_create("Download queue", nil);
+        let downloadQueue = dispatch_queue_create("Download queue", nil);
         dispatch_async(downloadQueue) {
             //in new thread, load menu for this day
-            var xml = Menus.loadMenuForDay(self.delegate.day, month: self.delegate.month, year: self.delegate.year, offset: self.delegate.offset)
+            let xml = Menus.loadMenuForDay(self.delegate.day, month: self.delegate.month, year: self.delegate.year, offset: self.delegate.offset)
             //go back to main thread
             dispatch_async(dispatch_get_main_queue()) {
                 //if the response was nil, handle
@@ -407,7 +407,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
                     self.courses = [error]
                     
                     //insert new menu items to UITableView
-                    var newSet   = NSMutableIndexSet()
+                    let newSet   = NSMutableIndexSet()
                     newSet.addIndexesInRange(NSMakeRange(0, self.courses.count))
                     self.menuItems.insertSections(newSet, withRowAnimation:UITableViewRowAnimation.Right)
                     
@@ -430,7 +430,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
                         withFilters: self.delegate.filters)
                     
                     //insert new menu items to UITableView
-                    var newSet   = NSMutableIndexSet()
+                    let newSet   = NSMutableIndexSet()
                     newSet.addIndexesInRange(NSMakeRange(0, self.courses.count))
                     self.menuItems.insertSections(newSet, withRowAnimation:UITableViewRowAnimation.Right)
                     
@@ -446,7 +446,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     
     //UITableView delegate method, creates animation when displaying cell; removed, not popular
     func animateIn(this : UIView) {
-        var init_angle : Double = divide(90*M_PI, 180)
+        let init_angle : Double = divide(90*M_PI, right: 180)
         var rotation = CATransform3DMakeRotation(CGFloat(init_angle), 0.0, 0.7, 0.4) as CATransform3D
         rotation.m34 = (-1.0/600.0)
         
@@ -499,13 +499,13 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
             }
         }
         
-        var phrase = AVSpeechUtterance(string: menu)
+        let phrase = AVSpeechUtterance(string: menu)
         phrase.rate = 0.18
         speaker!.speakUtterance(phrase)
     }
     
     //resets speech button color when finished
-    func speechSynthesizer(synthesizer: AVSpeechSynthesizer!, didFinishSpeechUtterance utterance: AVSpeechUtterance!) {
+    func speechSynthesizer(synthesizer: AVSpeechSynthesizer, didFinishSpeechUtterance utterance: AVSpeechUtterance) {
         dispatch_async(dispatch_get_main_queue()) {
             self.speakButton.setImage(UIImage(named: "speaker"), forState: UIControlState.Normal)
         }

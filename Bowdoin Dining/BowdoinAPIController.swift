@@ -62,8 +62,8 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
     //makes SOAP request
     func createSOAPRequestWithEnvelope(soapEnvelope : String) {
         //create request
-        var url = NSURL(string: "https://gooseeye.bowdoin.edu/ws-csGoldShim/Service.asmx")!
-        var req = NSMutableURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.UseProtocolCachePolicy, timeoutInterval: 5000)
+        let url = NSURL(string: "https://gooseeye.bowdoin.edu/ws-csGoldShim/Service.asmx")!
+        let req = NSMutableURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.UseProtocolCachePolicy, timeoutInterval: 5000)
         
         req.addValue("text/xml",    forHTTPHeaderField: "Content-Type")
         req.addValue("bowdoin.edu", forHTTPHeaderField: "Host")
@@ -71,7 +71,7 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
         req.HTTPBody = soapEnvelope.dataUsingEncoding(NSUTF8StringEncoding)
         
         //begin connection
-        var connection = NSURLConnection(request: req, delegate: self, startImmediately: false)
+        let connection = NSURLConnection(request: req, delegate: self, startImmediately: false)
         
         if connection != nil {
             connection!.scheduleInRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
@@ -85,14 +85,14 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
     //takes care of HTTP Authentication
     func connection(connection: NSURLConnection, didReceiveAuthenticationChallenge challenge: NSURLAuthenticationChallenge) {
         if self.loginAttempts == 0 {
-            var authMethod = challenge.protectionSpace.authenticationMethod
+            let authMethod = challenge.protectionSpace.authenticationMethod
             if authMethod == NSURLAuthenticationMethodNTLM {
 
-                var credential = NSURLCredential(user: self.user.username!,
+                let credential = NSURLCredential(user: self.user.username!,
                     password: self.user.password!,
                     persistence: NSURLCredentialPersistence.None)
                 
-                challenge.sender.useCredential(credential, forAuthenticationChallenge: challenge)
+                challenge.sender?.useCredential(credential, forAuthenticationChallenge: challenge)
             }
             self.loginAttempts++
         } else {

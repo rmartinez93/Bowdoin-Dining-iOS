@@ -29,17 +29,17 @@ class BowdoinAPIParser {
                     let dtCSGoldSVCBalances2 = DocumentElement!.elementsForName("dtCSGoldSVCBalances")?.last as! GDataXMLElement?
                     
                     if dtCSGoldSVCBalances1 != nil && dtCSGoldSVCBalances2 != nil {
-                        var firstName = dtCSGoldSVCBalances1!.elementsForName("FIRSTNAME")?.first as! GDataXMLElement?
-                        var lastName  = dtCSGoldSVCBalances1!.elementsForName("LASTNAME")?.first as! GDataXMLElement?
-                        var balance   = dtCSGoldSVCBalances1!.elementsForName("BALANCE")?.first as! GDataXMLElement?
-                        var ppoints   = dtCSGoldSVCBalances2!.elementsForName("BALANCE")?.first as! GDataXMLElement?
+                        let firstName = dtCSGoldSVCBalances1!.elementsForName("FIRSTNAME")?.first as! GDataXMLElement?
+                        let lastName  = dtCSGoldSVCBalances1!.elementsForName("LASTNAME")?.first as! GDataXMLElement?
+                        let balance   = dtCSGoldSVCBalances1!.elementsForName("BALANCE")?.first as! GDataXMLElement?
+                        let ppoints   = dtCSGoldSVCBalances2!.elementsForName("BALANCE")?.first as! GDataXMLElement?
                         
                         if firstName != nil && lastName != nil && balance != nil && ppoints != nil {
                             return
                                 (firstName!.stringValue(),
                                     lastName!.stringValue(),
-                                    Double(balance!.stringValue().toInt()!)/100.0,
-                                    Double(ppoints!.stringValue().toInt()!)/100.0)
+                                    Double(Int(balance!.stringValue())!)/100.0,
+                                    Double(Int(ppoints!.stringValue())!)/100.0)
                         }
                     }
                 }
@@ -67,7 +67,7 @@ class BowdoinAPIParser {
                         var CSGoldMPBalances : GDataXMLElement? = nil
                         
                         //different element depending on semester
-                        var components = NSCalendar.currentCalendar().components(NSCalendarUnit.CalendarUnitMonth, fromDate: NSDate())
+                        let components = NSCalendar.currentCalendar().components(NSCalendarUnit.Month, fromDate: NSDate())
                         if components.month > 6 {
                             CSGoldMPBalances = DocumentElement!.elementsForName("csGoldMPBalances")?.first as! GDataXMLElement?
                         } else {
@@ -75,12 +75,12 @@ class BowdoinAPIParser {
                         }
                         
                         if CSGoldMPBalances != nil {
-                            var smallBucket  = CSGoldMPBalances!.elementsForName("SMALLBUCKET")?.first as! GDataXMLElement?
+                            let smallBucket  = CSGoldMPBalances!.elementsForName("SMALLBUCKET")?.first as! GDataXMLElement?
                             
-                            var mediumBucket = CSGoldMPBalances!.elementsForName("MEDIUMBUCKET")?.first as! GDataXMLElement?
+                            let mediumBucket = CSGoldMPBalances!.elementsForName("MEDIUMBUCKET")?.first as! GDataXMLElement?
                             
                             if smallBucket != nil && mediumBucket != nil {
-                                return smallBucket!.stringValue().toInt()! + mediumBucket!.stringValue().toInt()!
+                                return Int(smallBucket!.stringValue())! + Int(mediumBucket!.stringValue())!
                             }
                         }
                     } else {
@@ -111,11 +111,11 @@ class BowdoinAPIParser {
                         let CSGoldGLTrans = DocumentElement!.elementsForName("dtCSGoldGLTrans")
                         if CSGoldGLTrans != nil {
                             var transactions : [Transaction] = []
-                            for trans in reverse(CSGoldGLTrans) {
-                                var date = trans.elementsForName("TRANDATE")?.first?.stringValue
-                                var desc = trans.elementsForName("LONGDES")?.first?.stringValue
-                                var amnt = trans.elementsForName("APPRVALUEOFTRAN")?.first?.stringValue
-                                var blnc = trans.elementsForName("BALVALUEAFTERTRAN")?.first?.stringValue
+                            for trans in CSGoldGLTrans.reverse() {
+                                let date = trans.elementsForName("TRANDATE")?.first?.stringValue
+                                let desc = trans.elementsForName("LONGDES")?.first?.stringValue
+                                let amnt = trans.elementsForName("APPRVALUEOFTRAN")?.first?.stringValue
+                                let blnc = trans.elementsForName("BALVALUEAFTERTRAN")?.first?.stringValue
                                 transactions.append(Transaction(name: desc!, date: date!, amount: amnt!, balance: blnc!))
                             }
                             
@@ -153,7 +153,7 @@ class BowdoinAPIParser {
                         if dtCSGoldLineHistogram != nil {
                             for dataPoint in dtCSGoldLineHistogram {
                                 let location = (dataPoint as! GDataXMLElement).elementsForName("LOCATION")?.first?.stringValue
-                                let count    = (dataPoint as! GDataXMLElement).elementsForName("LINECOUNT")?.first?.stringValue.toInt()
+                                let count    = Int(((dataPoint as! GDataXMLElement).elementsForName("LINECOUNT")?.first?.stringValue)!)
                                 
                                 if location == "Thorne Aero 1" {
                                     thorneLine.append(count!)
@@ -175,10 +175,10 @@ class BowdoinAPIParser {
     }
     
     class func isDiningHallOpen(hall : String) -> Bool {
-        var calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
+        let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
         calendar.locale = NSLocale(localeIdentifier: "en-US");
         
-        let today = calendar.components(NSCalendarUnit.CalendarUnitHour | NSCalendarUnit.CalendarUnitMinute | NSCalendarUnit.CalendarUnitWeekday, fromDate: NSDate())
+        let today = calendar.components([NSCalendarUnit.Hour, NSCalendarUnit.Minute, NSCalendarUnit.Weekday], fromDate: NSDate())
         let weekday = today.weekday
         let minute  = today.minute
         let hour    = today.hour

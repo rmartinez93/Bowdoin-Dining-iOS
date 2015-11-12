@@ -21,7 +21,6 @@ class SettingsViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        var userDefaults = NSUserDefaults.standardUserDefaults()
         //defaults to 0 (off) if none set
         self.dietFilter.selectedSegmentIndex = NSUserDefaults.standardUserDefaults().integerForKey("diet-filter")
         
@@ -42,7 +41,7 @@ class SettingsViewController: UIViewController {
     @IBAction func indexDidChangeForSegmentedControl(sender: UISegmentedControl) {
         delegate.updateDietFilter(sender.selectedSegmentIndex)
         
-        var userDefaults = NSUserDefaults.standardUserDefaults()
+        let userDefaults = NSUserDefaults.standardUserDefaults()
         userDefaults.setInteger(sender.selectedSegmentIndex, forKey: "diet-filter")
         userDefaults.synchronize()
     }
