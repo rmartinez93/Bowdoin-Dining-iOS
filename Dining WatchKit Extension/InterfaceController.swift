@@ -17,19 +17,19 @@ class InterfaceController: WKInterfaceController {
         
         // Configure interface objects here.
         self.diningHalls.setNumberOfRows(2, withRowType: "DiningHall")
-        var moulton = self.diningHalls.rowControllerAtIndex(0) as! DiningHall
+        let moulton = self.diningHalls.rowControllerAtIndex(0) as! DiningHall
         moulton.name.setText("Moulton")
         
-        var thorne  = self.diningHalls.rowControllerAtIndex(1) as! DiningHall
+        let thorne  = self.diningHalls.rowControllerAtIndex(1) as! DiningHall
         thorne.name.setText("Thorne")
         
-        println("GO GET LINE DATA")
+        print("GO GET LINE DATA")
         WKInterfaceController.openParentApplication(["getLineData" : true], reply: { (reply, error) -> Void in
-            println("AND NOW I'M BACK")
+            print("AND NOW I'M BACK")
             let moultonScore = reply["moultonScore"] as! Double
             let thorneScore  = reply["thorneScore"] as! Double
-            println("\(moultonScore)")
-            println("\(thorneScore)")
+            print("\(moultonScore)")
+            print("\(thorneScore)")
             
             let moultonColor : UIColor?
             let thorneColor : UIColor?
