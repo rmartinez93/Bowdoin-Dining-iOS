@@ -55,5 +55,40 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>second</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Thorne</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>Thorne</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>first</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Moulton</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>Moulton</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>pizza</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Pub</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>Pub</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>card</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>My Account</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>Account</string>
+		</dict>
+	</array>
 </dict>
 </plist>

@@ -38,7 +38,7 @@ extension String {
 }
 
 class console {
-    class func log(arg : AnyObject) {
+    class func log(arg : Any) {
         print(arg)
     }
 }

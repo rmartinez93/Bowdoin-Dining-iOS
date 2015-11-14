@@ -52,7 +52,41 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
             self.updateDietFilter(currentFilter!)
         }
         
+        //launched from one of my shortut items
+        if #available(iOS 9.0, *) {
+            if let shortcutItem = launchOptions?[UIApplicationLaunchOptionsShortcutItemKey] as? UIApplicationShortcutItem
+            {
+                self.handleShortcutItem(shortcutItem)
+                return false
+            }
+        }
+
+        
         return true
+    }
+    
+    @available(iOS 9.0, *)
+    func application(application: UIApplication, performActionForShortcutItem shortcutItem: UIApplicationShortcutItem, completionHandler: (Bool) -> Void) {
+        self.handleShortcutItem(shortcutItem)
+    }
+
+    //handles case where shortcut item launched the app
+    @available(iOS 9.0, *)
+    func handleShortcutItem(shortcutItem : UIApplicationShortcutItem) {
+        if let shortcutType = ShortcutType(rawValue: shortcutItem.type) {
+            //Get root tab bar viewcontroller and its first controller
+            let rootTabBarController = window!.rootViewController as! UITabBarController
+            switch shortcutType {
+            case .Thorne:
+                rootTabBarController.selectedIndex = 0
+            case .Moulton:
+                rootTabBarController.selectedIndex = 1
+            case .Pub:
+                rootTabBarController.selectedIndex = 2
+            case .Account:
+                rootTabBarController.selectedIndex = 3
+            }
+        }
     }
 
     //sets diet fielters from settings
@@ -196,6 +230,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
             object: nil,
             userInfo: nil)
     }
-    
 }
 
+enum ShortcutType: String {
+    case Thorne = "Thorne"
+    case Moulton = "Moulton"
+    case Pub = "Pub"
+    case Account = "Account"
+}

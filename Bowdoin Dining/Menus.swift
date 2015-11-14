@@ -79,7 +79,7 @@ class Menus : NSObject {
             
             if xmlData != nil {
                 //cache file, return
-                let result = xmlData!.writeToFile(path, atomically: true)
+                xmlData!.writeToFile(path, atomically: true)
             }
             return xmlData
         }

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4507E70419726E3A000628DE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4507E70119726E3A000628DE /* CoreGraphics.framework */; };
 		4508C6011A9EB548007411D6 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4508C6001A9EB548007411D6 /* Utilities.swift */; };
+		453544A61BF5A38E00F6D84B /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 453544A51BF5A38E00F6D84B /* Default-568h@2x.png */; settings = {ASSET_TAGS = (); }; };
 		455280DB1975FD27006C2DEA /* pub-menu.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 455280DA1975FD27006C2DEA /* pub-menu.pdf */; };
 		4552811E19763ACE006C2DEA /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4552811D19763ACE006C2DEA /* SystemConfiguration.framework */; };
 		4552812019763AD4006C2DEA /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4552811F19763AD4006C2DEA /* MobileCoreServices.framework */; };
@@ -80,6 +81,7 @@
 		4507E70219726E3A000628DE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4507E70319726E3A000628DE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4508C6001A9EB548007411D6 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		453544A51BF5A38E00F6D84B /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		455280DA1975FD27006C2DEA /* pub-menu.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "pub-menu.pdf"; sourceTree = "<group>"; };
 		4552811B19763AC0006C2DEA /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		4552811D19763ACE006C2DEA /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -223,6 +225,7 @@
 		45AAB57F1970636E0078A7F9 = {
 			isa = PBXGroup;
 			children = (
+				453544A51BF5A38E00F6D84B /* Default-568h@2x.png */,
 				457E8F671B0548A300BA720A /* Bowdoin Dining for Mac */,
 				457E8F7A1B0548A300BA720A /* Bowdoin Dining for MacTests */,
 				4507E70719726E53000628DE /* Frameworks */,
@@ -452,6 +455,7 @@
 				4563386519E77E040042B372 /* TransactionCell.xib in Resources */,
 				45AAB59C1970636E0078A7F9 /* Images.xcassets in Resources */,
 				4563386919E7901A0042B372 /* Launch Screen.xib in Resources */,
+				453544A61BF5A38E00F6D84B /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

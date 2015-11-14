@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14E17e" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="15B38b" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7702"/>
-        <plugIn identifier="com.apple.WebKitIBPlugin" version="7702"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
+        <plugIn identifier="com.apple.WebKitIBPlugin" version="8191"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -89,6 +89,7 @@
                         <subviews>
                             <webView translatesAutoresizingMaskIntoConstraints="NO" id="ln5-j0-n0G">
                                 <rect key="frame" x="0.0" y="0.0" width="380" height="600"/>
+                                <animations/>
                                 <webPreferences key="preferences" defaultFontSize="12" defaultFixedFontSize="12">
                                     <nil key="identifier"/>
                                 </webPreferences>
@@ -100,6 +101,7 @@
                             <constraint firstItem="ln5-j0-n0G" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="coy-9K-Kqa"/>
                             <constraint firstAttribute="bottom" secondItem="ln5-j0-n0G" secondAttribute="bottom" id="vZ2-4q-lub"/>
                         </constraints>
+                        <animations/>
                     </view>
                     <connections>
                         <outlet property="webView" destination="ln5-j0-n0G" id="Yw1-oI-Fbp"/>
