@@ -10,9 +10,10 @@ import UIKit
 import QuartzCore
 import AVFoundation
 
-class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControllerDelegate, UITableViewDataSource, UINavigationBarDelegate, AVSpeechSynthesizerDelegate {
+class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControllerDelegate, UITableViewDataSource, UINavigationBarDelegate, AVSpeechSynthesizerDelegate, UIMenuItemViewDelegate {
     var delegate = UIApplication.sharedApplication().delegate as! AppDelegate
     var courses : [Course] = []
+    var favoritesData : [String : Int] = [:]
     var speaker : AVSpeechSynthesizer?
     var diningHallName : String?
     
@@ -225,12 +226,12 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     
     //UITableView delegate method, sets settings for cell/menu item to be displayed at a given section->row
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let simpleTableIdentifier = "SimpleTableCell"
+        let simpleTableIdentifier = "BasicCell"
         
-        var cell = tableView.dequeueReusableCellWithIdentifier(simpleTableIdentifier) as UITableViewCell!
+        var cell = tableView.dequeueReusableCellWithIdentifier(simpleTableIdentifier) as! UIMenuItemView!
         
         if cell == nil {
-            cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: simpleTableIdentifier)
+            cell = NSBundle.mainBundle().loadNibNamed("UIMenuItemView", owner: self, options: nil).first as! UIMenuItemView
         }
         
         //if this is a valid section->row, grab right menu item from course and set cell properties
@@ -240,19 +241,22 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
                 let this : MenuItem? = course.menuItems[indexPath.row]
                 
                 if let item = this {
-                    cell!.textLabel!.text = item.name
-                    cell!.textLabel!.numberOfLines = 0
+                    cell!.title!.text = item.name
                     
-                    cell!.detailTextLabel!.text = item.descriptors
-                    cell!.detailTextLabel!.textColor = UIColor.lightGrayColor()
-                    cell!.detailTextLabel!.numberOfLines = 0
+                    cell!.detail!.text = item.descriptors
+                    cell!.detail!.textColor = UIColor.lightGrayColor()
                     
-                    let favorited = Course.allFavoritedItems()
-                    if favorited.containsObject(item.itemId) {
-                        cell!.backgroundColor = UIColor(red: 1, green: 0.84, blue: 0, alpha: 1)
-                    } else {
-                        cell!.backgroundColor = UIColor.whiteColor()
+                    let faveCount = self.favoritesData[item.itemId] != nil
+                        ? self.favoritesData[item.itemId]! : 0
+                    
+                    let allFavorited = Course.allFavoritedItems()
+                    var favorited = false;
+                    if allFavorited.containsObject(item.itemId) {
+                        favorited = true;
                     }
+                    
+                    cell!.initData(faveCount, favorited: favorited, itemId: item.itemId, delegate: self)
+                    
                     cell!.sizeToFit()
                 }
             }
@@ -294,49 +298,6 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         }
     }
     
-    //UITableView delegate method, what to do after side-swiping cell
-    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        //first, load in menu course this cell belongs to
-        let course = self.courses[indexPath.section]
-        //get item from course
-        let item   = course.menuItems[indexPath.row]
-        
-        //load favorited items
-        let favorited = Course.allFavoritedItems()
-        
-        //if this cell is NOT favorited, show favoriting action
-        if !favorited.containsObject(item.itemId) {
-            //create favoriting action
-            let faveAction = UITableViewRowAction(style: UITableViewRowActionStyle.Default,
-                title: "Favorite",
-                handler: {
-                    void in
-                    //if item is favorited, save it to our centralized list of favorited items
-                    Course.addToFavoritedItems(item.itemId)
-                    //update styling of cell
-                    let cell = tableView.cellForRowAtIndexPath(indexPath) as UITableViewCell!
-                    cell.backgroundColor = UIColor(red: 1, green: 0.84, blue:0, alpha:1)
-                    tableView.setEditing(false, animated: true)
-            })
-            faveAction.backgroundColor = UIColor(red:1, green:0.84, blue:0, alpha:1)
-            return [faveAction]
-        } else {
-            let unfaveAction = UITableViewRowAction(style: UITableViewRowActionStyle.Default,
-                title: "Remove",
-                handler: {
-                    void in
-                    //otherwise if this cell is favorited, show un-favoriting action
-                    Course.removeFromFavoritedItems(item.itemId)
-                    //update styling of cell
-                    let cell = tableView.cellForRowAtIndexPath(indexPath) as UITableViewCell!
-                    cell.backgroundColor = UIColor.whiteColor()
-                    tableView.setEditing(false, animated: true)
-            })
-            unfaveAction.backgroundColor = UIColor.lightGrayColor()
-            return [unfaveAction]
-        }
-    }
-    
     //UITableView delegate method, needed because of bug in iOS 8 for now
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         // No statement or algorithm is needed in here. Just the implementation
@@ -372,6 +333,21 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     
     //handles all logic related to updating the tableView with new menu items
     func updateVisibleMenu() {
+        self.prepareForMenuLoad();
+        
+        self.loadMenu({ (xml) -> () in
+            //handle incorrectly loaded menu
+            if xml == nil {
+                self.menuLoadFailed();
+            }
+            //else we successfully loaded XML!
+            else {
+                self.presentMenu(xml!);
+            }
+        })
+    }
+    
+    func prepareForMenuLoad() {
         //creates date based on days added to current day, saves to delegate
         let date = NSDate(timeIntervalSinceNow: NSTimeInterval(60*60*24*self.delegate.daysAdded))
         let formattedDate = Menus.formatDate(date)
@@ -388,7 +364,9 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         self.disableAllButtons()
         self.loading.startAnimating()
         self.menuItems.beginUpdates()
-        
+    }
+    
+    func loadMenu(callback: (NSData?) -> ()) {
         //create a new thread...
         let downloadQueue = dispatch_queue_create("Download queue", nil);
         dispatch_async(downloadQueue) {
@@ -396,50 +374,59 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
             let xml = Menus.loadMenuForDay(self.delegate.day, month: self.delegate.month, year: self.delegate.year, offset: self.delegate.offset)
             //go back to main thread
             dispatch_async(dispatch_get_main_queue()) {
-                //if the response was nil, handle
-                if xml == nil {
-                    //update the buttons
-                    self.makeCorrectButtonsVisible()
-                    
-                    let error = Course()
-                    error.courseName = "No Menu Available"
-                    
-                    self.courses = [error]
-                    
-                    //insert new menu items to UITableView
-                    let newSet   = NSMutableIndexSet()
-                    newSet.addIndexesInRange(NSMakeRange(0, self.courses.count))
-                    self.menuItems.insertSections(newSet, withRowAnimation:UITableViewRowAnimation.Right)
-                    
-                    //stop loading indicator, end updates to UITableView, scroll to top and reenable user interaction
-                    self.loading.stopAnimating()
-                    self.menuItems.endUpdates()
-                    self.menuItems.setContentOffset(CGPointZero, animated: true)
-                    
-                }
-                //else we successfully loaded XML!
-                else {
-                    //update the buttons
-                    self.makeCorrectButtonsVisible()
-                    
-                    //create a menu from this data and save it to delegate
-                    self.courses = Menus.createMenuFromXML(xml!,
-                        forMeal:     self.meals.selectedSegmentIndex,
-                        onWeekday:   isWeekday(self.delegate.offset),
-                        atLocation:  self.view.tag,
-                        withFilters: self.delegate.filters)
-                    
-                    //insert new menu items to UITableView
-                    let newSet   = NSMutableIndexSet()
-                    newSet.addIndexesInRange(NSMakeRange(0, self.courses.count))
-                    self.menuItems.insertSections(newSet, withRowAnimation:UITableViewRowAnimation.Right)
-                    
-                    //stop loading indicator, end updates to UITableView, scroll to top and reenable user interaction
-                    self.loading.stopAnimating()
-                    self.menuItems.endUpdates()
-                    self.menuItems.setContentOffset(CGPointZero, animated: true)
-                    
-                }
+                callback(xml);
+            }
+        }
+
+    }
+    
+    func menuLoadFailed() {
+        //update the buttons
+        self.makeCorrectButtonsVisible()
+        
+        let error = Course()
+        error.courseName = "No Menu Available"
+        
+        self.courses = [error]
+        
+        //insert new menu items to UITableView
+        let newSet   = NSMutableIndexSet()
+        newSet.addIndexesInRange(NSMakeRange(0, self.courses.count))
+        self.menuItems.insertSections(newSet, withRowAnimation:UITableViewRowAnimation.Right)
+        
+        //stop loading indicator, end updates to UITableView, scroll to top and reenable user interaction
+        self.loading.stopAnimating()
+        self.menuItems.endUpdates()
+        self.menuItems.setContentOffset(CGPointZero, animated: true)
+    }
+    
+    func presentMenu(xml : NSData) {
+        //update the buttons
+        self.makeCorrectButtonsVisible()
+        
+        //create a new thread...
+        let downloadQueue = dispatch_queue_create("Download queue", nil);
+        dispatch_async(downloadQueue) {
+            //create a menu from this data and save it to delegate
+            let menuData = Menus.createMenuFromXML(xml,
+                forMeal:     self.meals.selectedSegmentIndex,
+                onWeekday:   isWeekday(self.delegate.offset),
+                atLocation:  self.view.tag,
+                withFilters: self.delegate.filters)
+            
+            self.courses = menuData.courses
+            self.favoritesData = menuData.favoritesData
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                //insert new menu items to UITableView
+                let newSet   = NSMutableIndexSet()
+                newSet.addIndexesInRange(NSMakeRange(0, self.courses.count))
+                self.menuItems.insertSections(newSet, withRowAnimation:UITableViewRowAnimation.Right)
+                
+                //stop loading indicator, end updates to UITableView, scroll to top and reenable user interaction
+                self.loading.stopAnimating()
+                self.menuItems.endUpdates()
+                self.menuItems.setContentOffset(CGPointZero, animated: true)
             }
         }
     }
@@ -516,13 +503,50 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         dispatch_async(dispatch_get_main_queue()) {
             UIView.animateWithDuration(0.5, animations: { () -> Void in
                 if self.view.tag == self.delegate.thorneId {
-//                    self.meals.tintColor = self.delegate.thorneColor
                     (self.delegate.window!.rootViewController as! UITabBarController).tabBar.tintColor = self.delegate.thorneColor!
                 } else if self.view.tag == self.delegate.moultonId {
-//                    self.meals.tintColor = self.delegate.moultonColor
                     (self.delegate.window!.rootViewController as! UITabBarController).tabBar.tintColor = self.delegate.moultonColor!
                 }
             })
+        }
+    }
+    
+    func toggleFavorite(itemId: String) {
+        //load favorited items
+        let allFavorited = Course.allFavoritedItems()
+        
+        var endpoint = "http://bowdoindining.meteor.com/methods/"
+        //if this cell is NOT favorited, show favoriting action
+        if !allFavorited.containsObject(itemId) {
+            //if item is favorited, save it to our centralized list of favorited items
+            Course.addToFavoritedItems(itemId)
+            endpoint += "favorite"
+        } else {
+            Course.removeFromFavoritedItems(itemId)
+            endpoint += "unfavorite"
+        }
+        
+        //create a new thread...
+        let downloadQueue = dispatch_queue_create("Download queue", nil);
+        dispatch_async(downloadQueue) {
+            let url = NSURL(string: endpoint)
+            
+            let request = NSMutableURLRequest(URL: url!)
+            request.HTTPMethod = "POST"
+            
+            request.HTTPBody = NSString(string: "\(itemId)").dataUsingEncoding(NSUTF8StringEncoding)
+            
+            let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+                data, response, error in
+                
+                if error != nil {
+                    print("error=\(error)")
+                    return
+                }
+                
+                console.log(response)
+            }
+            task.resume()
         }
     }
 }

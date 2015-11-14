@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15B38b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="top" selectionStyle="none" indentationWidth="10" reuseIdentifier="BasicCell" rowHeight="54" id="WWI-7r-fqG" customClass="UIMenuItemView" customModule="BowdoinDining" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="485" height="44"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WWI-7r-fqG" id="Emv-kP-jSn">
+                <rect key="frame" x="0.0" y="0.0" width="485" height="43.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="438" placeholderIntrinsicHeight="21" text="Menu Item Name" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cjV-Hp-Erg">
+                        <rect key="frame" x="8" y="3" width="441" height="21"/>
+                        <animations/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="V, VE, NGI" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fkB-55-vaO">
+                        <rect key="frame" x="8" y="24" width="441" height="12"/>
+                        <animations/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="10"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="heart" translatesAutoresizingMaskIntoConstraints="NO" id="Zf1-be-WRQ">
+                        <rect key="frame" x="458" y="3" width="18" height="18"/>
+                        <animations/>
+                        <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="18" id="Se9-71-1pE"/>
+                            <constraint firstAttribute="height" constant="18" id="bvj-zX-bwC"/>
+                        </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="8d0-e5-gzd" appends="YES" id="XIK-8N-0Zn"/>
+                        </connections>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="101" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TG6-LT-Ppk">
+                        <rect key="frame" x="458" y="21" width="18" height="12"/>
+                        <animations/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="21" id="l7K-cC-nvO"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="10"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <animations/>
+                <constraints>
+                    <constraint firstItem="TG6-LT-Ppk" firstAttribute="leading" secondItem="Zf1-be-WRQ" secondAttribute="leading" id="9f0-IS-6c5"/>
+                    <constraint firstItem="fkB-55-vaO" firstAttribute="top" secondItem="cjV-Hp-Erg" secondAttribute="bottom" id="EuS-Py-5HC"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="TG6-LT-Ppk" secondAttribute="trailing" constant="1" id="FJi-F6-dpI"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="fkB-55-vaO" secondAttribute="bottom" constant="-3.5" id="Qut-1S-SAt"/>
+                    <constraint firstItem="fkB-55-vaO" firstAttribute="leading" secondItem="cjV-Hp-Erg" secondAttribute="leading" id="bLk-n7-Jh0"/>
+                    <constraint firstItem="Zf1-be-WRQ" firstAttribute="leading" secondItem="cjV-Hp-Erg" secondAttribute="trailing" constant="9" id="clr-Zi-ci7"/>
+                    <constraint firstItem="Zf1-be-WRQ" firstAttribute="top" secondItem="cjV-Hp-Erg" secondAttribute="top" id="gtk-XW-VqY"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="Zf1-be-WRQ" secondAttribute="trailing" constant="1" id="hZH-Wt-zdq"/>
+                    <constraint firstAttribute="leadingMargin" secondItem="cjV-Hp-Erg" secondAttribute="leading" id="iry-UR-J7t"/>
+                    <constraint firstItem="cjV-Hp-Erg" firstAttribute="trailing" secondItem="fkB-55-vaO" secondAttribute="trailing" id="kmQ-n8-zXh"/>
+                    <constraint firstItem="TG6-LT-Ppk" firstAttribute="top" secondItem="Zf1-be-WRQ" secondAttribute="bottom" id="nbz-r7-ACx"/>
+                    <constraint firstItem="cjV-Hp-Erg" firstAttribute="top" secondItem="Emv-kP-jSn" secondAttribute="topMargin" constant="-5" id="xV7-oj-2zx"/>
+                    <constraint firstItem="TG6-LT-Ppk" firstAttribute="trailing" secondItem="Zf1-be-WRQ" secondAttribute="trailing" id="zzw-hY-6Zx"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="Qut-1S-SAt"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <animations/>
+            <connections>
+                <outlet property="detail" destination="fkB-55-vaO" id="f03-Op-gGY"/>
+                <outlet property="faves" destination="TG6-LT-Ppk" id="EYt-gk-jXJ"/>
+                <outlet property="icon" destination="Zf1-be-WRQ" id="aR5-Th-p0g"/>
+                <outlet property="title" destination="cjV-Hp-Erg" id="dFs-6d-vuA"/>
+            </connections>
+            <point key="canvasLocation" x="441.5" y="364"/>
+        </tableViewCell>
+        <tapGestureRecognizer id="8d0-e5-gzd">
+            <connections>
+                <action selector="toggleFavorited" destination="WWI-7r-fqG" id="KCH-pS-M43"/>
+            </connections>
+        </tapGestureRecognizer>
+    </objects>
+    <resources>
+        <image name="heart" width="232" height="219"/>
+    </resources>
+</document>

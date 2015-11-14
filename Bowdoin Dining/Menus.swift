@@ -85,8 +85,8 @@ class Menus : NSObject {
         }
     }
     
-    class func createMenuFromXML(xmlData : NSData, forMeal mealSegment : NSInteger, onWeekday weekday : Bool, atLocation locationId : NSInteger, withFilters filters : NSArray) -> [Course] {
-        let ignoreList = ["Salad Bar", "..."]
+    class func createMenuFromXML(xmlData : NSData, forMeal mealSegment : NSInteger, onWeekday weekday : Bool, atLocation locationId : NSInteger, withFilters filters : NSArray) -> (courses: [Course], favoritesData: [String : Int]) {
+        let ignoreList = ["Salad Bar", "...", "Salads"]
         
         //Create Google XML parsing object from NSData, grab "<meal>"s below root
         do {
@@ -215,10 +215,55 @@ class Menus : NSObject {
                 courses.append(closed)
             }
             
-            return courses; //return array of courses
+            return loadFavoritesDataForCourses(courses) //return array of courses
         } catch {
             print("Menu Parsing Error")
-            return []
+            return ([], [:])
+        }
+    }
+    
+    class func loadFavoritesDataForCourses(courses : [Course]) -> (courses: [Course], favoritesData: [String : Int]) {
+        var itemIds : [String] = []
+        for course in courses {
+            for item in course.menuItems {
+                if item != "NA" {
+                    itemIds.append(item.itemId)
+                }
+            }
+        }
+        
+        //begin network activity
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        
+        //make request to get info from itemIds
+        let endPointURL = "http://bowdoindining.meteor.com/favorites/\(itemIds.combine(","))"
+        let url = NSURL(string: endPointURL)
+        let data = NSData(contentsOfURL: url!)
+        
+        //end network activity
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+        
+        do {
+            //extract favorites data into dictionary
+            var favoritesData : [String: Int] = [:]
+            if let jsonData = data {
+                if let json: NSDictionary = try NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions.MutableContainers) as? NSDictionary {
+                    if let favorites = json["favorites"] as? NSArray {
+                        for item in favorites {
+                            if let favorite = item as? NSDictionary {
+                                let itemId = favorite["itemId"] as! String
+                                let favorites = favorite["favorites"] as! Int
+                                favoritesData[itemId] = favorites
+                            }
+                        }
+                    }
+                }
+            }
+            
+            //return courses together with favorites data
+            return (courses, favoritesData)
+        } catch {
+            return (courses, [:])
         }
     }
     
