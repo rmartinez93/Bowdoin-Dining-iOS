@@ -25,7 +25,7 @@
                         <rect key="frame" x="8" y="24" width="438" height="12"/>
                         <animations/>
                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="10"/>
-                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="textColor" red="0.0" green="0.66666666666666663" blue="0.069487085971609019" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="heart" translatesAutoresizingMaskIntoConstraints="NO" id="Zf1-be-WRQ">

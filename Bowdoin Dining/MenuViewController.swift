@@ -100,18 +100,6 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     override func viewDidAppear(animated: Bool) {
         //load menu based on delegate settings
         self.updateVisibleMenu()
-        
-        let defaults = NSUserDefaults.standardUserDefaults()
-        if !defaults.boolForKey("ShownLineDataTutorial") {
-            let alert = UIAlertController(title: "New Feature", message: "The Bowdoin Dining & OneCard app will now let you know if there's a line at either dining hall! Simply tap into the 'Thorne' or 'Moulton' tabs at the bottom—They will turn green if there's a short line, yellow if the dining hall is busy, or red if it's very busy. You must be signed in under the 'Accounts' tab to use this feature!", preferredStyle: UIAlertControllerStyle.Alert)
-            
-            let okay = UIAlertAction(title: "Okay!", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
-                defaults.setBool(true, forKey: "ShownLineDataTutorial")
-            })
-            
-            alert.addAction(okay)
-            self.presentViewController(alert, animated: true, completion: nil)
-        }
     }
     
     @IBAction func indexDidChangeForSegmentedControl(sender : UISegmentedControl) {
@@ -247,9 +235,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
                 
                 if let item = this {
                     cell!.title!.text = item.name
-                    
                     cell!.detail!.text = item.descriptors
-                    cell!.detail!.textColor = UIColor.lightGrayColor()
                     
                     let faveCount = self.favoritesData[item.itemId] != nil
                         ? self.favoritesData[item.itemId]! : 0

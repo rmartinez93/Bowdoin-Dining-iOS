@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C106a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15B38b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -10,18 +12,29 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Bowdoin" translatesAutoresizingMaskIntoConstraints="NO" id="xjy-Q4-YhK">
-                    <rect key="frame" x="133" y="132" width="215" height="215"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bear" translatesAutoresizingMaskIntoConstraints="NO" id="xjy-Q4-YhK">
+                    <rect key="frame" x="50" y="50" width="380" height="380"/>
+                    <animations/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="215" id="ZQj-wh-SvS"/>
-                        <constraint firstAttribute="width" constant="215" id="e9j-BA-xtg"/>
+                        <constraint firstAttribute="width" secondItem="xjy-Q4-YhK" secondAttribute="height" multiplier="25:25" id="EZA-As-8hh"/>
                     </constraints>
                 </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bowdoin Dining" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eJK-2B-USz">
+                    <rect key="frame" x="124" y="410" width="232" height="40.5"/>
+                    <animations/>
+                    <fontDescription key="fontDescription" name="Baskerville" family="Baskerville" pointSize="35"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
+            <animations/>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstAttribute="centerX" secondItem="xjy-Q4-YhK" secondAttribute="centerX" id="E13-oS-55Q"/>
-                <constraint firstAttribute="centerY" secondItem="xjy-Q4-YhK" secondAttribute="centerY" id="PWe-Qo-igy"/>
+                <constraint firstItem="xjy-Q4-YhK" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="50" id="NcE-Q8-hfH"/>
+                <constraint firstAttribute="trailing" secondItem="xjy-Q4-YhK" secondAttribute="trailing" constant="50" id="P79-EV-uQm"/>
+                <constraint firstItem="eJK-2B-USz" firstAttribute="top" secondItem="xjy-Q4-YhK" secondAttribute="bottom" constant="-20" id="Vh8-Mt-m1S"/>
+                <constraint firstItem="xjy-Q4-YhK" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="aCY-Ab-eIV"/>
+                <constraint firstItem="eJK-2B-USz" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="pDw-Mh-JEB"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -29,6 +42,6 @@
         </view>
     </objects>
     <resources>
-        <image name="Bowdoin" width="512" height="512"/>
+        <image name="bear" width="400" height="400"/>
     </resources>
 </document>
