@@ -85,7 +85,7 @@ class Menus : NSObject {
         }
     }
     
-    class func createMenuFromXML(xmlData : NSData, forMeal mealSegment : NSInteger, onWeekday weekday : Bool, atLocation locationId : NSInteger, withFilters filters : NSArray) -> (courses: [Course], favoritesData: [String : Int]) {
+    class func createMenuFromXML(xmlData : NSData, forMeal mealSegment : NSInteger, onWeekday weekday : Bool, atLocation locationId : NSInteger, withFilters filters : NSArray) -> [Course] {
         let ignoreList = ["Salad Bar", "...", "Salads"]
         
         //Create Google XML parsing object from NSData, grab "<meal>"s below root
@@ -215,14 +215,14 @@ class Menus : NSObject {
                 courses.append(closed)
             }
             
-            return loadFavoritesDataForCourses(courses) //return array of courses
+            return courses
         } catch {
             print("Menu Parsing Error")
-            return ([], [:])
+            return []
         }
     }
     
-    class func loadFavoritesDataForCourses(courses : [Course]) -> (courses: [Course], favoritesData: [String : Int]) {
+    class func loadFavoritesDataForCourses(courses : [Course]) -> [String : Int] {
         var itemIds : [String] = []
         for course in courses {
             for item in course.menuItems {
@@ -261,9 +261,9 @@ class Menus : NSObject {
             }
             
             //return courses together with favorites data
-            return (courses, favoritesData)
+            return favoritesData
         } catch {
-            return (courses, [:])
+            return [:]
         }
     }
     

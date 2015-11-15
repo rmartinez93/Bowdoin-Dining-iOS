@@ -16,6 +16,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     var favoritesData : [String : Int] = [:]
     var speaker : AVSpeechSynthesizer?
     var diningHallName : String?
+    var refreshControl: UIRefreshControl!
     
     @IBOutlet var navBar    : UINavigationBar!
     @IBOutlet var menuItems : UITableView!
@@ -37,9 +38,13 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
             
             //share selected segment between Moulton/Thorne
             self.delegate.selectedSegment = self.meals.selectedSegmentIndex
-        } else {
-            
         }
+        
+        refreshControl = UIRefreshControl()
+        refreshControl.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1)
+        refreshControl.tintColor = UIColor.whiteColor()
+        refreshControl.addTarget(self, action: Selector("loadFavoritesData"), forControlEvents: UIControlEvents.ValueChanged)
+        menuItems.addSubview(refreshControl)
     }
     
     func positionForBar(bar: UIBarPositioning) -> UIBarPosition  {
@@ -256,7 +261,6 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
                     }
                     
                     cell!.initData(faveCount, favorited: favorited, itemId: item.itemId, delegate: self)
-                    
                     cell!.sizeToFit()
                 }
             }
@@ -298,15 +302,10 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         }
     }
     
-    //UITableView delegate method, needed because of bug in iOS 8 for now
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        // No statement or algorithm is needed in here. Just the implementation
-    }
-    
     //UITableView delegate method, sets section header styles
     func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let header = view as! UITableViewHeaderFooterView
-        header.textLabel!.textColor = UIColor(red:0, green: 0.4, blue: 0.8, alpha: 1)
+        header.textLabel!.textColor = UIColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 1)
         header.textLabel!.font = UIFont.boldSystemFontOfSize(12)
         header.contentView.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1)
     }
@@ -404,29 +403,38 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         //update the buttons
         self.makeCorrectButtonsVisible()
         
+        //create a menu from this data and save it to delegate
+        self.courses = Menus.createMenuFromXML(xml,
+            forMeal:     self.meals.selectedSegmentIndex,
+            onWeekday:   isWeekday(self.delegate.offset),
+            atLocation:  self.view.tag,
+            withFilters: self.delegate.filters)
+        
+        //insert new menu items to UITableView
+        let newSet   = NSMutableIndexSet()
+        newSet.addIndexesInRange(NSMakeRange(0, self.courses.count))
+        self.menuItems.insertSections(newSet, withRowAnimation:UITableViewRowAnimation.Right)
+        
+        //stop loading indicator, end updates to UITableView, scroll to top and reenable user interaction
+        self.loading.stopAnimating()
+        self.menuItems.endUpdates()
+        self.menuItems.setContentOffset(CGPointZero, animated: true)
+        
+        self.loadFavoritesData()
+    }
+    
+    func loadFavoritesData() {
         //create a new thread...
         let downloadQueue = dispatch_queue_create("Download queue", nil);
         dispatch_async(downloadQueue) {
-            //create a menu from this data and save it to delegate
-            let menuData = Menus.createMenuFromXML(xml,
-                forMeal:     self.meals.selectedSegmentIndex,
-                onWeekday:   isWeekday(self.delegate.offset),
-                atLocation:  self.view.tag,
-                withFilters: self.delegate.filters)
-            
-            self.courses = menuData.courses
-            self.favoritesData = menuData.favoritesData
+            let favoritesData = Menus.loadFavoritesDataForCourses(self.courses)
             
             dispatch_async(dispatch_get_main_queue()) {
-                //insert new menu items to UITableView
-                let newSet   = NSMutableIndexSet()
-                newSet.addIndexesInRange(NSMakeRange(0, self.courses.count))
-                self.menuItems.insertSections(newSet, withRowAnimation:UITableViewRowAnimation.Right)
+                self.favoritesData += favoritesData
                 
-                //stop loading indicator, end updates to UITableView, scroll to top and reenable user interaction
-                self.loading.stopAnimating()
-                self.menuItems.endUpdates()
-                self.menuItems.setContentOffset(CGPointZero, animated: true)
+                //reload with favorites data
+                self.menuItems.reloadData()
+                self.refreshControl.endRefreshing()
             }
         }
     }
@@ -543,8 +551,6 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
                     print("error=\(error)")
                     return
                 }
-                
-                console.log(response)
             }
             task.resume()
         }

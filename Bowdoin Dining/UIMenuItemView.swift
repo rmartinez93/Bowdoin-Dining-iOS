@@ -36,6 +36,8 @@ class UIMenuItemView: UITableViewCell {
         self.favorited = favorited
         if(favorited) {
             self.icon.image = UIImage(named: "heart-filled")
+        } else {
+            self.icon.image = UIImage(named: "heart")
         }
         
         self.itemId = itemId
@@ -57,6 +59,18 @@ class UIMenuItemView: UITableViewCell {
         faves.text! = favoritesCount > 0 ? "\(favoritesCount)" : ""
         
         delegate?.toggleFavorite(self.itemId!)
+    }
+    
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        if #available(iOS 9.0, *) {
+            if let touch = touches.first where traitCollection.forceTouchCapability == .Available {
+                if(touch.force / touch.maximumPossibleForce > 0.9) {
+                    self.toggleFavorited()
+                }
+            }
+        } else {
+            // Fallback on earlier versions
+        }
     }
 }
 
