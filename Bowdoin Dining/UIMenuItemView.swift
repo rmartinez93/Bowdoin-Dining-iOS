@@ -49,11 +49,11 @@ class UIMenuItemView: UITableViewCell {
         favorited = !favorited
         if(favorited) {
             icon.image = UIImage(named: "heart-filled")
-            favoritesCount++
+            favoritesCount += 1
         }
         else {
             icon.image = UIImage(named: "heart")
-            favoritesCount--
+            favoritesCount -= 1
         }
         
         faves.text! = favoritesCount > 0 ? "\(favoritesCount)" : ""

@@ -21,7 +21,7 @@ class LoginModalViewController : UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "accountDidLoad:",
+            selector: #selector(LoginModalViewController.accountDidLoad(_:)),
             name: "AccountFinishedLoading",
             object: nil)
     }

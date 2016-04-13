@@ -24,19 +24,19 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
         
         //tell VC to watch for success notifications from User obj
         NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "accountDidLoad:",
+            selector: #selector(AccountViewController.accountDidLoad(_:)),
             name: "AccountFinishedLoading",
             object: nil)
         
         //tell VC to watch for success notifications from User obj
         NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "transactionsDidLoad:",
+            selector: #selector(AccountViewController.transactionsDidLoad(_:)),
             name: "TransactionsFinishedLoading",
             object: nil)
         
         //tell VC to watch for failure notifications from User obj
         NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "userLoadingFailed:",
+            selector: #selector(AccountViewController.dataLoadingFailed(_:)),
             name: "UserLoadingFailed",
             object: nil)
         

@@ -94,7 +94,7 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
                 
                 challenge.sender?.useCredential(credential, forAuthenticationChallenge: challenge)
             }
-            self.loginAttempts++
+            self.loginAttempts += 1
         } else {
             connection.cancel()
             self.user.dataLoadingFailed()

@@ -87,7 +87,7 @@ class PubViewController: UIViewController, UINavigationBarDelegate {
         super.viewWillAppear(animated)
         
         //sharing gesture
-        self.shareGesture = UIScreenEdgePanGestureRecognizer(target: self, action: "inviteToMeal")
+        self.shareGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(PubViewController.inviteToMeal))
         self.shareGesture!.edges = UIRectEdge.Left
         self.delegate.window!.addGestureRecognizer(self.shareGesture!)
     }

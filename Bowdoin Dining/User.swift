@@ -181,7 +181,7 @@ class User : NSObject {
         }
         
         var totalScore = 0.0
-        for var i = 0; i < length; i++ {
+        for i in 0 ..< length {
             if i >= length-10 {
                 let currentLineCount = line[i]
                 let minuteCrowdedness = Double(currentLineCount) / crowdednessThreshold

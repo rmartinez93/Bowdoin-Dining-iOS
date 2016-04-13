@@ -143,7 +143,7 @@ class Menus : NSObject {
                             var attributes : [String] = []
                             
                             if attributeMatches.count != 0 { //if there were matches, loop through them and add them to string
-                                for var i = 0; i < attributeMatches.count; i++ {
+                                for i in 0 ..< attributeMatches.count {
                                     let special = attributeMatches.objectAtIndex(i) as! NSTextCheckingResult
                                     attributes += [(item_name.stringValue() as NSString).substringWithRange(special.range) as String]
                                 }
@@ -163,7 +163,7 @@ class Menus : NSObject {
                                 
                                 //check if item course exists
                                 var coursePosition = -1;
-                                for var i = 0; i < courses.count; i++ {
+                                for i in 0 ..< courses.count {
                                     let course = courses[i] as Course
                                     if course.courseName == courseObject.stringValue() {
                                         coursePosition = i
@@ -236,7 +236,7 @@ class Menus : NSObject {
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         
         //make request to get info from itemIds
-        let endPointURL = "http://bowdoindining.meteor.com/favorites/\(itemIds.combine(","))"
+        let endPointURL = "http://bowdoindining.meteorapp.com/favorites/\(itemIds.combine(","))"
         let url = NSURL(string: endPointURL)
         let data = NSData(contentsOfURL: url!)
         

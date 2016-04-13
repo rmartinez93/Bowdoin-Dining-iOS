@@ -43,7 +43,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1)
         refreshControl.tintColor = UIColor.whiteColor()
-        refreshControl.addTarget(self, action: Selector("loadFavoritesData"), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self, action: #selector(MenuViewController.loadFavoritesData), forControlEvents: UIControlEvents.ValueChanged)
         menuItems.addSubview(refreshControl)
     }
     
@@ -92,7 +92,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         
         //tell VC to watch for success notifications from User obj, in case lines not loaded
         NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "linesDidLoad",
+            selector: #selector(MenuViewController.linesDidLoad),
             name: "LinesFinishedLoading",
             object: nil)
     }
@@ -509,7 +509,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         //load favorited items
         let allFavorited = Course.allFavoritedItems()
         
-        var endpoint = "http://bowdoindining.meteor.com/methods/"
+        var endpoint = "http://bowdoindining.meteorapp.com/methods/"
         //if this cell is NOT favorited, show favoriting action
         if !allFavorited.containsObject(itemId) {
             //if item is favorited, save it to our centralized list of favorited items

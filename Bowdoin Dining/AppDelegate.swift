@@ -150,7 +150,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
         
         //tell VC to watch for success notifications from User obj
         NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "linesDidFinishLoading",
+            selector: #selector(AppDelegate.linesDidFinishLoading),
             name: "LineDataLoaded",
             object: nil)
         

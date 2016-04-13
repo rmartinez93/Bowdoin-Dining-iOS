@@ -11,7 +11,7 @@ import Foundation
 extension Array {
     func combine(separator: String) -> String {
         var str : String = ""
-        for var i = 0; i < self.count; i++ {
+        for i in 0 ..< self.count {
             str += "\(self[i])"
             if i < self.count-1 {
                 str += separator
