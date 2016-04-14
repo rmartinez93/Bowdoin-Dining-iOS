@@ -135,7 +135,7 @@ class Menus : NSObject {
                         
                         do {
                             //create regex for removing diet attributes from item name, find matches in string
-                            let regex = try NSRegularExpression(pattern: "\\b(NGI|VE|V|L)\\b", options: [])
+                            let regex = try NSRegularExpression(pattern: "\\b(NGI|VE|V|L|H)\\b", options: [])
                             
                             let attributeMatches = regex.matchesInString(item_name.stringValue(), options: [], range: NSMakeRange(0, (item_name.stringValue() as NSString).length)) as NSArray
                             

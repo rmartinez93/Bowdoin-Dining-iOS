@@ -102,6 +102,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
                 self.filters.append("NGI")
             case 4:
                 self.filters.append("L")
+            case 5:
+                self.filters.append("H")
             default:
                 break;
         }
