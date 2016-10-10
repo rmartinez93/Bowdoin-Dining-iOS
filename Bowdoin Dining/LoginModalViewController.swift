@@ -15,19 +15,19 @@ class LoginModalViewController : UIViewController {
     @IBOutlet var loggingIn     : UIActivityIndicatorView!
     @IBOutlet var insutructions : UILabel!
     @IBOutlet var loginButton   : UIButton!
-    var delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    var delegate = UIApplication.shared.delegate as! AppDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        NSNotificationCenter.defaultCenter().addObserver(self,
+        NotificationCenter.default.addObserver(self,
             selector: #selector(LoginModalViewController.accountDidLoad(_:)),
-            name: "AccountFinishedLoading",
+            name: NSNotification.Name(rawValue: "AccountFinishedLoading"),
             object: nil)
     }
     
-    override func viewWillDisappear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func didReceiveMemoryWarning() {
@@ -35,43 +35,43 @@ class LoginModalViewController : UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    @IBAction func login(sender : UIButton) {
+    @IBAction func login(_ sender : UIButton) {
         self.loggingIn.startAnimating()
-        self.loginButton.setTitle("    ", forState: UIControlState.Normal)
-        self.usernameField.enabled = false
-        self.passwordField.enabled = false
+        self.loginButton.setTitle("    ", for: UIControlState())
+        self.usernameField.isEnabled = false
+        self.passwordField.isEnabled = false
         
         //create user with new credentials
         self.delegate.user = User(username: self.usernameField.text!, password: self.passwordField.text!)
         
-        let downloadQueue = dispatch_queue_create("Download queue", nil)
-        dispatch_async(downloadQueue) {
+        let downloadQueue = DispatchQueue(label: "Download queue", attributes: [])
+        downloadQueue.async {
             //in new thread, load user info
             self.delegate.user!.loadAccountData()
         }
     }
     
-    func accountDidLoad(notification : NSNotification) {
+    func accountDidLoad(_ notification : Notification) {
         //go to main thread
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             if !self.delegate.user!.dataLoaded {
                 self.loggingIn.stopAnimating()
-                self.loginButton.setTitle("Login", forState: UIControlState.Normal)
-                self.usernameField.enabled = true
-                self.passwordField.enabled = true
+                self.loginButton.setTitle("Login", for: UIControlState())
+                self.usernameField.isEnabled = true
+                self.passwordField.isEnabled = true
                 self.insutructions.text = "Username or password is invalid."
             } else {
-                if self.remember.on {
+                if self.remember.isOn {
                     self.delegate.user!.remember()
                 }
                 
                 self.loggingIn.stopAnimating()
-                self.performSegueWithIdentifier("userDidLogin", sender: self)
+                self.performSegue(withIdentifier: "userDidLogin", sender: self)
             }
         }
     }
     
-    @IBAction func nextItem(textfield : UITextField) {
+    @IBAction func nextItem(_ textfield : UITextField) {
         let nextTag = textfield.tag + 1
         // Try to find next responder
         let nextResponder = textfield.superview?.viewWithTag(nextTag)
@@ -85,7 +85,7 @@ class LoginModalViewController : UIViewController {
         }
     }
     
-    @IBAction func hideKeyboard(textfield : UITextField) {
+    @IBAction func hideKeyboard(_ textfield : UITextField) {
         textfield.resignFirstResponder()
     }
 }

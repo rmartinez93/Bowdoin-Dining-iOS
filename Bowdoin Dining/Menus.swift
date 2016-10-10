@@ -13,25 +13,25 @@ class Menus : NSObject {
     var serverURL = "https://www.bowdoin.edu/atreus/lib/xml/"
     
     //format an NSDate for our use
-    class func formatDate(todayDate : NSDate) -> NSMutableArray {
+    class func formatDate(_ todayDate : Date) -> NSMutableArray {
         //load gregorian calendar
-        let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
-        calendar.locale = NSLocale(localeIdentifier: "en-US")
+        var calendar = Calendar(identifier: Calendar.Identifier.gregorian)
+        calendar.locale = Locale(identifier: "en-US")
         
         //create DateComponents from the NSDate and NSCalendar
-        let today = calendar.components([NSCalendarUnit.Year, NSCalendarUnit.WeekOfYear, NSCalendarUnit.Weekday], fromDate: todayDate)
+        var today = (calendar as NSCalendar).components([NSCalendar.Unit.year, NSCalendar.Unit.weekOfYear, NSCalendar.Unit.weekday], from: todayDate)
         
         //calculate offset from sunday (day menu begins)
         let offset  = today.weekday
         
         //set current day to sunday (first day) of this week, and create NSDateComponents for that day
         today.weekday = 1
-        let lastSundayDate = calendar.dateFromComponents(today) as NSDate!
-        let lastSunday = calendar.components([NSCalendarUnit.Day, NSCalendarUnit.Year, NSCalendarUnit.Month, NSCalendarUnit.Weekday], fromDate: lastSundayDate)
+        let lastSundayDate = calendar.date(from: today) as Date!
+        let lastSunday = (calendar as NSCalendar).components([NSCalendar.Unit.day, NSCalendar.Unit.year, NSCalendar.Unit.month, NSCalendar.Unit.weekday], from: lastSundayDate!)
         
         //store info about last sunday's date for use with Bowdoin XML API
         let day   = lastSunday.day
-        let month = lastSunday.month - 1
+        let month = lastSunday.month! - 1
         let year  = lastSunday.year
         
         return [day, month, year, offset]
@@ -40,15 +40,15 @@ class Menus : NSObject {
     class func clearOldCache() {
         let cachePath = self.cachePath()
         do {
-            let allCache = try NSFileManager.defaultManager().contentsOfDirectoryAtPath(cachePath)
+            let allCache = try FileManager.default.contentsOfDirectory(atPath: cachePath)
 
             for item in allCache {
-                let attributes = try NSFileManager.defaultManager().attributesOfItemAtPath(item)
+                let attributes = try FileManager.default.attributesOfItem(atPath: item)
                 console.log(attributes)
                 
-                let creationDate = attributes[NSFileCreationDate] as! NSDate
-                if creationDate.compare(NSDate()) == NSComparisonResult.OrderedAscending {
-                    try NSFileManager.defaultManager().removeItemAtPath(item)
+                let creationDate = attributes[FileAttributeKey.creationDate] as! Date
+                if creationDate.compare(Date()) == ComparisonResult.orderedAscending {
+                    try FileManager.default.removeItem(atPath: item)
                 }
             }
         } catch {
@@ -58,34 +58,34 @@ class Menus : NSObject {
     }
     
     //load menu for a given day
-    class func loadMenuForDay(day : NSInteger, month : NSInteger, year : NSInteger, offset : NSInteger) -> NSData? {
+    class func loadMenuForDay(_ day : NSInteger, month : NSInteger, year : NSInteger, offset : NSInteger) -> Data? {
         //first, search local path in case cached
         let path = self.localURLForDay(day, month: month, year: year, offset: offset) as String
-        let fileExists = NSFileManager.defaultManager().fileExistsAtPath(path) as Bool
+        let fileExists = FileManager.default.fileExists(atPath: path) as Bool
         if fileExists { //if cached, return cached file
-            return NSData(contentsOfFile: path)
+            return (try? Data(contentsOf: URL(fileURLWithPath: path)))
         } else { //else not cached
             //begin network activity
-            UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+            UIApplication.shared.isNetworkActivityIndicatorVisible = true
 
             //download menu for this day
             let urlString = self.externalURLForDay(day, month: month, year: year, offset: offset) as String
-            let url = NSURL(string: urlString)!
+            let url = URL(string: urlString)!
 
-            let xmlData = NSMutableData(contentsOfURL: url)
+            let xmlData = NSMutableData(contentsOf: url)
             
             //end network activity
-            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
             
             if xmlData != nil {
                 //cache file, return
-                xmlData!.writeToFile(path, atomically: true)
+                xmlData!.write(toFile: path, atomically: true)
             }
-            return xmlData
+            return xmlData as Data?
         }
     }
     
-    class func createMenuFromXML(xmlData : NSData, forMeal mealSegment : NSInteger, onWeekday weekday : Bool, atLocation locationId : NSInteger, withFilters filters : NSArray) -> [Course] {
+    class func createMenuFromXML(_ xmlData : Data, forMeal mealSegment : NSInteger, onWeekday weekday : Bool, atLocation locationId : NSInteger, withFilters filters : NSArray) -> [Course] {
         let ignoreList = ["Salad Bar", "...", "Salads"]
         
         //Create Google XML parsing object from NSData, grab "<meal>"s below root
@@ -93,74 +93,71 @@ class Menus : NSObject {
             let doc = try GDataXMLDocument(data: xmlData, options: 0)
             
             let root = doc.rootElement()
-            let meals = root.elementsForName("meal") as NSArray
+            let meals = root?.elements(forName: "meal") as! [GDataXMLElement]
             
             //compensate for disappearing meals
-            var mealId : NSInteger = 0;
+            var mealIndex : Int = 0;
             switch mealSegment {
             case 0:
                 if !weekday {
-                    mealId = 1
+                    mealIndex = 1
                 }
             case 1:
                 if weekday {
-                    mealId = 2
+                    mealIndex = 2
                 } else {
-                    mealId = 3
+                    mealIndex = 3
                 }
             case 2:
-                mealId = 3
+                mealIndex = 3
             default: break
             }
             
-            let meal  = meals.objectAtIndex(mealId) as! GDataXMLElement
+            let meal  = meals[mealIndex]
             
             //each meal has two units (locations), create an XML Element for this locationId's menu
-            let units = meal.elementsForName("unit") as NSArray
-            let unit  = units.objectAtIndex(locationId) as! GDataXMLElement
-            let menu  = (unit.elementsForName("menu") as NSArray).firstObject as! GDataXMLElement
+            let units = meal.elements(forName: "unit") as! [GDataXMLElement]
+            let unit  = units[locationId]
+            let menu  = (unit.elements(forName: "menu") as! [GDataXMLElement]).first!
             
             //create array for records (menu items), initialize array of courses (a menu item attribute)
-            let menuArray = menu.elementsForName("record") as NSArray?
+            let menuArray = menu.elements(forName: "record") as? [GDataXMLElement]
             var courses : [Course] = []
             
             //if there are menu items available, loop through them
             if let menuItems = menuArray {
                 for item in menuItems {
                     //grab information about this menu item: name & id
-                    let item_name = ((item as! GDataXMLElement).elementsForName("webLongName") as NSArray).firstObject as! GDataXMLElement
-                    
+                    let item_name = (item.elements(forName: "webLongName") as! [GDataXMLElement]).first!
                     if !ignoreList.contains(item_name.stringValue()) {
-                        let item_id   = ((item as! GDataXMLElement).elementsForName("itemID") as NSArray).firstObject as! GDataXMLElement
-                        
+                        let item_id   = (item.elements(forName: "itemID") as! [GDataXMLElement]).first!
                         do {
                             //create regex for removing diet attributes from item name, find matches in string
                             let regex = try NSRegularExpression(pattern: "\\b(NGI|VE|V|L|H)\\b", options: [])
                             
-                            let attributeMatches = regex.matchesInString(item_name.stringValue(), options: [], range: NSMakeRange(0, (item_name.stringValue() as NSString).length)) as NSArray
+                            let attributeMatches = regex.matches(in: item_name.stringValue(), options: [], range: NSMakeRange(0, (item_name.stringValue() as NSString).length)) as NSArray
                             
                             //store diet attributes for filtering
                             var attributes : [String] = []
                             
                             if attributeMatches.count != 0 { //if there were matches, loop through them and add them to string
                                 for i in 0 ..< attributeMatches.count {
-                                    let special = attributeMatches.objectAtIndex(i) as! NSTextCheckingResult
-                                    attributes += [(item_name.stringValue() as NSString).substringWithRange(special.range) as String]
+                                    let special = attributeMatches.object(at: i) as! NSTextCheckingResult
+                                    attributes += [(item_name.stringValue() as NSString).substring(with: special.range) as String]
                                 }
                             }
                             
                             //replace matches with empty space
-                            let cleaned = regex.stringByReplacingMatchesInString(item_name.stringValue(), options: [], range: NSMakeRange(0, (item_name.stringValue() as NSString).length), withTemplate: "").stringByReplacingOccurrencesOfString("(", withString: "").stringByReplacingOccurrencesOfString(")", withString: "")
+                            let cleaned = regex.stringByReplacingMatches(in: item_name.stringValue(), options: [], range: NSMakeRange(0, (item_name.stringValue() as NSString).length), withTemplate: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "")
                             
                             //check if any diet attributes match our filter
                             let overlap = NSMutableSet(array: filters as [AnyObject])
-                            overlap.intersectSet(NSSet(array: attributes) as Set<NSObject>)
+                            overlap.intersect(NSSet(array: attributes) as Set<NSObject>)
                             
                             //if there is no active diet filter, or this item passes our filter
                             if filters.count == 0 || overlap.allObjects.count != 0 {
                                 //determine course for this item and check if it already exists in our courses array
-                                let courseObject = ((item as! GDataXMLElement).elementsForName("course") as NSArray).firstObject as! GDataXMLElement
-                                
+                                let courseObject = (item.elements(forName: "course") as! [GDataXMLElement]).first!
                                 //check if item course exists
                                 var coursePosition = -1;
                                 for i in 0 ..< courses.count {
@@ -222,32 +219,32 @@ class Menus : NSObject {
         }
     }
     
-    class func loadFavoritesDataForCourses(courses : [Course]) -> [String : Int] {
+    class func loadFavoritesDataForCourses(_ courses : [Course]) -> [String : Int] {
         var itemIds : [String] = []
         for course in courses {
             for item in course.menuItems {
-                if item != "NA" {
+                if item.itemId != "NA" {
                     itemIds.append(item.itemId)
                 }
             }
         }
         
         //begin network activity
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         
         //make request to get info from itemIds
         let endPointURL = "http://bowdoindining.meteorapp.com/favorites/\(itemIds.combine(","))"
-        let url = NSURL(string: endPointURL)
-        let data = NSData(contentsOfURL: url!)
+        let url = URL(string: endPointURL)
+        let data = try? Data(contentsOf: url!)
         
         //end network activity
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
         
         do {
             //extract favorites data into dictionary
             var favoritesData : [String: Int] = [:]
             if let jsonData = data {
-                if let json: NSDictionary = try NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions.MutableContainers) as? NSDictionary {
+                if let json: NSDictionary = try JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions.mutableContainers) as? NSDictionary {
                     if let favorites = json["favorites"] as? NSArray {
                         for item in favorites {
                             if let favorite = item as? NSDictionary {
@@ -267,34 +264,34 @@ class Menus : NSObject {
         }
     }
     
-    class func externalURLForDay(day : NSInteger, month : NSInteger, year : NSInteger, offset : NSInteger) -> NSString {
-        return "\(Menus().serverURL)\(year)-\(month)-\(day)/\(offset).xml"
+    class func externalURLForDay(_ day : NSInteger, month : NSInteger, year : NSInteger, offset : NSInteger) -> NSString {
+        return "\(Menus().serverURL)\(year)-\(month)-\(day)/\(offset).xml" as NSString
     }
     
-    class func localURLForDay(day : NSInteger, month : NSInteger, year : NSInteger, offset : NSInteger) -> NSString {
+    class func localURLForDay(_ day : NSInteger, month : NSInteger, year : NSInteger, offset : NSInteger) -> NSString {
         let file = "local-\(year)-\(month)-\(day)-\(offset).xml"
-        return "\(self.cachePath())\(file)"
+        return "\(self.cachePath())\(file)" as NSString
     }
     
     class func cachePath() -> String {
-        let cachePath = NSURL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.CachesDirectory, NSSearchPathDomainMask.UserDomainMask, true).first!)
-        let menusPath = cachePath.URLByAppendingPathComponent("menus")
+        let cachePath = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.cachesDirectory, FileManager.SearchPathDomainMask.userDomainMask, true).first!)
+        let menusPath = cachePath.appendingPathComponent("menus")
         
         //create path if it doesn't exist
-        if (!NSFileManager.defaultManager().fileExistsAtPath(menusPath.path!)) {
+        if (!FileManager.default.fileExists(atPath: menusPath.path)) {
             do {
-                try NSFileManager.defaultManager().createDirectoryAtPath(menusPath.path!, withIntermediateDirectories: false, attributes: nil)
+                try FileManager.default.createDirectory(atPath: menusPath.path, withIntermediateDirectories: false, attributes: nil)
             } catch {
                 print("Cache Path Error")
             }
         }
         
-        return menusPath.path!
+        return menusPath.path
     }
 }
 
 extension String {
     func trim() -> String {
-        return self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+        return self.trimmingCharacters(in: CharacterSet.whitespaces)
     }
 }

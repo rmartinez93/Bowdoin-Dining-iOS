@@ -17,74 +17,74 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
     @IBOutlet var points       : UILabel!
     @IBOutlet var recent       : UIButton!
     @IBOutlet var timeStamp: UILabel!
-    var delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    var delegate = UIApplication.shared.delegate as! AppDelegate
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         //tell VC to watch for success notifications from User obj
-        NSNotificationCenter.defaultCenter().addObserver(self,
+        NotificationCenter.default.addObserver(self,
             selector: #selector(AccountViewController.accountDidLoad(_:)),
-            name: "AccountFinishedLoading",
+            name: NSNotification.Name(rawValue: "AccountFinishedLoading"),
             object: nil)
         
         //tell VC to watch for success notifications from User obj
-        NSNotificationCenter.defaultCenter().addObserver(self,
+        NotificationCenter.default.addObserver(self,
             selector: #selector(AccountViewController.transactionsDidLoad(_:)),
-            name: "TransactionsFinishedLoading",
+            name: NSNotification.Name(rawValue: "TransactionsFinishedLoading"),
             object: nil)
         
         //tell VC to watch for failure notifications from User obj
-        NSNotificationCenter.defaultCenter().addObserver(self,
+        NotificationCenter.default.addObserver(self,
             selector: #selector(AccountViewController.dataLoadingFailed(_:)),
-            name: "UserLoadingFailed",
+            name: NSNotification.Name(rawValue: "UserLoadingFailed"),
             object: nil)
         
         //load user data
         self.loadUserData(self)
     }
     
-    override func viewWillDisappear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
         
         super.viewWillDisappear(animated)
     }
     
-    func positionForBar(bar: UIBarPositioning) -> UIBarPosition  {
-        return UIBarPosition.TopAttached
+    func position(for bar: UIBarPositioning) -> UIBarPosition  {
+        return UIBarPosition.topAttached
     }
     
-    @IBAction func userDidLogin(segue : UIStoryboardSegue) {
+    @IBAction func userDidLogin(_ segue : UIStoryboardSegue) {
 
     }
     
-    @IBAction func userCancelledLogin(segue : UIStoryboardSegue) {
+    @IBAction func userCancelledLogin(_ segue : UIStoryboardSegue) {
         
     }
     
-    @IBAction func userReturnedFromTransactions(segue : UIStoryboardSegue) {
+    @IBAction func userReturnedFromTransactions(_ segue : UIStoryboardSegue) {
         
     }
     
-    @IBAction func loadUserData(sender : AnyObject) {
+    @IBAction func loadUserData(_ sender : AnyObject) {
         self.meals.text   = "N/A"
         self.points.text  = "N/A"
         self.balance.text = "N/A"
         self.timeStamp.text = ""
-        self.navBar.topItem!.rightBarButtonItem!.enabled = false
-        self.navBar.topItem!.leftBarButtonItem!.enabled  = false
-        self.recent.enabled = false
+        self.navBar.topItem!.rightBarButtonItem!.isEnabled = false
+        self.navBar.topItem!.leftBarButtonItem!.isEnabled  = false
+        self.recent.isEnabled = false
         
         if self.delegate.user == nil || self.delegate.user!.loggedIn == false {
-            let userDefaults = NSUserDefaults.standardUserDefaults()
-            let username     = userDefaults.objectForKey("bowdoin_username") as? String
-            let password     = userDefaults.objectForKey("bowdoin_password") as? String
+            let userDefaults = UserDefaults.standard
+            let username     = userDefaults.object(forKey: "bowdoin_username") as? String
+            let password     = userDefaults.object(forKey: "bowdoin_password") as? String
             
             //if we have user info saved, download their data
             if username != nil && password != nil {
                 self.loadingData.startAnimating()
-                let downloadQueue = dispatch_queue_create("Download queue", nil);
-                dispatch_async(downloadQueue) {
+                let downloadQueue = DispatchQueue(label: "Download queue", attributes: []);
+                downloadQueue.async {
                     //in new thread, load user info if not loaded or if force-reloaded
                     self.delegate.user = User(username: username!, password: password!)
                     self.delegate.user?.loadAccountData()
@@ -92,9 +92,9 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
             }
             //else, ask for user credentials
             else {
-                self.navBar.topItem!.rightBarButtonItem!.enabled = true
-                self.navBar.topItem!.leftBarButtonItem!.enabled  = false
-                self.recent.enabled = false
+                self.navBar.topItem!.rightBarButtonItem!.isEnabled = true
+                self.navBar.topItem!.leftBarButtonItem!.isEnabled  = false
+                self.recent.isEnabled = false
             }
         } else {
             self.delegate.user!.loadAccountData()
@@ -105,9 +105,9 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
         self.delegate.user!.loadTransactionData()
     }
     
-    func dataLoadingFailed(notification : NSNotification) {
+    func dataLoadingFailed(_ notification : Notification) {
         //refresh onscreen info
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             let alert = UIAlertView(title: "Account Error",
                 message: "Sorry, your account data could not be loaded at this time. Please try again later.",
                 delegate: self,
@@ -118,33 +118,33 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
     }
     
     //Transaction data loaded
-    func transactionsDidLoad(notification: NSNotification) {
-        dispatch_async(dispatch_get_main_queue()) {
+    func transactionsDidLoad(_ notification: Notification) {
+        DispatchQueue.main.async {
             if self.delegate.user!.dataLoaded {
-                let transactionsVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("TransactionsViewController") as! TransactionsViewController
-                self.presentViewController(transactionsVC, animated: true, completion: nil)
+                let transactionsVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "TransactionsViewController") as! TransactionsViewController
+                self.present(transactionsVC, animated: true, completion: nil)
             }
         }
     }
     
     //Balance/Polar Points/Meals loaded
-    func accountDidLoad(notification : NSNotification) {
+    func accountDidLoad(_ notification : Notification) {
         //refresh onscreen info
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             if self.delegate.user!.dataLoaded {
                 self.loadingData.stopAnimating()
-                self.navBar.topItem!.rightBarButtonItem!.enabled = false
-                self.navBar.topItem!.leftBarButtonItem!.enabled  = true
-                self.recent.enabled = true
+                self.navBar.topItem!.rightBarButtonItem!.isEnabled = false
+                self.navBar.topItem!.leftBarButtonItem!.isEnabled  = true
+                self.recent.isEnabled = true
                 
                 self.view.setNeedsDisplay()
                 
                 self.meals.text   = NSString(format: "%i",    self.delegate.user!.mealsLeft!) as String
                 self.points.text  = NSString(format: "$%.2f", self.delegate.user!.polarPoints!) as String
                 self.balance.text = NSString(format: "$%.2f", self.delegate.user!.cardBalance!) as String                
-                let dateFormatter = NSDateFormatter()
+                let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "MM/dd 'at' hh:mm a"
-                self.timeStamp.text = "Last Updated: \(dateFormatter.stringFromDate(NSDate()))"
+                self.timeStamp.text = "Last Updated: \(dateFormatter.string(from: Date()))"
             }
         }
     }

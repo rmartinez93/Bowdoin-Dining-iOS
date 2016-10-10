@@ -9,7 +9,7 @@
 import UIKit
 
 class PubViewController: UIViewController, UINavigationBarDelegate {
-    var delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    var delegate = UIApplication.shared.delegate as! AppDelegate
     var shareGesture : UIScreenEdgePanGestureRecognizer?
     @IBOutlet var MageesMenu : UIWebView!
     @IBOutlet var navBar     : UINavigationBar!
@@ -55,8 +55,8 @@ class PubViewController: UIViewController, UINavigationBarDelegate {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        let url = NSBundle.mainBundle().URLForResource("pub-menu", withExtension: "pdf") as NSURL!
-        let request = NSURLRequest(URL: url)
+        let url = Bundle.main.url(forResource: "pub-menu", withExtension: "pdf") as URL!
+        let request = URLRequest(url: url!)
 
         //load menu
         self.MageesMenu.loadRequest(request)
@@ -65,41 +65,41 @@ class PubViewController: UIViewController, UINavigationBarDelegate {
         self.MageesMenu.scrollView.contentInset.bottom = 50
     }
     
-    func positionForBar(bar: UIBarPositioning) -> UIBarPosition  {
-        return UIBarPosition.TopAttached
+    func position(for bar: UIBarPositioning) -> UIBarPosition  {
+        return UIBarPosition.topAttached
     }
     
     //shares an invite to the currently browsed meal
     func inviteToMeal() {
         var invite = [AnyObject]()
-        invite.append("Let's get a meal at the Pub?")
+        invite.append("Let's get a meal at the Pub?" as AnyObject)
         
         let activityViewController = UIActivityViewController(activityItems: invite, applicationActivities: nil)
-        self.presentViewController(activityViewController, animated: true, completion: nil)
+        self.present(activityViewController, animated: true, completion: nil)
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.delegate.window!.removeGestureRecognizer(shareGesture!)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         //sharing gesture
         self.shareGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(PubViewController.inviteToMeal))
-        self.shareGesture!.edges = UIRectEdge.Left
+        self.shareGesture!.edges = UIRectEdge.left
         self.delegate.window!.addGestureRecognizer(self.shareGesture!)
     }
     
     @IBAction func showSpecials() {
-        let url = NSURL(string: "https://www.bowdoin.edu/atreus/diningspecials/specials.jsp")
-        UIApplication.sharedApplication().openURL(url!)
+        let url = URL(string: "https://www.bowdoin.edu/atreus/diningspecials/specials.jsp")
+        UIApplication.shared.openURL(url!)
     }
     
     @IBAction func dialPub() {
-        let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
-        calendar.locale = NSLocale(localeIdentifier: "en-US");
+        var calendar = Calendar(identifier: Calendar.Identifier.gregorian)
+        calendar.locale = Locale(identifier: "en-US");
         
 //        let components = calendar.components([NSCalendarUnit.Hour, NSCalendarUnit.Minute, NSCalendarUnit.Weekday], fromDate: NSDate())
 //        
@@ -108,8 +108,8 @@ class PubViewController: UIViewController, UINavigationBarDelegate {
 //        let day  = components.weekday
 //        
         //if pubIsOpen(day, hour: hour, min: min) {
-        let phoneNumberURL = NSURL(string:"tel://2077253888")!
-        UIApplication.sharedApplication().openURL(phoneNumberURL)
+        let phoneNumberURL = URL(string:"tel://2077253888")!
+        UIApplication.shared.openURL(phoneNumberURL)
 //        } else {
 //            var alert = UIAlertView(title: "Pub Closed",
 //                message: "Sorry, the pub seems to be closed at this time. Please try again later!",
@@ -119,7 +119,7 @@ class PubViewController: UIViewController, UINavigationBarDelegate {
 //        }
     }
     
-    func pubIsOpen(day : Int, hour : Int, min : Int) -> Bool {
+    func pubIsOpen(_ day : Int, hour : Int, min : Int) -> Bool {
         let OH = [sunOH, monOH, tueOH, wedOH, thuOH, friOH, satOH]
         let OM = [sunOM, monOM, tueOM, wedOM, thuOM, friOM, satOM]
         let CH = [sunCH, monCH, tueCH, wedCH, thuCH, friCH, satCH]
@@ -129,12 +129,12 @@ class PubViewController: UIViewController, UINavigationBarDelegate {
     }
     
     //is time1 before time2
-    func before(hour1 : Int, minute1 : Int, hour2 : Int, minute2 : Int) -> Bool {
+    func before(_ hour1 : Int, minute1 : Int, hour2 : Int, minute2 : Int) -> Bool {
         return  hour1 < hour2 || (hour1 == hour2 && minute1 < minute2)
     }
     
     //is time1 after time2
-    func after(hour1 : Int, minute1 : Int, hour2 : Int, minute2 : Int) -> Bool {
+    func after(_ hour1 : Int, minute1 : Int, hour2 : Int, minute2 : Int) -> Bool {
         return  hour1 > hour2 || (hour1 == hour2 && minute1 >= minute2)
     }
     

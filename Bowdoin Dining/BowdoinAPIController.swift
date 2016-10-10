@@ -47,7 +47,7 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
     }
     
     //SOAP envelope for request
-    func returnSoapEnvelopeForService(serviceRequested : String) -> String {
+    func returnSoapEnvelopeForService(_ serviceRequested : String) -> String {
         var soapEnvelope = "<?xml version=\"1.0\"?>"
         soapEnvelope += "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tem=\"http://tempuri.org/\">"
         soapEnvelope += "<soapenv:Header/>"
@@ -60,21 +60,21 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
     }
     
     //makes SOAP request
-    func createSOAPRequestWithEnvelope(soapEnvelope : String) {
+    func createSOAPRequestWithEnvelope(_ soapEnvelope : String) {
         //create request
-        let url = NSURL(string: "https://gooseeye.bowdoin.edu/ws-csGoldShim/Service.asmx")!
-        let req = NSMutableURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.UseProtocolCachePolicy, timeoutInterval: 5000)
+        let url = URL(string: "https://gooseeye.bowdoin.edu/ws-csGoldShim/Service.asmx")!
+        let req = NSMutableURLRequest(url: url, cachePolicy: NSURLRequest.CachePolicy.useProtocolCachePolicy, timeoutInterval: 5000)
         
         req.addValue("text/xml",    forHTTPHeaderField: "Content-Type")
         req.addValue("bowdoin.edu", forHTTPHeaderField: "Host")
-        req.HTTPMethod = "POST"
-        req.HTTPBody = soapEnvelope.dataUsingEncoding(NSUTF8StringEncoding)
+        req.httpMethod = "POST"
+        req.httpBody = soapEnvelope.data(using: String.Encoding.utf8)
         
         //begin connection
-        let connection = NSURLConnection(request: req, delegate: self, startImmediately: false)
+        let connection = NSURLConnection(request: req as URLRequest, delegate: self, startImmediately: false)
         
         if connection != nil {
-            connection!.scheduleInRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
+            connection!.schedule(in: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
             
             connection!.start()
         } else {
@@ -83,16 +83,16 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
     }
     
     //takes care of HTTP Authentication
-    func connection(connection: NSURLConnection, didReceiveAuthenticationChallenge challenge: NSURLAuthenticationChallenge) {
+    func connection(_ connection: NSURLConnection, didReceive challenge: URLAuthenticationChallenge) {
         if self.loginAttempts == 0 {
             let authMethod = challenge.protectionSpace.authenticationMethod
             if authMethod == NSURLAuthenticationMethodNTLM {
 
-                let credential = NSURLCredential(user: self.user.username!,
+                let credential = URLCredential(user: self.user.username!,
                     password: self.user.password!,
-                    persistence: NSURLCredentialPersistence.None)
+                    persistence: URLCredential.Persistence.none)
                 
-                challenge.sender?.useCredential(credential, forAuthenticationChallenge: challenge)
+                challenge.sender?.use(credential, for: challenge)
             }
             self.loginAttempts += 1
         } else {
@@ -101,28 +101,28 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
         }
     }
 
-    func connection(connection: NSURLConnection!, didReceiveResponse response: NSURLResponse!) {
+    private func connection(_ connection: NSURLConnection!, didReceiveResponse response: URLResponse!) {
         // Response received, clear out data
         self.data = NSMutableData()
     }
     
-    func connection(connection: NSURLConnection!, didReceiveData data: NSData!) {
+    private func connection(_ connection: NSURLConnection!, didReceiveData data: Data!) {
         // Store received data
-        self.data?.appendData(data)
+        self.data?.append(data)
     }
     
-    func connection(connection: NSURLConnection, didFailWithError error: NSError) {
+    func connection(_ connection: NSURLConnection, didFailWithError error: Error) {
         //The request has failed for some reason!
         // Check the error var
         NSLog("ERR \(error)")
         self.user.dataLoadingFailed()
     }
     
-    func connection(connection: NSURLConnection!, willCacheResponse cachedResponse : NSCachedURLResponse) -> NSCachedURLResponse? {
+    func connection(_ connection: NSURLConnection!, willCacheResponse cachedResponse : CachedURLResponse) -> CachedURLResponse? {
         return nil
     }
     
-    func connectionDidFinishLoading(connection: NSURLConnection!) {
-        self.user.parseData(self.data!, type: self.type)
+    func connectionDidFinishLoading(_ connection: NSURLConnection!) {
+        self.user.parseData(self.data! as Data, type: self.type)
     }
 }

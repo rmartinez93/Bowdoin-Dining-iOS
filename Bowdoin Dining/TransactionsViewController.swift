@@ -9,7 +9,7 @@
 import UIKit
 
 class TransactionsViewController : UIViewController, UITableViewDelegate, UITableViewDataSource, UINavigationBarDelegate {
-    var delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    var delegate = UIApplication.shared.delegate as! AppDelegate
     var transactions : [AnyObject]!
     @IBOutlet var transactionView : UITableView!
     @IBOutlet var navBar : UINavigationBar!
@@ -18,15 +18,15 @@ class TransactionsViewController : UIViewController, UITableViewDelegate, UITabl
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        transactionView.layoutMargins = UIEdgeInsetsZero
+        transactionView.layoutMargins = UIEdgeInsets.zero
     }
     
-    func positionForBar(bar: UIBarPositioning) -> UIBarPosition  {
-        return UIBarPosition.TopAttached
+    func position(for bar: UIBarPositioning) -> UIBarPosition  {
+        return UIBarPosition.topAttached
     }
     
-    override func viewWillDisappear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func didReceiveMemoryWarning() {
@@ -34,26 +34,26 @@ class TransactionsViewController : UIViewController, UITableViewDelegate, UITabl
         // Dispose of any resources that can be recreated.
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.delegate.user!.transactions!.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let simpleTableIdentifier: NSString = "SimpleTableCell"
         
-        var cell = tableView.dequeueReusableCellWithIdentifier(simpleTableIdentifier as String) as? TransactionCell
+        var cell = tableView.dequeueReusableCell(withIdentifier: simpleTableIdentifier as String) as? TransactionCell
         
         if cell == nil {
-            cell = NSBundle.mainBundle().loadNibNamed("TransactionCell", owner: self, options: nil).first as? TransactionCell
+            cell = Bundle.main.loadNibNamed("TransactionCell", owner: self, options: nil)?.first as? TransactionCell
         }
         
         //if this is a valid section->row, grab right menu item from course and set cell properties
-        let transaction = self.delegate.user!.transactions![indexPath.row] as Transaction
+        let transaction = self.delegate.user!.transactions![(indexPath as NSIndexPath).row] as Transaction
         cell!.titleLabel.text   = transaction.name
         cell!.dateLabel.text    = transaction.date
         cell!.amountLabel.text  = NSString(format: "-$%.2f", transaction.amount) as String
         cell!.balanceLabel.text = NSString(format: "$%.2f", transaction.balance) as String
-        cell!.layoutMargins = UIEdgeInsetsZero;
+        cell!.layoutMargins = UIEdgeInsets.zero;
         
         cell!.sizeToFit()
         

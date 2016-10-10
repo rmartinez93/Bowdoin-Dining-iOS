@@ -23,13 +23,13 @@ class UIMenuItemView: UITableViewCell {
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
     }
     
-    func initData(favoritesCount : Int, favorited : Bool, itemId : String, delegate : UIMenuItemViewDelegate) {
+    func initData(_ favoritesCount : Int, favorited : Bool, itemId : String, delegate : UIMenuItemViewDelegate) {
         self.favoritesCount = favoritesCount
         faves.text! = favoritesCount > 0 ? "\(favoritesCount)" : ""
         
@@ -61,9 +61,9 @@ class UIMenuItemView: UITableViewCell {
         delegate?.toggleFavorite(self.itemId!)
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if #available(iOS 9.0, *) {
-            if let touch = touches.first where traitCollection.forceTouchCapability == .Available {
+            if let touch = touches.first , traitCollection.forceTouchCapability == .available {
                 if(touch.force / touch.maximumPossibleForce > 0.9) {
                     self.toggleFavorited()
                 }
@@ -75,5 +75,5 @@ class UIMenuItemView: UITableViewCell {
 }
 
 protocol UIMenuItemViewDelegate {
-    func toggleFavorite(itemId : String)
+    func toggleFavorite(_ itemId : String)
 }

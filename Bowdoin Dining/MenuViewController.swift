@@ -11,7 +11,7 @@ import QuartzCore
 import AVFoundation
 
 class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControllerDelegate, UITableViewDataSource, UINavigationBarDelegate, AVSpeechSynthesizerDelegate, UIMenuItemViewDelegate {
-    var delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    var delegate = UIApplication.shared.delegate as! AppDelegate
     var courses : [Course] = []
     var favoritesData : [String : Int] = [:]
     var speaker : AVSpeechSynthesizer?
@@ -42,13 +42,13 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         
         refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1)
-        refreshControl.tintColor = UIColor.whiteColor()
-        refreshControl.addTarget(self, action: #selector(MenuViewController.loadFavoritesData), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.tintColor = UIColor.white
+        refreshControl.addTarget(self, action: #selector(MenuViewController.loadFavoritesData), for: UIControlEvents.valueChanged)
         menuItems.addSubview(refreshControl)
     }
     
-    func positionForBar(bar: UIBarPositioning) -> UIBarPosition  {
-        return UIBarPosition.TopAttached
+    func position(for bar: UIBarPositioning) -> UIBarPosition  {
+        return UIBarPosition.topAttached
     }
     
     override func didReceiveMemoryWarning() {
@@ -56,21 +56,21 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewWillDisappear(animated: Bool) {
-        (self.delegate.window!.rootViewController as! UITabBarController).tabBar.tintColor = UIColor.whiteColor()
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+    override func viewWillDisappear(_ animated: Bool) {
+        (self.delegate.window!.rootViewController as! UITabBarController).tabBar.tintColor = UIColor.white
+        NotificationCenter.default.removeObserver(self)
         
         if speaker != nil {
-            speaker!.stopSpeakingAtBoundary(AVSpeechBoundary.Immediate)
-            dispatch_async(dispatch_get_main_queue()) {
-                self.speakButton.setImage(UIImage(named: "speaker"), forState: UIControlState.Normal)
+            speaker!.stopSpeaking(at: AVSpeechBoundary.immediate)
+            DispatchQueue.main.async {
+                self.speakButton.setImage(UIImage(named: "speaker"), for: UIControlState())
             }
         }
         
         super.viewWillDisappear(animated)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         //set the text label to day we're browsing
@@ -91,18 +91,18 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         }
         
         //tell VC to watch for success notifications from User obj, in case lines not loaded
-        NSNotificationCenter.defaultCenter().addObserver(self,
+        NotificationCenter.default.addObserver(self,
             selector: #selector(MenuViewController.linesDidLoad),
-            name: "LinesFinishedLoading",
+            name: NSNotification.Name(rawValue: "LinesFinishedLoading"),
             object: nil)
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         //load menu based on delegate settings
         self.updateVisibleMenu()
     }
     
-    @IBAction func indexDidChangeForSegmentedControl(sender : UISegmentedControl) {
+    @IBAction func indexDidChangeForSegmentedControl(_ sender : UISegmentedControl) {
         //if this was a valid selection, update our delegate and update the menu
         if UISegmentedControlNoSegment != sender.selectedSegmentIndex {
             self.delegate.selectedSegment = self.meals.selectedSegmentIndex
@@ -110,14 +110,14 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         }
     }
     
-    @IBAction func backButtonPressed(sender : AnyObject) {
+    @IBAction func backButtonPressed(_ sender : AnyObject) {
         if self.delegate.daysAdded > 0 {
             self.changeDayBy(-1)
             self.updateVisibleMenu()
         }
     }
     
-    @IBAction func forwardButtonPressed(sender : AnyObject) {
+    @IBAction func forwardButtonPressed(_ sender : AnyObject) {
         if self.delegate.daysAdded < 6 {
             self.changeDayBy(1)
             self.updateVisibleMenu()
@@ -130,77 +130,77 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         } else if self.delegate.daysAdded == 1 {
             return "Tomorrow"
         } else {
-            let newDate = NSDate(timeIntervalSinceNow: NSTimeInterval(60*60*24*self.delegate.daysAdded))
-            let dateFormatter = NSDateFormatter()
+            let newDate = Date(timeIntervalSinceNow: TimeInterval(60*60*24*self.delegate.daysAdded))
+            let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "EEEE"
-            return dateFormatter.stringFromDate(newDate)
+            return dateFormatter.string(from: newDate)
         }
     }
     
-    func changeDayBy(amount: NSInteger) {
+    func changeDayBy(_ amount: NSInteger) {
         self.delegate.daysAdded += amount
         self.navBar!.topItem!.title = self.getTextForDaysAdded() as String
     }
     
     func disableAllButtons() {
-        self.backButton.enabled = false
-        self.forwardButton.enabled = false
-        self.meals.enabled = false
+        self.backButton.isEnabled = false
+        self.forwardButton.isEnabled = false
+        self.meals.isEnabled = false
     }
     
     func makeCorrectButtonsVisible() {
         //handle visibility of back/foward
-        self.backButton.enabled = true
-        self.forwardButton.enabled = true
+        self.backButton.isEnabled = true
+        self.forwardButton.isEnabled = true
         if self.delegate.daysAdded == 6 {
-            self.forwardButton.enabled = false
+            self.forwardButton.isEnabled = false
         }
         else if self.delegate.daysAdded == 0 {
-            self.backButton.enabled = false
+            self.backButton.isEnabled = false
         }
         
         //disable/enable segmented buttons
-        let date = NSDate(timeIntervalSinceNow: NSTimeInterval(60*60*24*self.delegate.daysAdded))
+        let date = Date(timeIntervalSinceNow: TimeInterval(60*60*24*self.delegate.daysAdded))
         let formattedDate = Menus.formatDate(date)
-        let offset = (formattedDate.lastObject as! NSNumber).integerValue
+        let offset = (formattedDate.lastObject as! NSNumber).intValue
         
         //insert/remove meals depending on day of the week
         if isWeekday(offset) {
-            if self.meals.titleForSegmentAtIndex(0) != "Breakfast" {
-                self.meals.removeSegmentAtIndex(0, animated: false)
-                self.meals.insertSegmentWithTitle("Breakfast", atIndex: 0, animated: false)
-                self.meals.insertSegmentWithTitle("Lunch",     atIndex: 1, animated: false)
+            if self.meals.titleForSegment(at: 0) != "Breakfast" {
+                self.meals.removeSegment(at: 0, animated: false)
+                self.meals.insertSegment(withTitle: "Breakfast", at: 0, animated: false)
+                self.meals.insertSegment(withTitle: "Lunch",     at: 1, animated: false)
                 self.meals.selectedSegmentIndex = self.delegate.selectedSegment
             }
         } else {
-            if self.meals.titleForSegmentAtIndex(0) != "Brunch" {
-                self.meals.removeSegmentAtIndex(0, animated: false)
-                self.meals.removeSegmentAtIndex(0, animated: false)
-                self.meals.insertSegmentWithTitle("Brunch", atIndex: 0, animated: false)
+            if self.meals.titleForSegment(at: 0) != "Brunch" {
+                self.meals.removeSegment(at: 0, animated: false)
+                self.meals.removeSegment(at: 0, animated: false)
+                self.meals.insertSegment(withTitle: "Brunch", at: 0, animated: false)
                 self.meals.selectedSegmentIndex = self.delegate.selectedSegment
             }
         }
-        self.meals.enabled = true
+        self.meals.isEnabled = true
     }
     
     func segmentIndexOfCurrentMeal() -> NSInteger {
-        let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
-        calendar.locale = NSLocale(localeIdentifier: "en-US");
+        var calendar = Calendar(identifier: Calendar.Identifier.gregorian)
+        calendar.locale = Locale(identifier: "en-US");
         
-        let today = calendar.components([NSCalendarUnit.Hour, NSCalendarUnit.Weekday], fromDate: NSDate())
+        let today = (calendar as NSCalendar).components([NSCalendar.Unit.hour, NSCalendar.Unit.weekday], from: Date())
         let weekday = today.weekday
         let hour    = today.hour
         
-        if isWeekday(weekday) {
-            if hour < 11 {
+        if isWeekday(weekday!) {
+            if hour! < 11 {
                 return 0 //breakfast
-            } else if hour < 14 {
+            } else if hour! < 14 {
                 return 1 //lunch
             } else {
                 return 2 //dinner
             }
         } else {
-            if hour < 14 {
+            if hour! < 14 {
                 return 0 //brunch
             } else {
                 return 1 //dinner
@@ -209,7 +209,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     }
     
     //UITableView delegate method, returns number of rows/meal items in a given section/course
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section < self.courses.count {
             return self.courses[section].menuItems.count
         } else {
@@ -218,20 +218,20 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     }
     
     //UITableView delegate method, sets settings for cell/menu item to be displayed at a given section->row
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let simpleTableIdentifier = "BasicCell"
         
-        var cell = tableView.dequeueReusableCellWithIdentifier(simpleTableIdentifier) as! UIMenuItemView!
+        var cell = tableView.dequeueReusableCell(withIdentifier: simpleTableIdentifier) as! UIMenuItemView!
         
         if cell == nil {
-            cell = NSBundle.mainBundle().loadNibNamed("UIMenuItemView", owner: self, options: nil).first as! UIMenuItemView
+            cell = Bundle.main.loadNibNamed("UIMenuItemView", owner: self, options: nil)?.first as? UIMenuItemView
         }
         
         //if this is a valid section->row, grab right menu item from course and set cell properties
-        if indexPath.section < self.courses.count {
-            let course = self.courses[indexPath.section]
-            if indexPath.row < course.menuItems.count {
-                let this : MenuItem? = course.menuItems[indexPath.row]
+        if (indexPath as NSIndexPath).section < self.courses.count {
+            let course = self.courses[(indexPath as NSIndexPath).section]
+            if (indexPath as NSIndexPath).row < course.menuItems.count {
+                let this : MenuItem? = course.menuItems[(indexPath as NSIndexPath).row]
                 
                 if let item = this {
                     cell!.title!.text = item.name
@@ -242,7 +242,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
                     
                     let allFavorited = Course.allFavoritedItems()
                     var favorited = false;
-                    if allFavorited.containsObject(item.itemId) {
+                    if allFavorited.contains(item.itemId) {
                         favorited = true;
                     }
                     
@@ -255,21 +255,21 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         return cell!
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        let course = self.courses[indexPath.section]
-        if indexPath.row < course.menuItems.count {
-            let this : MenuItem? = course.menuItems[indexPath.row]
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let course = self.courses[(indexPath as NSIndexPath).section]
+        if (indexPath as NSIndexPath).row < course.menuItems.count {
+            let this : MenuItem? = course.menuItems[(indexPath as NSIndexPath).row]
             if let item = this {
-                let options = unsafeBitCast(NSStringDrawingOptions.UsesLineFragmentOrigin.rawValue |
-                    NSStringDrawingOptions.UsesFontLeading.rawValue,
-                    NSStringDrawingOptions.self)
+                let options = unsafeBitCast(NSStringDrawingOptions.usesLineFragmentOrigin.rawValue |
+                    NSStringDrawingOptions.usesFontLeading.rawValue,
+                    to: NSStringDrawingOptions.self)
                 
-                let screenSize: CGRect = UIScreen.mainScreen().bounds
+                let screenSize: CGRect = UIScreen.main.bounds
                 
-                let textAttributes = [NSFontAttributeName: UIFont.systemFontOfSize(14)]
-                let nameSize = (item.name as NSString).boundingRectWithSize(CGSizeMake(screenSize.width - 80, CGFloat.max), options: options, attributes: textAttributes, context: nil)
+                let textAttributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 14)]
+                let nameSize = (item.name as NSString).boundingRect(with: CGSize(width: screenSize.width - 80, height: CGFloat.greatestFiniteMagnitude), options: options, attributes: textAttributes, context: nil)
                 
-                let descSize = (item.descriptors as NSString).boundingRectWithSize(CGSizeMake(screenSize.width, CGFloat.max), options: options, attributes: textAttributes, context: nil)
+                let descSize = (item.descriptors as NSString).boundingRect(with: CGSize(width: screenSize.width, height: CGFloat.greatestFiniteMagnitude), options: options, attributes: textAttributes, context: nil)
                 
                 return nameSize.height + descSize.height + 5
             }
@@ -279,7 +279,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     }
     
     //UITableView delegate method, returns name of section/course
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section < self.courses.count {
             let course = self.courses[section]
             return course.courseName
@@ -289,31 +289,30 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     }
     
     //UITableView delegate method, sets section header styles
-    func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let header = view as! UITableViewHeaderFooterView
         header.textLabel!.textColor = UIColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 1)
-        header.textLabel!.font = UIFont.boldSystemFontOfSize(12)
+        header.textLabel!.font = UIFont.boldSystemFont(ofSize: 12)
         header.contentView.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1)
     }
     
     //UITableView delegate method, creates animation when displaying cell
-    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        cell.textLabel?.font = UIFont.systemFontOfSize(16)
-        cell.detailTextLabel?.font = UIFont.systemFontOfSize(10)
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
+        cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 10)
     }
     
     //UITableView delegate method, returns number of sections/courses in loaded menu
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return self.courses.count
     }
     
     //shares an invite to the currently browsed meal
     @IBAction func inviteToMeal() {
-        var invite = [AnyObject]()
-        invite.append("Let's get \(self.meals.titleForSegmentAtIndex(self.meals.selectedSegmentIndex)!.lowercaseString) at \(BowdoinAPIParser.nameOfDiningHallWithId(self.view.tag)) \(self.getTextForDaysAdded())?")
+        let invite = "Let's get \(self.meals.titleForSegment(at: self.meals.selectedSegmentIndex)!.lowercased()) at \(BowdoinAPIParser.nameOfDiningHallWithId(self.view.tag)) \(self.getTextForDaysAdded())?"
         
-        let activityViewController = UIActivityViewController(activityItems: invite, applicationActivities: nil)
-        self.presentViewController(activityViewController, animated: true, completion: nil)
+        let activityViewController = UIActivityViewController(activityItems: [invite], applicationActivities: nil)
+        self.present(activityViewController, animated: true, completion: nil)
     }
     
     //handles all logic related to updating the tableView with new menu items
@@ -334,7 +333,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     
     func prepareForMenuLoad() {
         //creates date based on days added to current day, saves to delegate
-        let date = NSDate(timeIntervalSinceNow: NSTimeInterval(60*60*24*self.delegate.daysAdded))
+        let date = Date(timeIntervalSinceNow: TimeInterval(60*60*24*self.delegate.daysAdded))
         let formattedDate = Menus.formatDate(date)
         self.delegate.day    = formattedDate[0] as! NSInteger
         self.delegate.month  = formattedDate[1] as! NSInteger
@@ -342,7 +341,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         self.delegate.offset = formattedDate[3] as! NSInteger
         
         //firstly, remove everything from the UITableView
-        self.courses.removeAll(keepCapacity: false)
+        self.courses.removeAll(keepingCapacity: false)
         self.menuItems.reloadData()
         
         //disable user interaction and begin loading indicator
@@ -351,14 +350,14 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         self.menuItems.beginUpdates()
     }
     
-    func loadMenu(callback: (NSData?) -> ()) {
+    func loadMenu(_ callback: @escaping (Data?) -> ()) {
         //create a new thread...
-        let downloadQueue = dispatch_queue_create("Download queue", nil);
-        dispatch_async(downloadQueue) {
+        let downloadQueue = DispatchQueue(label: "Download queue", attributes: []);
+        downloadQueue.async {
             //in new thread, load menu for this day
             let xml = Menus.loadMenuForDay(self.delegate.day, month: self.delegate.month, year: self.delegate.year, offset: self.delegate.offset)
             //go back to main thread
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 callback(xml);
             }
         }
@@ -376,16 +375,16 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         
         //insert new menu items to UITableView
         let newSet   = NSMutableIndexSet()
-        newSet.addIndexesInRange(NSMakeRange(0, self.courses.count))
-        self.menuItems.insertSections(newSet, withRowAnimation:UITableViewRowAnimation.Right)
+        newSet.add(in: NSMakeRange(0, self.courses.count))
+        self.menuItems.insertSections(newSet as IndexSet, with:UITableViewRowAnimation.right)
         
         //stop loading indicator, end updates to UITableView, scroll to top and reenable user interaction
         self.loading.stopAnimating()
         self.menuItems.endUpdates()
-        self.menuItems.setContentOffset(CGPointZero, animated: true)
+        self.menuItems.setContentOffset(CGPoint.zero, animated: true)
     }
     
-    func presentMenu(xml : NSData) {
+    func presentMenu(_ xml : Data) {
         //update the buttons
         self.makeCorrectButtonsVisible()
         
@@ -394,28 +393,28 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
             forMeal:     self.meals.selectedSegmentIndex,
             onWeekday:   isWeekday(self.delegate.offset),
             atLocation:  self.view.tag,
-            withFilters: self.delegate.filters)
+            withFilters: self.delegate.filters as NSArray)
         
         //insert new menu items to UITableView
         let newSet   = NSMutableIndexSet()
-        newSet.addIndexesInRange(NSMakeRange(0, self.courses.count))
-        self.menuItems.insertSections(newSet, withRowAnimation:UITableViewRowAnimation.Right)
+        newSet.add(in: NSMakeRange(0, self.courses.count))
+        self.menuItems.insertSections(newSet as IndexSet, with:UITableViewRowAnimation.right)
         
         //stop loading indicator, end updates to UITableView, scroll to top and reenable user interaction
         self.loading.stopAnimating()
         self.menuItems.endUpdates()
-        self.menuItems.setContentOffset(CGPointZero, animated: true)
+        self.menuItems.setContentOffset(CGPoint.zero, animated: true)
         
         self.loadFavoritesData()
     }
     
     func loadFavoritesData() {
         //create a new thread...
-        let downloadQueue = dispatch_queue_create("Download queue", nil);
-        dispatch_async(downloadQueue) {
+        let downloadQueue = DispatchQueue(label: "Download queue", attributes: []);
+        downloadQueue.async {
             let favoritesData = Menus.loadFavoritesDataForCourses(self.courses)
             
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 self.favoritesData += favoritesData
                 
                 //reload with favorites data
@@ -426,37 +425,37 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     }
     
     //UITableView delegate method, creates animation when displaying cell; removed, not popular
-    func animateIn(this : UIView) {
+    func animateIn(_ this : UIView) {
         let init_angle : Double = divide(90*M_PI, right: 180)
         var rotation = CATransform3DMakeRotation(CGFloat(init_angle), 0.0, 0.7, 0.4) as CATransform3D
         rotation.m34 = (-1.0/600.0)
         
-        this.layer.shadowColor = UIColor.blackColor().CGColor
-        this.layer.shadowOffset = CGSizeMake(10, 10)
+        this.layer.shadowColor = UIColor.black.cgColor
+        this.layer.shadowOffset = CGSize(width: 10, height: 10)
         this.layer.opacity = 0
         
         this.layer.transform = rotation
-        this.layer.anchorPoint = CGPointMake(0, 0.5)
+        this.layer.anchorPoint = CGPoint(x: 0, y: 0.5)
         
         if this.layer.position.x != 0 {
-            this.layer.position = CGPointMake(0, this.layer.position.y);
+            this.layer.position = CGPoint(x: 0, y: this.layer.position.y);
         }
         
         UIView.beginAnimations("rotation",  context: nil)
         UIView.setAnimationDuration(0.4)
         this.layer.transform = CATransform3DIdentity
         this.layer.opacity = 1
-        this.layer.shadowOffset = CGSizeMake(0, 0)
+        this.layer.shadowOffset = CGSize(width: 0, height: 0)
         UIView.commitAnimations()
     }
     
     //Uses TTS to speak menus aloud
     @IBAction func speakMenu() {
         if speaker != nil {
-            if speaker!.speaking {
-                speaker!.stopSpeakingAtBoundary(AVSpeechBoundary.Immediate)
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.speakButton.setImage(UIImage(named: "speaker"), forState: UIControlState.Normal)
+            if speaker!.isSpeaking {
+                speaker!.stopSpeaking(at: AVSpeechBoundary.immediate)
+                DispatchQueue.main.async {
+                    self.speakButton.setImage(UIImage(named: "speaker"), for: UIControlState())
                 }
                 return
             }
@@ -465,11 +464,11 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
             speaker!.delegate = self
         }
         
-        dispatch_async(dispatch_get_main_queue()) {
-            self.speakButton.setImage(UIImage(named: "speaker_active"), forState: UIControlState.Normal)
+        DispatchQueue.main.async {
+            self.speakButton.setImage(UIImage(named: "speaker_active"), for: UIControlState())
         }
         
-        var menu = "For "+self.meals.titleForSegmentAtIndex(self.delegate.selectedSegment)!+" "+(self.getTextForDaysAdded())+" at \(BowdoinAPIParser.nameOfDiningHallWithId(self.view.tag)) we have "
+        var menu = "For "+self.meals.titleForSegment(at: self.delegate.selectedSegment)!+" "+(self.getTextForDaysAdded())+" at \(BowdoinAPIParser.nameOfDiningHallWithId(self.view.tag)) we have "
         for course in self.courses {
             for item in course.menuItems {
                 if item == course.menuItems.last && course == self.courses.last {
@@ -481,21 +480,21 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         }
         
         let phrase = AVSpeechUtterance(string: menu)
-        phrase.rate = 0.18
-        speaker!.speakUtterance(phrase)
+        phrase.rate = 0.5
+        speaker!.speak(phrase)
     }
     
     //resets speech button color when finished
-    func speechSynthesizer(synthesizer: AVSpeechSynthesizer, didFinishSpeechUtterance utterance: AVSpeechUtterance) {
-        dispatch_async(dispatch_get_main_queue()) {
-            self.speakButton.setImage(UIImage(named: "speaker"), forState: UIControlState.Normal)
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        DispatchQueue.main.async {
+            self.speakButton.setImage(UIImage(named: "speaker"), for: UIControlState())
         }
     }
     
     //displays line data if loaded
     func linesDidLoad() {
-        dispatch_async(dispatch_get_main_queue()) {
-            UIView.animateWithDuration(0.5, animations: { () -> Void in
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.5, animations: { () -> Void in
                 if self.view.tag == self.delegate.thorneId {
                     (self.delegate.window!.rootViewController as! UITabBarController).tabBar.tintColor = self.delegate.thorneColor!
                 } else if self.view.tag == self.delegate.moultonId {
@@ -505,13 +504,13 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         }
     }
     
-    func toggleFavorite(itemId: String) {
+    func toggleFavorite(_ itemId: String) {
         //load favorited items
         let allFavorited = Course.allFavoritedItems()
         
         var endpoint = "http://bowdoindining.meteorapp.com/methods/"
         //if this cell is NOT favorited, show favoriting action
-        if !allFavorited.containsObject(itemId) {
+        if !allFavorited.contains(itemId) {
             //if item is favorited, save it to our centralized list of favorited items
             Course.addToFavoritedItems(itemId)
             endpoint += "favorite"
@@ -521,23 +520,21 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         }
         
         //create a new thread...
-        let downloadQueue = dispatch_queue_create("Download queue", nil);
-        dispatch_async(downloadQueue) {
-            let url = NSURL(string: endpoint)
+        let downloadQueue = DispatchQueue(label: "Download queue", attributes: []);
+        downloadQueue.async {
+            let url = URL(string: endpoint)
+            var request = URLRequest(url: url!)
+            request.httpMethod = "POST"
+            request.httpBody = itemId.utf8StringEncodedData!
             
-            let request = NSMutableURLRequest(URL: url!)
-            request.HTTPMethod = "POST"
-            
-            request.HTTPBody = NSString(string: "\(itemId)").dataUsingEncoding(NSUTF8StringEncoding)
-            
-            let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+            let task = URLSession.shared.dataTask(with: request, completionHandler: {
                 data, response, error in
                 
                 if error != nil {
                     print("error=\(error)")
                     return
                 }
-            }
+            }) 
             task.resume()
         }
     }

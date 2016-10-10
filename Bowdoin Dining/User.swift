@@ -31,9 +31,9 @@ class User : NSObject {
     
     //returns true if user credentials are stored
     class func credentialsStored() -> Bool {
-        let userDefaults = NSUserDefaults.standardUserDefaults()
-        let username     = userDefaults.objectForKey("bowdoin_username") as? NSString
-        let password     = userDefaults.objectForKey("bowdoin_password") as? NSString
+        let userDefaults = UserDefaults.standard
+        let username     = userDefaults.object(forKey: "bowdoin_username") as? NSString
+        let password     = userDefaults.object(forKey: "bowdoin_password") as? NSString
         
         if username != nil && password != nil {
             return true
@@ -43,16 +43,16 @@ class User : NSObject {
     }
     
     class func forget() {
-        let userDefaults = NSUserDefaults.standardUserDefaults()
-        userDefaults.removeObjectForKey("bowdoin_username")
-        userDefaults.removeObjectForKey("bowdoin_password")
+        let userDefaults = UserDefaults.standard
+        userDefaults.removeObject(forKey: "bowdoin_username")
+        userDefaults.removeObject(forKey: "bowdoin_password")
         userDefaults.synchronize()
     }
     
     func remember() {
-        let userDefaults = NSUserDefaults.standardUserDefaults()
-        userDefaults.setObject(self.username, forKey: "bowdoin_username")
-        userDefaults.setObject(self.password, forKey: "bowdoin_password")
+        let userDefaults = UserDefaults.standard
+        userDefaults.set(self.username, forKey: "bowdoin_username")
+        userDefaults.set(self.password, forKey: "bowdoin_password")
         userDefaults.synchronize()
     }
     
@@ -88,14 +88,14 @@ class User : NSObject {
         }
     }
 
-    func parseData(data: NSData, type: String) {
+    func parseData(_ data: Data, type: String) {
         self.dataLoaded = true
 
         do {
             let doc = try GDataXMLDocument(data: data, options: 0)
             let root = doc.rootElement
             
-            let soapBody = root().elementsForName("soap:Body").first as! GDataXMLElement?
+            let soapBody = root().elements(forName: "soap:Body").first as! GDataXMLElement?
             
             if soapBody != nil {
                 switch type {
@@ -118,7 +118,7 @@ class User : NSObject {
                         self.mealsLeft = mealsLeft
                         
                         //success! Finished loading Account.
-                        NSNotificationCenter.defaultCenter().postNotificationName("AccountFinishedLoading",
+                        NotificationCenter.default.post(name: Notification.Name(rawValue: "AccountFinishedLoading"),
                             object: nil,
                             userInfo: nil)
                     } else {
@@ -130,7 +130,7 @@ class User : NSObject {
                         self.transactions = transactions
                         
                         //success! Finished loading Transactions.
-                        NSNotificationCenter.defaultCenter().postNotificationName("TransactionsFinishedLoading",
+                        NotificationCenter.default.post(name: Notification.Name(rawValue: "TransactionsFinishedLoading"),
                             object: nil,
                             userInfo: nil)
                     } else {
@@ -148,7 +148,7 @@ class User : NSObject {
                     }
                     
                     //success! Finished loading.
-                    NSNotificationCenter.defaultCenter().postNotificationName("LineDataLoaded",
+                    NotificationCenter.default.post(name: Notification.Name(rawValue: "LineDataLoaded"),
                         object: nil,
                         userInfo: nil)
                 default:
@@ -160,7 +160,7 @@ class User : NSObject {
         }
     }
     
-    func score(line: [Int], lineName: String) -> Double {
+    func score(_ line: [Int], lineName: String) -> Double {
         let length = line.count
         
         //if no entries or no line, return
@@ -201,12 +201,12 @@ class User : NSObject {
     func dataLoadingFailed() {
         self.dataLoaded = false
         
-        NSNotificationCenter.defaultCenter().postNotificationName("UserLoadingFailed",
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "UserLoadingFailed"),
             object: nil,
             userInfo: nil)
     }
 }
 
 protocol UserDelegate {
-    func dataLoadingFailed(notification : NSNotification)
+    func dataLoadingFailed(_ notification : Notification)
 }

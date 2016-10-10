@@ -27,12 +27,12 @@ class Transaction : NSObject {
 extension String {
     func parseDate() -> String {
         //example: 2014-09-10T21:47:22-04:00
-        let stringDate  = (self as NSString).substringToIndex(16)
+        let stringDate  = (self as NSString).substring(to: 16)
         
-        let formatter = NSDateFormatter()
+        let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm"
-        let date = formatter.dateFromString(stringDate)
+        let date = formatter.date(from: stringDate)
         formatter.dateFormat = "MM/dd/yyyy hh:mm a"
-        return formatter.stringFromDate(date!)
+        return formatter.string(from: date!)
     }
 }
