@@ -121,8 +121,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
             case 3:
                 self.filters.append("NGI")
             case 4:
-                self.filters.append("L")
+                self.filters.append("GF")
             case 5:
+                self.filters.append("DF")
+            case 6:
+                self.filters.append("L")
+            case 7:
                 self.filters.append("H")
             default:
                 break;
