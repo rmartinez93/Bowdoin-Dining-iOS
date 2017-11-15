@@ -508,7 +508,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         //load favorited items
         let allFavorited = Course.allFavoritedItems()
         
-        var endpoint = "http://bowdoindining.meteorapp.com/methods/"
+        var endpoint = "https://app.bowdoin.menu/methods/"
         //if this cell is NOT favorited, show favoriting action
         if !allFavorited.contains(itemId) {
             //if item is favorited, save it to our centralized list of favorited items

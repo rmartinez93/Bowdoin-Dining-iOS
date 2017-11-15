@@ -233,7 +233,7 @@ class Menus : NSObject {
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         
         //make request to get info from itemIds
-        let endPointURL = "http://bowdoindining.meteorapp.com/favorites/\(itemIds.combine(","))"
+        let endPointURL = "https://app.bowdoin.menu/favorites/\(itemIds.combine(","))"
         let url = URL(string: endPointURL)
         let data = try? Data(contentsOf: url!)
         
