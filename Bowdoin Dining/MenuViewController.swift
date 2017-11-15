@@ -426,7 +426,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     
     //UITableView delegate method, creates animation when displaying cell; removed, not popular
     func animateIn(_ this : UIView) {
-        let init_angle : Double = divide(90*M_PI, right: 180)
+        let init_angle : Double = divide(90*Double.pi, right: 180)
         var rotation = CATransform3DMakeRotation(CGFloat(init_angle), 0.0, 0.7, 0.4) as CATransform3D
         rotation.m34 = (-1.0/600.0)
         
@@ -531,7 +531,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
                 data, response, error in
                 
                 if error != nil {
-                    print("error=\(error)")
+                    print("error=\(String(describing: error))")
                     return
                 }
             }) 

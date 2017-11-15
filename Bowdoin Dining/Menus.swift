@@ -22,7 +22,7 @@ class Menus : NSObject {
         var today = (calendar as NSCalendar).components([NSCalendar.Unit.year, NSCalendar.Unit.weekOfYear, NSCalendar.Unit.weekday], from: todayDate)
         
         //calculate offset from sunday (day menu begins)
-        let offset  = today.weekday
+        let offset  = today.weekday!
         
         //set current day to sunday (first day) of this week, and create NSDateComponents for that day
         today.weekday = 1
@@ -30,9 +30,9 @@ class Menus : NSObject {
         let lastSunday = (calendar as NSCalendar).components([NSCalendar.Unit.day, NSCalendar.Unit.year, NSCalendar.Unit.month, NSCalendar.Unit.weekday], from: lastSundayDate!)
         
         //store info about last sunday's date for use with Bowdoin XML API
-        let day   = lastSunday.day
+        let day   = lastSunday.day!
         let month = lastSunday.month! - 1
-        let year  = lastSunday.year
+        let year  = lastSunday.year!
         
         return [day, month, year, offset]
     }
