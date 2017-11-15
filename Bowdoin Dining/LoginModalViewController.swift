@@ -51,7 +51,7 @@ class LoginModalViewController : UIViewController {
         }
     }
     
-    func accountDidLoad(_ notification : Notification) {
+    @objc func accountDidLoad(_ notification : Notification) {
         //go to main thread
         DispatchQueue.main.async {
             if !self.delegate.user!.dataLoaded {

@@ -70,7 +70,7 @@ class PubViewController: UIViewController, UINavigationBarDelegate {
     }
     
     //shares an invite to the currently browsed meal
-    func inviteToMeal() {
+    @objc func inviteToMeal() {
         var invite = [AnyObject]()
         invite.append("Let's get a meal at the Pub?" as AnyObject)
         

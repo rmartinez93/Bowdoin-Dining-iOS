@@ -105,7 +105,7 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
         self.delegate.user!.loadTransactionData()
     }
     
-    func dataLoadingFailed(_ notification : Notification) {
+    @objc func dataLoadingFailed(_ notification : Notification) {
         //refresh onscreen info
         DispatchQueue.main.async {
             let alert = UIAlertView(title: "Account Error",
@@ -118,7 +118,7 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
     }
     
     //Transaction data loaded
-    func transactionsDidLoad(_ notification: Notification) {
+    @objc func transactionsDidLoad(_ notification: Notification) {
         DispatchQueue.main.async {
             if self.delegate.user!.dataLoaded {
                 let transactionsVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "TransactionsViewController") as! TransactionsViewController
@@ -128,7 +128,7 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
     }
     
     //Balance/Polar Points/Meals loaded
-    func accountDidLoad(_ notification : Notification) {
+    @objc func accountDidLoad(_ notification : Notification) {
         //refresh onscreen info
         DispatchQueue.main.async {
             if self.delegate.user!.dataLoaded {

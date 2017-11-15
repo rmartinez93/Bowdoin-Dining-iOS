@@ -140,7 +140,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
         
         //style
         navigationController.navigationBar.titleTextAttributes
-            = [NSFontAttributeName : UIFont(name: "Helvetica Neue", size: 28.0)!, NSForegroundColorAttributeName : UIColor.white]
+            = [NSAttributedStringKey.font : UIFont(name: "Helvetica Neue", size: 28.0)!, NSAttributedStringKey.foregroundColor : UIColor.white]
         
         navigationController.navigationBar.tintColor = UIColor.white
         navigationController.navigationBar.barTintColor = UIColor.clear
@@ -215,7 +215,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
     }
     
     //parses line data to color once loaded
-    func linesDidFinishLoading() {
+    @objc func linesDidFinishLoading() {
         let thorneScore = self.user?.thorneScore
         let moultonScore = self.user?.moultonScore
         let dict = ["thorneScore" : thorneScore ?? -1, "moultonScore" : moultonScore ?? -1]

@@ -266,7 +266,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
                 
                 let screenSize: CGRect = UIScreen.main.bounds
                 
-                let textAttributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 14)]
+                let textAttributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14)]
                 let nameSize = (item.name as NSString).boundingRect(with: CGSize(width: screenSize.width - 80, height: CGFloat.greatestFiniteMagnitude), options: options, attributes: textAttributes, context: nil)
                 
                 let descSize = (item.descriptors as NSString).boundingRect(with: CGSize(width: screenSize.width, height: CGFloat.greatestFiniteMagnitude), options: options, attributes: textAttributes, context: nil)
@@ -408,7 +408,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         self.loadFavoritesData()
     }
     
-    func loadFavoritesData() {
+    @objc func loadFavoritesData() {
         //create a new thread...
         let downloadQueue = DispatchQueue(label: "Download queue", attributes: []);
         downloadQueue.async {
@@ -492,7 +492,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     }
     
     //displays line data if loaded
-    func linesDidLoad() {
+    @objc func linesDidLoad() {
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.5, animations: { () -> Void in
                 if self.view.tag == self.delegate.thorneId {
