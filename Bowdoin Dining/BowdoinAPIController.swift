@@ -9,7 +9,7 @@
 
 import Foundation
 
-class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
+class BowdoinAPIController: NSObject {
     var user     : User
     var type     : String
     var data     : NSMutableData?
@@ -25,25 +25,25 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
     // Gets user account data (balance, points)
     func getAccountData() {
         self.type = "account"
-        self.createSOAPRequestWithEnvelope(self.returnSoapEnvelopeForService("<tem:GetCSGoldSVCBalances/>"))
+        self.requestDataWithSoapEnvelope(self.returnSoapEnvelopeForService("<tem:GetCSGoldSVCBalances/>"))
     }
     
     // Gets meal data (number of meals remaining)
     func getMealData() {
         self.type = "meals"
-        self.createSOAPRequestWithEnvelope(self.returnSoapEnvelopeForService("<tem:GetCSGoldMPBalances/>"))
+        self.requestDataWithSoapEnvelope(self.returnSoapEnvelopeForService("<tem:GetCSGoldMPBalances/>"))
     }
     
     // Gets line status
     func getLineData() {
         self.type = "lines"
-        self.createSOAPRequestWithEnvelope(self.returnSoapEnvelopeForService("<tem:GetCSGoldLineCountsHistogram/>"))
+        self.requestDataWithSoapEnvelope(self.returnSoapEnvelopeForService("<tem:GetCSGoldLineCountsHistogram/>"))
     }
     
     // Gets recent transactions
     func getTransactionData() {
         self.type = "transactions"
-        self.createSOAPRequestWithEnvelope(self.returnSoapEnvelopeForService("<tem:GetCSGoldGLTrans/>"))
+        self.requestDataWithSoapEnvelope(self.returnSoapEnvelopeForService("<tem:GetCSGoldGLTrans/>"))
     }
     
     // SOAP envelope for request
@@ -59,9 +59,7 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
         return soapEnvelope
     }
     
-    // Makes SOAP request
-    func createSOAPRequestWithEnvelope(_ soapEnvelope : String) {
-        // Create the request.
+    func createRequestWithBody(_ data: Data) -> URLRequest {
         let url = URL(string: "https://gooseeye.bowdoin.edu/ws-csGoldShim/Service.asmx")!
         let req = NSMutableURLRequest(url: url, cachePolicy: NSURLRequest.CachePolicy.useProtocolCachePolicy, timeoutInterval: 5000)
         
@@ -69,10 +67,18 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
         req.addValue("text/xml",    forHTTPHeaderField: "Content-Type")
         req.addValue("bowdoin.edu", forHTTPHeaderField: "Host")
         req.httpMethod = "POST"
-        req.httpBody = soapEnvelope.data(using: String.Encoding.utf8)
+        req.httpBody = data
+        
+        return req as URLRequest
+    }
+    
+    // Makes SOAP request
+    func requestDataWithSoapEnvelope(_ soapEnvelope : String) {
+        // Create the request.
+        let req = createRequestWithBody(soapEnvelope.data(using: String.Encoding.utf8)!)
         
         // Create a URL connection
-        let connection = NSURLConnection(request: req as URLRequest, delegate: self, startImmediately: false)
+        let connection = NSURLConnection(request: req, delegate: self, startImmediately: false)
         
         if connection != nil {
             // Schedule this ASAP.
@@ -86,6 +92,9 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
         }
     }
     
+}
+
+extension BowdoinAPIController: NSURLConnectionDelegate {
     // Takes care of HTTP Authentication
     func connection(_ connection: NSURLConnection, didReceive challenge: URLAuthenticationChallenge) {
         // If we haven't tried to login yet, authenticate.
@@ -96,8 +105,8 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
             if authMethod == NSURLAuthenticationMethodNTLM {
                 // Use username and password to form credential.
                 let credential = URLCredential(user: self.user.username!,
-                    password: self.user.password!,
-                    persistence: URLCredential.Persistence.none)
+                                               password: self.user.password!,
+                                               persistence: URLCredential.Persistence.none)
                 
                 // Use credential with challenge request.
                 challenge.sender?.use(credential, for: challenge)
@@ -114,7 +123,7 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
             self.user.dataLoadingFailed()
         }
     }
-
+    
     private func connection(_ connection: NSURLConnection!, didReceiveResponse response: URLResponse!) {
         // Response received, clear out data
         self.data = NSMutableData()
