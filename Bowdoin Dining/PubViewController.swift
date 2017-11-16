@@ -69,6 +69,10 @@ class PubViewController: UIViewController, UINavigationBarDelegate {
         return UIBarPosition.topAttached
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     //shares an invite to the currently browsed meal
     @objc func inviteToMeal() {
         var invite = [AnyObject]()

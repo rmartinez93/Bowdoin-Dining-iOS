@@ -40,6 +40,10 @@ class LoginModalViewController : UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .default
+    }
 
     @IBAction func login(_ sender : UIButton) {
         self.loggingIn.startAnimating()

@@ -47,10 +47,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
     var moultonColor : UIColor?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        //dark background, light text status bar
-        UIApplication.shared.setStatusBarStyle(UIStatusBarStyle.lightContent, animated: false)
-        
         //set tabBar style, moreNavigationController delegate
         if self.window != nil {
             //set tab bar to be light gray

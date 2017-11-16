@@ -25,8 +25,14 @@ class TransactionsViewController : UIViewController, UITableViewDelegate, UITabl
         return UIBarPosition.topAttached
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
+        
+        super.viewWillDisappear(animated)
     }
     
     override func didReceiveMemoryWarning() {

@@ -54,6 +54,10 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
         return UIBarPosition.topAttached
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     @IBAction func userDidLogin(_ segue : UIStoryboardSegue) {
 
     }

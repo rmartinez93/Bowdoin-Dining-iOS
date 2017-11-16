@@ -102,6 +102,10 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         self.updateVisibleMenu()
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     @IBAction func indexDidChangeForSegmentedControl(_ sender : UISegmentedControl) {
         //if this was a valid selection, update our delegate and update the menu
         if UISegmentedControlNoSegment != sender.selectedSegmentIndex {
