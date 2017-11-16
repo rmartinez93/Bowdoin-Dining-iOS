@@ -1358,7 +1358,7 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="bV5-QY-utS" firstAttribute="bottom" secondItem="q4Z-Ob-l5N" secondAttribute="bottom" constant="-49" id="91i-AW-LF2"/>
-                            <constraint firstItem="q4Z-Ob-l5N" firstAttribute="top" secondItem="5I2-lF-ibw" secondAttribute="top" constant="64" id="Bhd-81-TAY"/>
+                            <constraint firstItem="q4Z-Ob-l5N" firstAttribute="top" secondItem="lkS-pR-Fjh" secondAttribute="bottom" id="Bhd-81-TAY"/>
                             <constraint firstItem="bV5-QY-utS" firstAttribute="centerX" secondItem="lkS-pR-Fjh" secondAttribute="centerX" id="QZI-wc-pcu"/>
                             <constraint firstItem="bV5-QY-utS" firstAttribute="trailing" secondItem="lkS-pR-Fjh" secondAttribute="trailing" id="TIp-A2-6E3"/>
                             <constraint firstItem="bV5-QY-utS" firstAttribute="trailing" secondItem="q4Z-Ob-l5N" secondAttribute="trailing" id="ZVk-4f-Dh0"/>
