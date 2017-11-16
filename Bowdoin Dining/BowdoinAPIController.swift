@@ -12,7 +12,7 @@ import Foundation
 class BowdoinAPIController: NSObject {
     var user     : User
     var type     : String
-    var data     : NSMutableData?
+    var session  : URLSession?
     var loginAttempts = 0
     
     init(user : User) {
@@ -20,6 +20,8 @@ class BowdoinAPIController: NSObject {
         self.type     = ""
         
         super.init()
+        
+        self.session  = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: nil)
     }
     
     // Gets user account data (balance, points)
@@ -77,26 +79,26 @@ class BowdoinAPIController: NSObject {
         // Create the request.
         let req = createRequestWithBody(soapEnvelope.data(using: String.Encoding.utf8)!)
         
-        // Create a URL connection
-        let connection = NSURLConnection(request: req, delegate: self, startImmediately: false)
-        
-        if connection != nil {
-            // Schedule this ASAP.
-            connection!.schedule(in: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+        // Request the data
+        let dataTask = self.session!.dataTask(with: req) { (data, response, error) in
+            if error != nil {
+                print("ERROR!", response, error!)
+                
+                // Handle failure.
+                self.user.dataLoadingFailed()
+            }
             
-            // Start the connection.
-            connection!.start()
-        } else {
-            // Handle failure.
-            self.user.dataLoadingFailed()
+            if data != nil {
+                self.user.parseData(data!, type: self.type)
+            }
         }
+        
+        dataTask.resume()
     }
-    
 }
 
-extension BowdoinAPIController: NSURLConnectionDelegate {
-    // Takes care of HTTP Authentication
-    func connection(_ connection: NSURLConnection, didReceive challenge: URLAuthenticationChallenge) {
+extension BowdoinAPIController: URLSessionDelegate {
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         print("Received Login Challenge")
         // If we haven't tried to login yet, authenticate.
         if self.loginAttempts == 0 {
@@ -109,51 +111,41 @@ extension BowdoinAPIController: NSURLConnectionDelegate {
                                                password: self.user.password!,
                                                persistence: URLCredential.Persistence.none)
                 
+                print("Sending credentials...")
+                
                 // Use credential with challenge request.
-                challenge.sender?.use(credential, for: challenge)
-                print("Sent credentials")
+                completionHandler(.useCredential, credential)
+                
+                // Increment login attempts.
+                self.loginAttempts += 1
             }
             
-            // Increment login attempts.
-            self.loginAttempts += 1
+            // Make sure the server trusts us first.
+            if authMethod == NSURLAuthenticationMethodServerTrust {
+                print("Please trust us, Mr. Server...")
+                
+                completionHandler(.performDefaultHandling, nil)
+            }
         }
         else {
             print("Fail login challenge")
-            // Don't try more than once.
-            connection.cancel()
             
             // Handle failure.
             self.user.dataLoadingFailed()
+            
+            // Don't try more than once.
+            completionHandler(.cancelAuthenticationChallenge, nil)
         }
     }
     
-    private func connection(_ connection: NSURLConnection!, didReceiveResponse response: URLResponse!) {
-        print("Received response!")
-        // Response received, clear out data
-        self.data = NSMutableData()
+    func urlSession(_ session: URLSession,
+                    task: URLSessionTask,
+                    didReceive challenge: URLAuthenticationChallenge,
+                    completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        print("Received Login Challenge V2")
     }
     
-    private func connection(_ connection: NSURLConnection!, didReceiveData data: Data!) {
-        // Store received data
-        self.data?.append(data)
-    }
-    
-    func connection(_ connection: NSURLConnection, didFailWithError error: Error) {
-        // The request has failed for some reason!
-        print("ERROR: ", error.localizedDescription);
-        
-        // Handle failure.
-        self.user.dataLoadingFailed()
-    }
-    
-    func connection(_ connection: NSURLConnection!, willCacheResponse cachedResponse : CachedURLResponse) -> CachedURLResponse? {
-        return nil
-    }
-    
-    func connectionDidFinishLoading(_ connection: NSURLConnection!) {
-        // ONLY IF the data loaded, parse it.
-        if let data = self.data as Data? {
-            self.user.parseData(data, type: self.type)
-        }
+    func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
+        print("ERROR!", error!.localizedDescription)
     }
 }
