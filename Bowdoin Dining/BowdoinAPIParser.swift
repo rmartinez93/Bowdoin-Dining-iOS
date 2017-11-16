@@ -14,7 +14,7 @@ class BowdoinAPIParser {
     //returns a tuple with user data, or nil if failed
     class func parseAccountData(_ soapBody : GDataXMLElement) -> (firstName : String, lastName : String, cardBalance : Double, polarPoints : Double)? {
         let CSGoldSVCBalancesResponse = soapBody.elements(forName: "GetCSGoldSVCBalancesResponse")?.first as! GDataXMLElement?
-        console.log(CSGoldSVCBalancesResponse)
+
         if CSGoldSVCBalancesResponse != nil {
             let CSGoldSVCBalancesResult = CSGoldSVCBalancesResponse!.elements(forName: "GetCSGoldSVCBalancesResult")?.first as! GDataXMLElement?
             
