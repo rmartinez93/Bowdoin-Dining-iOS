@@ -106,13 +106,14 @@ class AccountViewController : UIViewController, UINavigationBarDelegate, UserDel
     }
     
     @objc func dataLoadingFailed(_ notification : Notification) {
-        //refresh onscreen info
         DispatchQueue.main.async {
-            let alert = UIAlertView(title: "Account Error",
-                message: "Sorry, your account data could not be loaded at this time. Please try again later.",
-                delegate: self,
-                cancelButtonTitle: "OK")
-            alert.show()
+            // Let the user know data loading failed.
+            let alert = UIAlertController(title: "Account Error", message: "Sorry, your account data could not be loaded at this time. Please try again later.", preferredStyle: .alert)
+            let cancelButton = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            
+            alert.addAction(cancelButton)
+            
+            self.present(alert, animated: true, completion: nil)
         }
         self.delegate.user = nil
     }
