@@ -47,6 +47,10 @@ class LoginModalViewController : UIViewController {
         self.usernameField.isEnabled = false
         self.passwordField.isEnabled = false
         
+        self.insutructions.text = "Logging in..."
+        self.insutructions.textColor = UIColor.black
+        self.insutructions.font = UIFont.systemFont(ofSize: 15)
+        
         //create user with new credentials
         self.delegate.user = User(username: self.usernameField.text!, password: self.passwordField.text!)
         
@@ -77,6 +81,8 @@ class LoginModalViewController : UIViewController {
             self.usernameField.isEnabled = true
             self.passwordField.isEnabled = true
             self.insutructions.text = "Username or password is invalid."
+            self.insutructions.textColor = UIColor.red
+            self.insutructions.font = UIFont.boldSystemFont(ofSize: 15)
         }
     }
     
