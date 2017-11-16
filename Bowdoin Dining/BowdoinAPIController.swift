@@ -22,31 +22,31 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
         super.init()
     }
     
-    //gets user account data (balance, points)
+    // Gets user account data (balance, points)
     func getAccountData() {
         self.type = "account"
         self.createSOAPRequestWithEnvelope(self.returnSoapEnvelopeForService("<tem:GetCSGoldSVCBalances/>"))
     }
     
-    //gets meal data (number of meals remaining)
+    // Gets meal data (number of meals remaining)
     func getMealData() {
         self.type = "meals"
         self.createSOAPRequestWithEnvelope(self.returnSoapEnvelopeForService("<tem:GetCSGoldMPBalances/>"))
     }
     
-    //gets line status
+    // Gets line status
     func getLineData() {
         self.type = "lines"
         self.createSOAPRequestWithEnvelope(self.returnSoapEnvelopeForService("<tem:GetCSGoldLineCountsHistogram/>"))
     }
     
-    //gets recent transactions
+    // Gets recent transactions
     func getTransactionData() {
         self.type = "transactions"
         self.createSOAPRequestWithEnvelope(self.returnSoapEnvelopeForService("<tem:GetCSGoldGLTrans/>"))
     }
     
-    //SOAP envelope for request
+    // SOAP envelope for request
     func returnSoapEnvelopeForService(_ serviceRequested : String) -> String {
         var soapEnvelope = "<?xml version=\"1.0\"?>"
         soapEnvelope += "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tem=\"http://tempuri.org/\">"
@@ -59,44 +59,58 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
         return soapEnvelope
     }
     
-    //makes SOAP request
+    // Makes SOAP request
     func createSOAPRequestWithEnvelope(_ soapEnvelope : String) {
-        //create request
+        // Create the request.
         let url = URL(string: "https://gooseeye.bowdoin.edu/ws-csGoldShim/Service.asmx")!
         let req = NSMutableURLRequest(url: url, cachePolicy: NSURLRequest.CachePolicy.useProtocolCachePolicy, timeoutInterval: 5000)
         
+        // Add request metadata.
         req.addValue("text/xml",    forHTTPHeaderField: "Content-Type")
         req.addValue("bowdoin.edu", forHTTPHeaderField: "Host")
         req.httpMethod = "POST"
         req.httpBody = soapEnvelope.data(using: String.Encoding.utf8)
         
-        //begin connection
+        // Create a URL connection
         let connection = NSURLConnection(request: req as URLRequest, delegate: self, startImmediately: false)
         
         if connection != nil {
+            // Schedule this ASAP.
             connection!.schedule(in: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
             
+            // Start the connection.
             connection!.start()
         } else {
+            // Handle failure.
             self.user.dataLoadingFailed()
         }
     }
     
-    //takes care of HTTP Authentication
+    // Takes care of HTTP Authentication
     func connection(_ connection: NSURLConnection, didReceive challenge: URLAuthenticationChallenge) {
+        // If we haven't tried to login yet, authenticate.
         if self.loginAttempts == 0 {
             let authMethod = challenge.protectionSpace.authenticationMethod
+            
+            // Authenticate with NTLM
             if authMethod == NSURLAuthenticationMethodNTLM {
-
+                // Use username and password to form credential.
                 let credential = URLCredential(user: self.user.username!,
                     password: self.user.password!,
                     persistence: URLCredential.Persistence.none)
                 
+                // Use credential with challenge request.
                 challenge.sender?.use(credential, for: challenge)
             }
+            
+            // Increment login attempts.
             self.loginAttempts += 1
-        } else {
+        }
+        else {
+            // Don't try more than once.
             connection.cancel()
+            
+            // Handle failure.
             self.user.dataLoadingFailed()
         }
     }
@@ -112,9 +126,10 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
     }
     
     func connection(_ connection: NSURLConnection, didFailWithError error: Error) {
-        //The request has failed for some reason!
-        // Check the error var
-        NSLog("ERR \(error)")
+        // The request has failed for some reason!
+        print("ERROR: ", error.localizedDescription);
+        
+        // Handle failure.
         self.user.dataLoadingFailed()
     }
     
@@ -123,6 +138,9 @@ class BowdoinAPIController : NSObject, NSURLConnectionDelegate {
     }
     
     func connectionDidFinishLoading(_ connection: NSURLConnection!) {
-        self.user.parseData(self.data! as Data, type: self.type)
+        // ONLY IF the data loaded, parse it.
+        if let data = self.data as Data? {
+            self.user.parseData(data, type: self.type)
+        }
     }
 }
