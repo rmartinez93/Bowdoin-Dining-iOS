@@ -111,6 +111,7 @@ extension BowdoinAPIController: NSURLConnectionDelegate {
                 
                 // Use credential with challenge request.
                 challenge.sender?.use(credential, for: challenge)
+                print("Sent credentials")
             }
             
             // Increment login attempts.
