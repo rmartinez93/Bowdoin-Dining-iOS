@@ -97,6 +97,7 @@ class BowdoinAPIController: NSObject {
 extension BowdoinAPIController: NSURLConnectionDelegate {
     // Takes care of HTTP Authentication
     func connection(_ connection: NSURLConnection, didReceive challenge: URLAuthenticationChallenge) {
+        print("Received Login Challenge")
         // If we haven't tried to login yet, authenticate.
         if self.loginAttempts == 0 {
             let authMethod = challenge.protectionSpace.authenticationMethod
@@ -116,6 +117,7 @@ extension BowdoinAPIController: NSURLConnectionDelegate {
             self.loginAttempts += 1
         }
         else {
+            print("Fail login challenge")
             // Don't try more than once.
             connection.cancel()
             
@@ -125,6 +127,7 @@ extension BowdoinAPIController: NSURLConnectionDelegate {
     }
     
     private func connection(_ connection: NSURLConnection!, didReceiveResponse response: URLResponse!) {
+        print("Received response!")
         // Response received, clear out data
         self.data = NSMutableData()
     }
