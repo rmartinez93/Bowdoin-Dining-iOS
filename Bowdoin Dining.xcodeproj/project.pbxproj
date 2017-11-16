@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		4507E70419726E3A000628DE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4507E70119726E3A000628DE /* CoreGraphics.framework */; };
 		4508C6011A9EB548007411D6 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4508C6001A9EB548007411D6 /* Utilities.swift */; };
-		455280DB1975FD27006C2DEA /* pub-menu.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 455280DA1975FD27006C2DEA /* pub-menu.pdf */; };
 		4552811E19763ACE006C2DEA /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4552811D19763ACE006C2DEA /* SystemConfiguration.framework */; };
 		4552812019763AD4006C2DEA /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4552811F19763AD4006C2DEA /* MobileCoreServices.framework */; };
 		4552812219763AEB006C2DEA /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4552812119763AEB006C2DEA /* libz.1.2.5.dylib */; };
@@ -45,6 +44,7 @@
 		45BE7FBE19799CC90024167A /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BE7FBD19799CC90024167A /* MenuItem.swift */; };
 		45BE7FC41979B1630024167A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45BE7FC21979B1630024167A /* CoreData.framework */; };
 		45FDA6CA197F3F0D00C8F6BD /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FDA6C9197F3F0D00C8F6BD /* AccountViewController.swift */; };
+		6027B62B1FBD5425004A28D4 /* pub-menu.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6027B62A1FBD5424004A28D4 /* pub-menu.pdf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,7 +82,6 @@
 		4507E70219726E3A000628DE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4507E70319726E3A000628DE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4508C6001A9EB548007411D6 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
-		455280DA1975FD27006C2DEA /* pub-menu.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "pub-menu.pdf"; sourceTree = "<group>"; };
 		4552811B19763AC0006C2DEA /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		4552811D19763ACE006C2DEA /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		4552811F19763AD4006C2DEA /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -128,6 +127,7 @@
 		45BE7FC21979B1630024167A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		45CC82991973320D008A391C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		45FDA6C9197F3F0D00C8F6BD /* AccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
+		6027B62A1FBD5424004A28D4 /* pub-menu.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "pub-menu.pdf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -275,7 +275,7 @@
 				45A64F8C1986B02600EF19DE /* GDataXMLNode.m */,
 				4508C6001A9EB548007411D6 /* Utilities.swift */,
 				45AAB59B1970636E0078A7F9 /* Images.xcassets */,
-				455280DA1975FD27006C2DEA /* pub-menu.pdf */,
+				6027B62A1FBD5424004A28D4 /* pub-menu.pdf */,
 				45AAB58B1970636E0078A7F9 /* Supporting Files */,
 			);
 			path = "Bowdoin Dining";
@@ -455,7 +455,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4552AD661997D23E00F2BBF5 /* Main.storyboard in Resources */,
-				455280DB1975FD27006C2DEA /* pub-menu.pdf in Resources */,
+				6027B62B1FBD5425004A28D4 /* pub-menu.pdf in Resources */,
 				4563386519E77E040042B372 /* TransactionCell.xib in Resources */,
 				45AAB59C1970636E0078A7F9 /* Images.xcassets in Resources */,
 				4563386919E7901A0042B372 /* Launch Screen.xib in Resources */,
