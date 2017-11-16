@@ -24,6 +24,12 @@ class LoginModalViewController : UIViewController {
             selector: #selector(LoginModalViewController.accountDidLoad(_:)),
             name: NSNotification.Name(rawValue: "AccountFinishedLoading"),
             object: nil)
+        
+        // Handle data loding failure
+        NotificationCenter.default.addObserver(self,
+           selector: #selector(LoginModalViewController.dataLoadingFailed(_:)),
+           name: NSNotification.Name(rawValue: "UserLoadingFailed"),
+           object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -54,20 +60,23 @@ class LoginModalViewController : UIViewController {
     @objc func accountDidLoad(_ notification : Notification) {
         //go to main thread
         DispatchQueue.main.async {
-            if !self.delegate.user!.dataLoaded {
-                self.loggingIn.stopAnimating()
-                self.loginButton.setTitle("Login", for: UIControlState())
-                self.usernameField.isEnabled = true
-                self.passwordField.isEnabled = true
-                self.insutructions.text = "Username or password is invalid."
-            } else {
-                if self.remember.isOn {
-                    self.delegate.user!.remember()
-                }
-                
-                self.loggingIn.stopAnimating()
-                self.performSegue(withIdentifier: "userDidLogin", sender: self)
+            if self.remember.isOn {
+                self.delegate.user!.remember()
             }
+            
+            self.loggingIn.stopAnimating()
+            self.performSegue(withIdentifier: "userDidLogin", sender: self)
+        }
+    }
+    
+    @objc func dataLoadingFailed(_ notification : Notification) {
+        //go to main thread
+        DispatchQueue.main.async {
+            self.loggingIn.stopAnimating()
+            self.loginButton.setTitle("Login", for: UIControlState())
+            self.usernameField.isEnabled = true
+            self.passwordField.isEnabled = true
+            self.insutructions.text = "Username or password is invalid."
         }
     }
     
