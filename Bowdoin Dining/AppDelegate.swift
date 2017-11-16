@@ -53,7 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
             (self.window!.rootViewController as! UITabBarController).tabBar.tintColor = UIColor.white
             (self.window!.rootViewController as! UITabBarController).tabBar.barTintColor = UIColor.clear
             (self.window!.rootViewController as! UITabBarController).tabBar.barStyle = UIBarStyle.black
-            (self.window!.rootViewController as! UITabBarController).tabBar.isTranslucent = true
+            (self.window!.rootViewController as! UITabBarController).tabBar.isTranslucent = false
             
             //setting delegate for styling
             (self.window!.rootViewController as! UITabBarController).moreNavigationController.delegate = self
@@ -141,7 +141,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
         navigationController.navigationBar.tintColor = UIColor.white
         navigationController.navigationBar.barTintColor = UIColor.clear
         navigationController.navigationBar.barStyle = UIBarStyle.black
-        navigationController.navigationBar.isTranslucent = true
+        navigationController.navigationBar.isTranslucent = false
         
         if viewController.title == "Settings" {
             viewController.navigationItem.title = "Settings"
