@@ -82,7 +82,7 @@ class BowdoinAPIController: NSObject {
         // Request the data
         let dataTask = self.session!.dataTask(with: req) { (data, response, error) in
             if error != nil {
-                print("ERROR!", response, error!)
+                print("ERROR!", error!)
                 
                 // Handle failure.
                 self.user.dataLoadingFailed()
