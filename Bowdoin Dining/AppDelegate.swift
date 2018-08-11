@@ -38,7 +38,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDel
     var day       : NSInteger       = 0
     var month     : NSInteger       = 0
     var year      : NSInteger       = 0
-    var offset    : NSInteger       = 0
     var selectedSegment : NSInteger = 0
     var handleReply : (([AnyHashable: Any]?) -> Void)?
     

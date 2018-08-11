@@ -164,12 +164,10 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         }
         
         //disable/enable segmented buttons
-        let date = Date(timeIntervalSinceNow: TimeInterval(60*60*24*self.delegate.daysAdded))
-        let formattedDate = Menus.formatDate(date)
-        let offset = (formattedDate.lastObject as! NSNumber).intValue
+        let date = Date.daysOffsetFromToday(self.delegate.daysAdded)
         
         //insert/remove meals depending on day of the week
-        if isWeekday(offset) {
+        if date.isWeekday() {
             if self.meals.titleForSegment(at: 0) != "Breakfast" {
                 self.meals.removeSegment(at: 0, animated: false)
                 self.meals.insertSegment(withTitle: "Breakfast", at: 0, animated: false)
@@ -188,23 +186,20 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     }
     
     func segmentIndexOfCurrentMeal() -> NSInteger {
-        var calendar = Calendar(identifier: Calendar.Identifier.gregorian)
-        calendar.locale = Locale(identifier: "en-US");
+        let today = Date()
+        let components = today.getComponents([.hour])
+        let hour = components.hour!
         
-        let today = (calendar as NSCalendar).components([NSCalendar.Unit.hour, NSCalendar.Unit.weekday], from: Date())
-        let weekday = today.weekday
-        let hour    = today.hour
-        
-        if isWeekday(weekday!) {
-            if hour! < 11 {
+        if today.isWeekday() {
+            if hour < 11 {
                 return 0 //breakfast
-            } else if hour! < 14 {
+            } else if hour < 14 {
                 return 1 //lunch
             } else {
                 return 2 //dinner
             }
         } else {
-            if hour! < 14 {
+            if hour < 14 {
                 return 0 //brunch
             } else {
                 return 1 //dinner
@@ -225,7 +220,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let simpleTableIdentifier = "BasicCell"
         
-        var cell = tableView.dequeueReusableCell(withIdentifier: simpleTableIdentifier) as! UIMenuItemView!
+        var cell = tableView.dequeueReusableCell(withIdentifier: simpleTableIdentifier) as? UIMenuItemView
         
         if cell == nil {
             cell = Bundle.main.loadNibNamed("UIMenuItemView", owner: self, options: nil)?.first as? UIMenuItemView
@@ -337,12 +332,11 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     
     func prepareForMenuLoad() {
         //creates date based on days added to current day, saves to delegate
-        let date = Date(timeIntervalSinceNow: TimeInterval(60*60*24*self.delegate.daysAdded))
-        let formattedDate = Menus.formatDate(date)
-        self.delegate.day    = formattedDate[0] as! NSInteger
-        self.delegate.month  = formattedDate[1] as! NSInteger
-        self.delegate.year   = formattedDate[2] as! NSInteger
-        self.delegate.offset = formattedDate[3] as! NSInteger
+        let date = Date.daysOffsetFromToday(self.delegate.daysAdded)
+        let components = date.getDayMonthYear()
+        self.delegate.day    = components.day
+        self.delegate.month  = components.month
+        self.delegate.year   = components.year
         
         //firstly, remove everything from the UITableView
         self.courses.removeAll(keepingCapacity: false)
@@ -359,7 +353,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         let downloadQueue = DispatchQueue(label: "Download queue", attributes: []);
         downloadQueue.async {
             //in new thread, load menu for this day
-            let xml = Menus.loadMenuForDay(self.delegate.day, month: self.delegate.month, year: self.delegate.year, offset: self.delegate.offset)
+            let xml = Menus.loadMenuForDay(self.delegate.day, month: self.delegate.month, year: self.delegate.year, unit: self.view.tag)
             //go back to main thread
             DispatchQueue.main.async {
                 callback(xml);
@@ -372,8 +366,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         //update the buttons
         self.makeCorrectButtonsVisible()
         
-        let error = Course()
-        error.courseName = "No Menu Available"
+        let error = Course(name: "No Menu Available")
         
         self.courses = [error]
         
@@ -392,12 +385,15 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         //update the buttons
         self.makeCorrectButtonsVisible()
         
+        let currentDay = Date.daysOffsetFromToday(self.delegate.daysAdded)
+        
         //create a menu from this data and save it to delegate
         self.courses = Menus.createMenuFromXML(xml,
             forMeal:     self.meals.selectedSegmentIndex,
-            onWeekday:   isWeekday(self.delegate.offset),
+            onWeekday:   currentDay.isWeekday(),
             atLocation:  self.view.tag,
-            withFilters: self.delegate.filters as NSArray)
+            withFilters: self.delegate.filters
+        )
         
         //insert new menu items to UITableView
         let newSet   = NSMutableIndexSet()
@@ -473,12 +469,14 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         }
         
         var menu = "For "+self.meals.titleForSegment(at: self.delegate.selectedSegment)!+" "+(self.getTextForDaysAdded())+" at \(BowdoinAPIParser.nameOfDiningHallWithId(self.view.tag)) we have "
-        for course in self.courses {
-            for item in course.menuItems {
-                if item == course.menuItems.last && course == self.courses.last {
-                    menu += "and "+item.name+". "
+        for (courseIndex, course) in self.courses.enumerated() {
+            for (itemIndex, item) in course.menuItems.enumerated() {
+                let isLastItem = itemIndex == course.menuItems.count - 1
+                let isLastCourse = courseIndex == self.courses.count - 1
+                if isLastItem && isLastCourse {
+                    menu += "and " + item.name + ". "
                 } else {
-                    menu += item.name+", "
+                    menu += item.name + ", "
                 }
             }
         }

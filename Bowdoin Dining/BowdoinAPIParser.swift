@@ -178,41 +178,41 @@ class BowdoinAPIParser {
         var calendar = Calendar(identifier: Calendar.Identifier.gregorian)
         calendar.locale = Locale(identifier: "en-US");
         
-        let today = (calendar as NSCalendar).components([NSCalendar.Unit.hour, NSCalendar.Unit.minute, NSCalendar.Unit.weekday], from: Date())
-        let weekday = today.weekday
-        let minute  = today.minute
-        let hour    = today.hour
+        let today = Date();
+        let components = today.getComponents([.hour, .minute])
+        let minute  = components.minute!
+        let hour    = components.hour!
         
         if hall == "thorne" {
-            if isWeekday(weekday!) {
-                if ((hour! > 7 && hour! < 9) || (hour! == 7 && minute! >= 30) || (hour! == 9 && minute! <= 30)) ||
-                    ((hour! >= 11 && hour! < 13) || (hour! == 13 && minute! <= 30)) ||
-                    ((hour! >= 17 && hour! < 19) || (hour! == 19 && minute! <= 30)) {
+            if today.isWeekday() {
+                if ((hour > 7 && hour < 9) || (hour == 7 && minute >= 30) || (hour == 9 && minute <= 30)) ||
+                    ((hour >= 11 && hour < 13) || (hour == 13 && minute <= 30)) ||
+                    ((hour >= 17 && hour < 19) || (hour == 19 && minute <= 30)) {
                         return true //Thorne Open
                 } else {
                     return false //Thorne Closed
                 }
             } else {
-                if ((hour! >= 11 && hour! < 13) || (hour! == 13 && minute! <= 30)) ||
-                    ((hour! >= 17 && hour! < 19) || (hour! == 19 && minute! <= 30)) {
+                if ((hour >= 11 && hour < 13) || (hour == 13 && minute <= 30)) ||
+                    ((hour >= 17 && hour < 19) || (hour == 19 && minute <= 30)) {
                         return true //Thorne Open
                 } else {
                     return false //Thorne Closed
                 }
             }
         } else if hall == "moulton" {
-            if isWeekday(weekday!) {
-                if ((hour! >= 7 && hour! < 10) || (hour! == 10 && minute! <= 30)) ||
-                    (hour! >= 11 && hour! < 14) ||
-                    (hour! >= 17 && hour! < 19) {
+            if today.isWeekday() {
+                if ((hour >= 7 && hour < 10) || (hour == 10 && minute <= 30)) ||
+                    (hour >= 11 && hour < 14) ||
+                    (hour >= 17 && hour < 19) {
                         return true //Moulton Open
                 } else {
                     return false //Moulton Closed
                 }
             } else {
-                if (hour! >= 9 && hour! < 11) ||
-                    ((hour! >= 11 && hour! < 12) || (hour! == 12 && minute! <= 30)) ||
-                    ((hour! >= 17 && hour! < 19) || (hour! == 19 && minute! <= 30)) {
+                if (hour >= 9 && hour < 11) ||
+                    ((hour >= 11 && hour < 12) || (hour == 12 && minute <= 30)) ||
+                    ((hour >= 17 && hour < 19) || (hour == 19 && minute <= 30)) {
                         return true //Moulton Open
                 } else {
                     return false //Moulton Closed

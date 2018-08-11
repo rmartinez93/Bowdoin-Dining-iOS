@@ -8,8 +8,14 @@
 
 import Foundation
 
-class MenuItem : NSObject {
+class MenuItem {
     var name        = ""
     var itemId      = ""
     var descriptors = ""
+    
+    init(name: String, itemId: String, attributes: [String]?) {
+        self.name = name
+        self.itemId = itemId
+        self.descriptors = attributes != nil ? attributes!.combine(" ").trim() : ""
+    }
 }

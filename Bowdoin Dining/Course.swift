@@ -8,9 +8,13 @@
 
 import Foundation
 
-class Course : NSObject {
+class Course {
     var courseName = ""
     var menuItems : [MenuItem] = []
+    
+    init(name: String) {
+        self.courseName = name
+    }
     
     //array of all favorited items grabbed from our favorites file
     class func allFavoritedItems() -> NSMutableArray {

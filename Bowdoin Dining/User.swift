@@ -8,7 +8,7 @@
 
 import Foundation
 
-class User : NSObject {
+class User {
     var username : String?
     var password : String?
     var lastname    : String?
@@ -95,7 +95,7 @@ class User : NSObject {
             let doc = try GDataXMLDocument(data: data, options: 0)
             let root = doc.rootElement
             
-            let soapBody = root().elements(forName: "soap:Body").first as! GDataXMLElement?
+            let soapBody = root()?.elements(forName: "soap:Body").first as! GDataXMLElement?
             
             if soapBody != nil {
                 switch type {
