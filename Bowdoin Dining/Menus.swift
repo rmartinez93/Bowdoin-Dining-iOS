@@ -11,8 +11,24 @@ import UIKit
 
 class Menus {
     static let menuUrl = "https://apps.bowdoin.edu/orestes/api.jsp"
-    static let ignoreList = ["Salad Bar", "...", "Salads"]
+    static let blackList = ["Salad Bar", "...", "Salads", "Salad Bar L & D -- Summer", "Deli Bar"]
     static let unitBase = 48
+    
+    class func cachePath() -> String {
+        let cachePath = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.cachesDirectory, FileManager.SearchPathDomainMask.userDomainMask, true).first!)
+        let menusPath = cachePath.appendingPathComponent("menus")
+        
+        //create path if it doesn't exist
+        if (!FileManager.default.fileExists(atPath: menusPath.path)) {
+            do {
+                try FileManager.default.createDirectory(atPath: menusPath.path, withIntermediateDirectories: false, attributes: nil)
+            } catch {
+                print("Cache Path Error")
+            }
+        }
+        
+        return menusPath.path
+    }
     
     class func clearOldCache() {
         let cachePath = self.cachePath()
@@ -33,36 +49,80 @@ class Menus {
         }
     }
     
-    //load menu for a given day
-    class func loadMenuForDay(_ day : Int, month : Int, year : Int, unit : Int) -> Data? {
-        //first, search local path in case cached
-        let path = self.localURLForDay(day, month: month, year: year, unit: unit) as String
-        let fileExists = FileManager.default.fileExists(atPath: path) as Bool
-        if fileExists { //if cached, return cached file
-            return (try? Data(contentsOf: URL(fileURLWithPath: path)))
-        } else { //else not cached
-            //begin network activity
-            Menus.activityIndicator(on: true)
-
-            //download menu for this day
-            let urlString = self.externalURLForDay(day, month: month, year: year, unit: unit) as String
-            print(urlString)
-            let url = URL(string: urlString)!
-
-            let xmlData = NSMutableData(contentsOf: url)
+    class func apiMenuURL(day: Int, month: Int, year: Int, unit: Int, mealName: String) -> String {
+        let monthString = "\(month)".leftPadding(toLength: 2, withPad: "0")
+        let dayString = "\(day)".leftPadding(toLength: 2, withPad: "0")
+        let locationUnit = Menus.unitBase + unit
+        
+        return "\(Menus.menuUrl)?date=\(year)\(monthString)\(dayString)&unit=\(locationUnit)&meal=\(mealName)"
+    }
+    
+    class func cacheMenuURL(day: Int, month: Int, year : Int, unit: Int, mealName: String) -> String {
+        let monthString = NSString(string: "\(month)").padding(toLength: 2, withPad: "0", startingAt: 0)
+        let dayString = NSString(string: "\(day)").padding(toLength: 2, withPad: "0", startingAt: 0)
+        
+        let file = "local-\(year)-\(monthString)-\(dayString)-\(unit)-\(mealName).xml"
+        return "\(self.cachePath())\(file)"
+    }
+    
+    class func writeMenuToCache(day : Int, month : Int, year : Int, unit: Int, mealName: String, data: Data?) {
+        if let menu = data {
+            let path = Menus.cacheMenuURL(day: day, month: month, year: year, unit: unit, mealName: mealName)
+            let url = URL(string: path)!
             
-            //end network activity
-            Menus.activityIndicator(on: false)
-            
-            if xmlData != nil {
-                //cache file, return
-                xmlData!.write(toFile: path, atomically: true)
-            }
-            return xmlData as Data?
+            //cache file, return
+            try? menu.write(to: url, options: [.atomic])
         }
     }
     
-    class func createMenuFromXML(_ xmlData : Data, forMeal mealSegment : Int, onWeekday weekday : Bool, atLocation locationId : Int, withFilters filters : [String]) -> [Course] {
+    class func readMenuFromCache(day: Int, month: Int, year: Int, unit: Int, mealName: String) -> Data? {
+        let path = self.cacheMenuURL(day: day, month: month, year: year, unit: unit, mealName: mealName)
+        
+        return FileManager.default.fileExists(atPath: path) as Bool
+            ? try? Data(contentsOf: URL(fileURLWithPath: path))
+            : nil;
+    }
+    
+    class func readMenuFromAPI(day : Int, month : Int, year : Int, unit: Int, mealName: String) -> Data? {
+        let path = self.apiMenuURL(day: day, month: month, year: year, unit: unit, mealName: mealName)
+        let url = URL(string: path)!
+        
+        // Begin network activity.
+        Menus.activityIndicator(on: true)
+        
+        // Download menu for this day.
+        let xmlData = try? Data(contentsOf: url)
+        
+        // End network activity.
+        Menus.activityIndicator(on: false)
+        
+        // Cache data.
+        Menus.writeMenuToCache(day: day, month: month, year: year, unit: unit, mealName: mealName, data: xmlData)
+        
+        return xmlData as Data?
+    }
+    
+    //load menu for a given day
+    class func loadMenu(date: Date, unit: Int, meal: Int) -> Data? {
+        // Extract day/month/year.
+        let components      = date.getDayMonthYear()
+        let day             = components.day
+        let month           = components.month
+        let year            = components.year
+        let mealName        = Menus.getMealNameForMeal(date: date, meal: meal)
+        
+        // Default to cached menu if it exists.
+        var menu = nil as Data?//readMenuFromCache(day: day, month: month, year: year, unit: unit, mealName: mealName)
+        
+        // Menu not cached, read externally.
+        if menu == nil {
+            menu = Menus.readMenuFromAPI(day: day, month: month, year: year, unit: unit, mealName: mealName)
+        }
+        
+        return menu
+    }
+    
+    class func createMenuFromXML(_ xmlData : Data, withFilters filters : [String]) -> [Course] {
         // Read the document.
         let doc = try! GDataXMLDocument(data: xmlData, options: 0)
         
@@ -79,14 +139,14 @@ class Menus {
         
         for item in menuItems {
             // Grab information about this menu item: course, name & id.
-            let courseName = (item.elements(forName: "course") as! [GDataXMLElement]).first!.stringValue()!
-            let itemName = (item.elements(forName: "webLongName") as! [GDataXMLElement]).first!.stringValue()!
-            let itemId   = (item.elements(forName: "itemID") as! [GDataXMLElement]).first!.stringValue()!
+            let courseName = (item.elements(forName: "course") as? [GDataXMLElement])?.first?.stringValue() ?? ""
+            let itemName = (item.elements(forName: "webLongName") as? [GDataXMLElement])?.first?.stringValue() ?? ""
+            let itemId   = (item.elements(forName: "itemID") as? [GDataXMLElement])?.first?.stringValue() ?? ""
             
             // Give up here if we're ignoring this item.
-            let passesIgnoreList = !Menus.ignoreList.contains(itemName)
-            if !passesIgnoreList {
-                break;
+            let passesBlackList = !Menus.blackList.contains(itemName)
+            if !passesBlackList {
+                continue;
             }
             
             // Parse out attributes (e.g. GF)
@@ -95,7 +155,7 @@ class Menus {
             // Give up here if this item doesn't pass our filter.
             let passesFilter = filters.count == 0 || attributes.intersects(filters)
             if !passesFilter {
-                break;
+                continue;
             }
             
             // Check if course already exists in our courses array
@@ -123,15 +183,16 @@ class Menus {
     }
     
     class func splitAttributesFromItemName(_ itemName: String) -> (name: String, attributes: [String]) {
-        //create regex for removing diet attributes from item name, find matches in string
+        // Create regex for removing diet attributes from item name, find matches in string
         let regex = try! NSRegularExpression(pattern: "\\b(NGI|GF|DF|VE|V|L|H)\\b", options: [])
         
         let attributeMatches = regex.matches(in: itemName, options: [], range: NSMakeRange(0, itemName.count)) as NSArray
         
-        //store diet attributes for filtering
+        // Store diet attributes for filtering
         var attributes : [String] = []
         
-        if attributeMatches.count != 0 { //if there were matches, loop through them and add them to string
+        // If there were matches, loop through them and add them to string
+        if attributeMatches.count > 0 {
             for i in 0 ..< attributeMatches.count {
                 let special = attributeMatches.object(at: i) as! NSTextCheckingResult
                 attributes += [(itemName as NSString).substring(with: special.range) as String]
@@ -202,36 +263,34 @@ class Menus {
         }
     }
     
-    class func externalURLForDay(_ day : Int, month : Int, year : Int, unit : Int) -> String {
-        let monthString = "\(month)".leftPadding(toLength: 2, withPad: "0")
-        let dayString = "\(day)".leftPadding(toLength: 2, withPad: "0")
-        let locationUnit = Menus.unitBase + unit
+    // Converts a meal and a date into a meal name param for api.
+    class func getMealNameForMeal(date: Date, meal: Int) -> String {
+        let weekday = date.getComponents([.weekday]).weekday!
         
-        return "\(Menus.menuUrl)?date=\(year)\(monthString)\(dayString)&unit=\(locationUnit)"
-    }
-    
-    class func localURLForDay(_ day : Int, month : Int, year : Int, unit : Int) -> String {
-        let monthString = NSString(string: "\(month)").padding(toLength: 2, withPad: "0", startingAt: 0)
-        let dayString = NSString(string: "\(day)").padding(toLength: 2, withPad: "0", startingAt: 0)
-        
-        let file = "local-\(year)-\(monthString)-\(dayString)-\(unit).xml"
-        return "\(self.cachePath())\(file)"
-    }
-    
-    class func cachePath() -> String {
-        let cachePath = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.cachesDirectory, FileManager.SearchPathDomainMask.userDomainMask, true).first!)
-        let menusPath = cachePath.appendingPathComponent("menus")
-        
-        //create path if it doesn't exist
-        if (!FileManager.default.fileExists(atPath: menusPath.path)) {
-            do {
-                try FileManager.default.createDirectory(atPath: menusPath.path, withIntermediateDirectories: false, attributes: nil)
-            } catch {
-                print("Cache Path Error")
+        if date.isWeekday() {
+            switch(meal) {
+            case 0: return "breakfast"
+            case 1: return "lunch"
+            case 2: return "dinner"
+            default: return ""
+            }
+        }
+        else if(weekday == 7) {
+            switch(meal) {
+            case 0: return "breakfast"
+            case 1: return "dinner"
+            default: return ""
+            }
+        }
+        else if(weekday == 1) {
+            switch(meal) {
+            case 0: return "brunch"
+            case 1: return "dinner"
+            default: return ""
             }
         }
         
-        return menusPath.path
+        return ""
     }
     
     class func activityIndicator(on: Bool) {

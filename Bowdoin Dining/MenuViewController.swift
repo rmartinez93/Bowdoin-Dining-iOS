@@ -331,13 +331,6 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     }
     
     func prepareForMenuLoad() {
-        //creates date based on days added to current day, saves to delegate
-        let date = Date.daysOffsetFromToday(self.delegate.daysAdded)
-        let components = date.getDayMonthYear()
-        self.delegate.day    = components.day
-        self.delegate.month  = components.month
-        self.delegate.year   = components.year
-        
         //firstly, remove everything from the UITableView
         self.courses.removeAll(keepingCapacity: false)
         self.menuItems.reloadData()
@@ -352,8 +345,13 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
         //create a new thread...
         let downloadQueue = DispatchQueue(label: "Download queue", attributes: []);
         downloadQueue.async {
+            let date = Date.daysOffsetFromToday(self.delegate.daysAdded)
+            let unit = self.view.tag
+            let meal = self.meals.selectedSegmentIndex
+            
             //in new thread, load menu for this day
-            let xml = Menus.loadMenuForDay(self.delegate.day, month: self.delegate.month, year: self.delegate.year, unit: self.view.tag)
+            let xml = Menus.loadMenu(date: date, unit: unit, meal: meal)
+            
             //go back to main thread
             DispatchQueue.main.async {
                 callback(xml);
@@ -384,16 +382,9 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     func presentMenu(_ xml : Data) {
         //update the buttons
         self.makeCorrectButtonsVisible()
-        
-        let currentDay = Date.daysOffsetFromToday(self.delegate.daysAdded)
-        
+                
         //create a menu from this data and save it to delegate
-        self.courses = Menus.createMenuFromXML(xml,
-            forMeal:     self.meals.selectedSegmentIndex,
-            onWeekday:   currentDay.isWeekday(),
-            atLocation:  self.view.tag,
-            withFilters: self.delegate.filters
-        )
+        self.courses = Menus.createMenuFromXML(xml, withFilters: self.delegate.filters)
         
         //insert new menu items to UITableView
         let newSet   = NSMutableIndexSet()
@@ -468,20 +459,20 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
             self.speakButton.setImage(UIImage(named: "speaker_active"), for: UIControlState())
         }
         
-        var menu = "For "+self.meals.titleForSegment(at: self.delegate.selectedSegment)!+" "+(self.getTextForDaysAdded())+" at \(BowdoinAPIParser.nameOfDiningHallWithId(self.view.tag)) we have "
+        var menuString = "For "+self.meals.titleForSegment(at: self.delegate.selectedSegment)!+" "+(self.getTextForDaysAdded())+" at \(BowdoinAPIParser.nameOfDiningHallWithId(self.view.tag)) we have "
         for (courseIndex, course) in self.courses.enumerated() {
             for (itemIndex, item) in course.menuItems.enumerated() {
                 let isLastItem = itemIndex == course.menuItems.count - 1
                 let isLastCourse = courseIndex == self.courses.count - 1
                 if isLastItem && isLastCourse {
-                    menu += "and " + item.name + ". "
+                    menuString += "and " + item.name + ". "
                 } else {
-                    menu += item.name + ", "
+                    menuString += item.name + ", "
                 }
             }
         }
         
-        let phrase = AVSpeechUtterance(string: menu)
+        let phrase = AVSpeechUtterance(string: menuString)
         phrase.rate = 0.5
         speaker!.speak(phrase)
     }
