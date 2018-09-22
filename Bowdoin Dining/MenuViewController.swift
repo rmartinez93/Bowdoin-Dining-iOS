@@ -342,13 +342,13 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITabBarControl
     }
     
     func loadMenu(_ callback: @escaping (Data?) -> ()) {
+        let date = Date.daysOffsetFromToday(self.delegate.daysAdded)
+        let unit = self.view.tag
+        let meal = self.meals.selectedSegmentIndex
+        
         //create a new thread...
         let downloadQueue = DispatchQueue(label: "Download queue", attributes: []);
         downloadQueue.async {
-            let date = Date.daysOffsetFromToday(self.delegate.daysAdded)
-            let unit = self.view.tag
-            let meal = self.meals.selectedSegmentIndex
-            
             //in new thread, load menu for this day
             let xml = Menus.loadMenu(date: date, unit: unit, meal: meal)
             

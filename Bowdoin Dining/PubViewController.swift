@@ -14,48 +14,15 @@ class PubViewController: UIViewController, UINavigationBarDelegate {
     @IBOutlet var MageesMenu : UIWebView!
     @IBOutlet var navBar     : UINavigationBar!
     
-    //Opening Hour (OH) / Opening Minute (OM), Closing Hour (CH) / Closing Minute (CM) for all days as of 10/11/14
-    let sunOH = 18
-    let sunOM = 30
-    let sunCH = 23
-    let sunCM = 59
-    
-    let monOH = 11
-    let monOM = 30
-    let monCH = 23
-    let monCM = 59
-    
-    let tueOH = 11
-    let tueOM = 30
-    let tueCH = 23
-    let tueCM = 59
-    
-    let wedOH = 11
-    let wedOM = 30
-    let wedCH = 23
-    let wedCM = 59
-    
-    let thuOH = 11
-    let thuOM = 30
-    let thuCH = 23
-    let thuCM = 59
-    
-    let friOH = 11
-    let friOM = 30
-    let friCH = 23
-    let friCM = 59
-    
-    let satOH = 18
-    let satOM = 00
-    let satCH = 23
-    let satCM = 59
-    // End opening times and closing times
+    // Get the menu from the web
+    let pubMenuUrl = "http://www.bowdoin.edu/dining/pdf/magees-menu.pdf"
+    let pubSpecialsUrl = "https://www.bowdoin.edu/atreus/diningspecials/specials.jsp"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        let url = Bundle.main.url(forResource: "pub-menu", withExtension: "pdf")
+        let url = URL(string: pubMenuUrl)
         let request = URLRequest(url: url!)
 
         //load menu
@@ -97,21 +64,12 @@ class PubViewController: UIViewController, UINavigationBarDelegate {
     }
     
     @IBAction func showSpecials() {
-        let url = URL(string: "https://www.bowdoin.edu/atreus/diningspecials/specials.jsp")
+        let url = URL(string: pubSpecialsUrl)
         UIApplication.shared.openURL(url!)
     }
     
     @IBAction func dialPub() {
-        var calendar = Calendar(identifier: Calendar.Identifier.gregorian)
-        calendar.locale = Locale(identifier: "en-US");
-        
-//        let components = calendar.components([NSCalendarUnit.Hour, NSCalendarUnit.Minute, NSCalendarUnit.Weekday], fromDate: NSDate())
-//        
-//        let hour = components.hour
-//        let min  = components.minute
-//        let day  = components.weekday
-//        
-        //if pubIsOpen(day, hour: hour, min: min) {
+//        if pubIsOpen() {
         let phoneNumberURL = URL(string:"tel://2077253888")!
         UIApplication.shared.openURL(phoneNumberURL)
 //        } else {
@@ -123,27 +81,64 @@ class PubViewController: UIViewController, UINavigationBarDelegate {
 //        }
     }
     
-    func pubIsOpen(_ day : Int, hour : Int, min : Int) -> Bool {
-        let OH = [sunOH, monOH, tueOH, wedOH, thuOH, friOH, satOH]
-        let OM = [sunOM, monOM, tueOM, wedOM, thuOM, friOM, satOM]
-        let CH = [sunCH, monCH, tueCH, wedCH, thuCH, friCH, satCH]
-        let CM = [sunCM, monCM, tueCM, wedCM, thuCM, friCM, satCM]
+    // Pub schedule (WIP)
+    var pubSchedule: Schedule = {
+        let sundaySchedule = try! ScheduleEntry(
+            startTime: ScheduleTime(day: Day.Sunday, hour: 18, minute: 30),
+            endTime:   ScheduleTime(day: Day.Sunday, hour: 23, minute: 59)
+        )
         
-        return after(hour, minute1: min, hour2: OH[day-1], minute2: OM[day-1]) && before(hour, minute1: min, hour2: CH[day-1], minute2: CM[day-1])
-    }
+        let mondaySchedule = try! ScheduleEntry(
+            startTime: ScheduleTime(day: Day.Monday, hour: 11, minute: 30),
+            endTime:   ScheduleTime(day: Day.Monday, hour: 23, minute: 59)
+        )
+        
+        let tuesdaySchedule = try! ScheduleEntry(
+            startTime: ScheduleTime(day: Day.Tuesday, hour: 11, minute: 30),
+            endTime:   ScheduleTime(day: Day.Tuesday, hour: 23, minute: 59)
+        )
+        
+        let wednesdaySchedule = try! ScheduleEntry(
+            startTime: ScheduleTime(day: Day.Wednesday, hour: 11, minute: 30),
+            endTime:   ScheduleTime(day: Day.Wednesday, hour: 23, minute: 59)
+        )
+        
+        let thursdaySchedule = try! ScheduleEntry(
+            startTime: ScheduleTime(day: Day.Thursday, hour: 11, minute: 30),
+            endTime:   ScheduleTime(day: Day.Thursday, hour: 23, minute: 59)
+        )
+        
+        let fridaySchedule = try! ScheduleEntry(
+            startTime: ScheduleTime(day: Day.Friday, hour: 11, minute: 30),
+            endTime:   ScheduleTime(day: Day.Friday, hour: 23, minute: 59)
+        )
+        
+        let saturdaySchedule = try! ScheduleEntry(
+            startTime: ScheduleTime(day: Day.Saturday, hour: 0, minute: 0),
+            endTime:   ScheduleTime(day: Day.Saturday, hour: 0, minute: 1)
+        )
+        
+        return Schedule([
+            sundaySchedule,
+            mondaySchedule,
+            tuesdaySchedule,
+            wednesdaySchedule,
+            thursdaySchedule,
+            fridaySchedule,
+            saturdaySchedule
+        ])
+    }()
     
-    //is time1 before time2
-    func before(_ hour1 : Int, minute1 : Int, hour2 : Int, minute2 : Int) -> Bool {
-        return  hour1 < hour2 || (hour1 == hour2 && minute1 < minute2)
-    }
-    
-    //is time1 after time2
-    func after(_ hour1 : Int, minute1 : Int, hour2 : Int, minute2 : Int) -> Bool {
-        return  hour1 > hour2 || (hour1 == hour2 && minute1 >= minute2)
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    // Checks if pub is open.
+    func isPubOpen() -> Bool {
+        let components = Date().getComponents([.hour, .minute, .weekday])
+
+        let hour = components.hour!
+        let min  = components.minute!
+        
+        let day  = Day(rawValue: components.weekday!)!
+        let time = ScheduleTime(day: day, hour: hour, minute: min)
+        
+        return pubSchedule.hasConflicts(time: time)
     }
 }

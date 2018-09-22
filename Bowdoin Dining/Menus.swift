@@ -112,7 +112,7 @@ class Menus {
         let mealName        = Menus.getMealNameForMeal(date: date, meal: meal)
         
         // Default to cached menu if it exists.
-        var menu = nil as Data?//readMenuFromCache(day: day, month: month, year: year, unit: unit, mealName: mealName)
+        var menu = Menus.readMenuFromCache(day: day, month: month, year: year, unit: unit, mealName: mealName)
         
         // Menu not cached, read externally.
         if menu == nil {
@@ -265,8 +265,6 @@ class Menus {
     
     // Converts a meal and a date into a meal name param for api.
     class func getMealNameForMeal(date: Date, meal: Int) -> String {
-        let weekday = date.getComponents([.weekday]).weekday!
-        
         if date.isWeekday() {
             switch(meal) {
             case 0: return "breakfast"
@@ -275,22 +273,13 @@ class Menus {
             default: return ""
             }
         }
-        else if(weekday == 7) {
-            switch(meal) {
-            case 0: return "breakfast"
-            case 1: return "dinner"
-            default: return ""
-            }
-        }
-        else if(weekday == 1) {
+        else {
             switch(meal) {
             case 0: return "brunch"
             case 1: return "dinner"
             default: return ""
             }
         }
-        
-        return ""
     }
     
     class func activityIndicator(on: Bool) {

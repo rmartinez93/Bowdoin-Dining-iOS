@@ -44,7 +44,7 @@
 		45BE7FBE19799CC90024167A /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BE7FBD19799CC90024167A /* MenuItem.swift */; };
 		45BE7FC41979B1630024167A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45BE7FC21979B1630024167A /* CoreData.framework */; };
 		45FDA6CA197F3F0D00C8F6BD /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FDA6C9197F3F0D00C8F6BD /* AccountViewController.swift */; };
-		6027B62B1FBD5425004A28D4 /* pub-menu.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6027B62A1FBD5424004A28D4 /* pub-menu.pdf */; };
+		60C34A312156771700F565B9 /* ScheduleUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C34A302156771700F565B9 /* ScheduleUtils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -127,7 +127,7 @@
 		45BE7FC21979B1630024167A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		45CC82991973320D008A391C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		45FDA6C9197F3F0D00C8F6BD /* AccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
-		6027B62A1FBD5424004A28D4 /* pub-menu.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "pub-menu.pdf"; sourceTree = "<group>"; };
+		60C34A302156771700F565B9 /* ScheduleUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleUtils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -274,8 +274,8 @@
 				45A64F8B1986B02600EF19DE /* GDataXMLNode.h */,
 				45A64F8C1986B02600EF19DE /* GDataXMLNode.m */,
 				4508C6001A9EB548007411D6 /* Utilities.swift */,
+				60C34A302156771700F565B9 /* ScheduleUtils.swift */,
 				45AAB59B1970636E0078A7F9 /* Images.xcassets */,
-				6027B62A1FBD5424004A28D4 /* pub-menu.pdf */,
 				45AAB58B1970636E0078A7F9 /* Supporting Files */,
 			);
 			path = "Bowdoin Dining";
@@ -455,7 +455,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4552AD661997D23E00F2BBF5 /* Main.storyboard in Resources */,
-				6027B62B1FBD5425004A28D4 /* pub-menu.pdf in Resources */,
 				4563386519E77E040042B372 /* TransactionCell.xib in Resources */,
 				45AAB59C1970636E0078A7F9 /* Images.xcassets in Resources */,
 				4563386919E7901A0042B372 /* Launch Screen.xib in Resources */,
@@ -509,6 +508,7 @@
 				45BE7FBC197995C80024167A /* Course.swift in Sources */,
 				457B28D01AE8113A002DCA8A /* MenuViewController.swift in Sources */,
 				45A9206319781F7A00768D46 /* AppDelegate.swift in Sources */,
+				60C34A312156771700F565B9 /* ScheduleUtils.swift in Sources */,
 				45BE7FB51978567A0024167A /* User.swift in Sources */,
 				4508C6011A9EB548007411D6 /* Utilities.swift in Sources */,
 				455578C819E75017004A4B21 /* TransactionsViewController.swift in Sources */,
