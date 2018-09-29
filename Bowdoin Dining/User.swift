@@ -67,6 +67,7 @@ class User {
         self.dataLoaded  = false
         self.moultonScore = nil
         self.thorneScore  = nil
+        self.transactions = []
         self.loggedIn    = false
         User.forget()
     }
